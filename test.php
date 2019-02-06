@@ -1,5 +1,5 @@
 <?php
-/// error_reporting(0);
+/// error_reporting(0);  esto para ver que se muestren los cambios arriba....
 
 $servername = 'localhost'; 
 $BaseDatos =  'mmeeting4'; 
