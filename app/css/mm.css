@@ -1,0 +1,268 @@
+body{
+    font-family: sans-serif;
+    font-weight: 100;
+    background: #ccc;
+}
+h1{
+    text-align: center;
+    color:#666;
+    text-shadow: 0px 2px 0px #fff;
+}
+
+.red {background-color: #d81b60;}
+
+.green {background-color: #00a65a;}
+
+.mitexto{
+    font-size: 14px;  height: 22px; padding-top: 2px; 
+}
+.mitexto2{
+    font-size: 14px; width: 5px;  height: 2em; padding-top: 2px; 
+}
+
+.miBoton{
+     font-size: 12px;  height: 22px; padding-bottom: 5px;  padding-top: 0px;
+}
+
+.miDiv{
+   font-size: 12px; border:  #008cab; border-color:  #fe0; border-width: 1px; background-color: #A2A3AE;
+}
+.error {
+  border-color: red;
+}
+ 
+.warning {
+  border-color: yellow;
+}
+
+.milabel{
+    font-size: 14px; font-weight:  bold; height: 22px; padding-top: 5px;  
+}
+.tablex{margin-left: 10px; width: 100%; border-color: #008cab; border-width: 1px;  font-size: 12px;}
+.tablex tr{ border-color: #008cab; border-width: 2px;  color: #000}
+
+.textos{
+    font-size: 14px;   color:#008cab;
+}
+.etiquetas {text-align: left; width: 170px;font-size: 14px;   color:#000;}
+
+.wrapp{
+    width: 250px; 
+    margin: 1 auto;
+    background: #3c8dbc;
+    border-color: #ea0;
+    border-radius: 15px;
+    padding: 10px;
+}
+
+.wrapp h3 { font-size: 10px;   color:#ea0;}
+
+.contact-item{
+    border-bottom: thin solid #ccc;
+    padding: 10px;
+}
+
+.mibottom{
+    text-align: center;
+    padding: 5px; 
+    height:  20px;
+}
+.modal {position:fixed;top: 40px;}
+.modal-header,
+.btn-custom {	background: #3c8dbc;	color: #FFF;}
+.modal-body {	background: #afc7d5;}
+.popover   {	background-color: #e74c3c;	color: #000;	width: 120px;}
+.popover.right .arrow:after {	border-right-color: #e74c3c;}
+.input-group[class*="col-"] {    padding-right: 15px;    padding-left: 15px;}
+.amplio {height: 200px;}
+
+glyphicon-edit {
+    font-size: 0.8em;
+}
+
+.navbar-mm{padding-top: 10px;  height: 10px; background-color: #ccc;}
+
+.busca-mm{height: 18px; padding-top: 0px; width: 220px;}
+.alert-mm{color:#000;background-color:#ccc;border-color:#faebcc}.alert-mm hr{border-top-color:#f7e1b5}.alert-mm .alert-link{color:#66512c}
+
+
+.mainTableTOC {
+	background-color: #FFFFFF;
+	border: 1px solid #999999;
+	border-spacing: 1px;
+	border-collapse: separate;
+	width: 75%;
+/*	table-layout: fixed;*/
+	border-radius: 8px;
+	box-shadow: 6px 6px 4px #888;
+ }
+
+.navTableTextTOC {
+    font-family: Geneva, Verdana, Arial, sans-serif; 
+	font-size: 9px; 
+	font-weight: Normal;
+	text-decoration: none;
+	color: #003366;
+	}
+
+/* Month and Year Row Setup */
+.monthYearRowTOC {
+    height: 32px;
+    background-color: #FEFFFE;
+    text-align: left;
+    vertical-align: middle;
+    margin: 0px;
+    padding: 6px;
+    border-radius: 8px;
+	}
+
+/* Month and Year Text Setup */ 
+.monthYearTextTOC {
+	font-family: Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: Bold;
+        width: 12%;
+	color: #355881;
+	}
+
+.hourYearTextTOC {
+	font-family: Geneva, Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: Bold;
+        width: 10%;
+	color: #355881;
+	}
+.dayTextTOC {
+	font-family: Geneva, Verdana, Arial, sans-serif;
+	font-size: 10px;
+        height: 30px;
+        width: 10%;
+	color: #355881;
+	}        
+/* Day Names Row Setup */
+.dayNamesRowTOC {
+    height: 20px;
+	background-color: #455678;
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 8px;
+	}
+.horaNamesRowTOC {
+    height: 10px;
+    background-color: #455678;
+    text-align: center;
+    vertical-align: middle;
+  
+    }
+/* Day Name Setup */
+.dayNamesTextTOC {
+    font-family: Geneva, Verdana, Arial, sans-serif; 
+	font-size: 10px; 
+	font-weight: Bold; 
+	color: #FFFFFF;
+	}
+
+/* Alignments, Font Face, Size and Color for Date Numbers and Row Height */
+.rowsTOC {
+	font-family: Arial, Geneva, Verdana, sans-serif;
+	font-size: 10px;
+        background-color: #455677;
+	color: #433D27;
+	text-align: left;
+	vertical-align: top;
+	height: 18px;
+	}
+
+/* Color of Today's Date */
+.todayTOC {
+	font-family: Geneva, Verdana, Arial, sans-serif;
+	font-size: 11px;
+	font-weight: Bold; 
+	color: #FFFF00;
+	background-color: #31528E;
+	text-align: left;
+	vertical-align: top;
+    padding: 2px;
+    margin: 0px;
+	}
+
+.titleTOC {
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
+    padding: 1px;
+    margin: 0px;
+    }
+
+.daynumTOC {
+	font-family: Geneva, Verdana, Arial, sans-serif;
+	font-size: 11px;
+	font-weight: Bold; 
+	color: #FBFCEF;
+	background-color: #A2A3AE;
+	text-align: left;
+	vertical-align: top;
+    padding: 2px;
+    margin: 0px;
+	border-radius: 4px;
+	}
+
+/* Cierra ventana emergente */        
+close {
+    background: #606061;
+    color: #FFFFFF;
+    line-height: 25px;
+    position: absolute;
+    right: 1px;
+    text-align: center;
+    top: 1px;
+    width: 24px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius:3px;
+ 
+}
+ 
+.close:hover {
+    background: #606061;
+    color:#222;
+}
+
+        .tabs li {
+                list-style:none;
+                display:inline;
+        }
+
+        .tabs a {
+                padding:5px 20px;
+                display:inline-block;
+                background: #3c8dbc;
+                border-color: #ea0;
+                color:#fff;
+                text-decoration:none;
+        }
+
+        .tabs a.active {
+                background:#fff;
+                color:#000;
+        }
+  
+        /* para la modal */
+        
+ .bgtransparent{
+ position:fixed;
+ left:0;
+ top:0;
+ background-color:#000;
+ opacity:0.6;
+ filter:alpha(opacity=60);
+}
+
+.bgmodal{
+ position:fixed; 
+ font-family:arial;
+ font-size:1em;
+ border:0.05em solid black;
+ overflow:auto;
+ background-color:#fff;
+}
