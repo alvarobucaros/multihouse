@@ -1,5 +1,4 @@
 <?php
-/// error_reporting(0);  cambios cambios y cambios marzo 23
 
 $servername = 'localhost'; 
 $BaseDatos =  'mmeeting4'; 
