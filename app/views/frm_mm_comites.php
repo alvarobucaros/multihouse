@@ -153,6 +153,6 @@
         </div>
 </div>
 
-<script src="controller/mm_comites.ctrl.js" type="text/javascript"></script>
-	 
+
+<script src="controller/min/mm_comites.ctrl.min.js" type="text/javascript"></script>
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Oct 09, 2017 5:35:33   <<<<<<< -->

@@ -50,9 +50,9 @@
             if($con==true)
             {
                 $query = "SELECT invitado_id, invitado_agendaId, invitado_nombre, invitado_empresa,  " .
-                     " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden  " .
+                     " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden, invitado_comite, invitado_empresaID  " .
                      " FROM mm_agendainvitados " .
-                     " WHERE invitado_agendaId =  ". $comite_td .
+                     " WHERE invitado_comite =  ". $comite_td .
                      " ORDER BY invitado_orden  ";
                 $result = mysqli_query($con, $query);
                 return $result;                            
@@ -93,7 +93,59 @@
                      " AND lista_empresa = '" . $empresa . " ORDER BY lista_inmueble";       
          $result = mysqli_query($con, $query); 
       echo $result; 
-    }        
+    }
+    
+     function consultaAgendas($data)
+    {
+        $objClase = new DBconexion(); 
+        $con = $objClase->conectar(); 
+     //   $dato = $data->dato; 
+        $rec = explode('||',$data) ;
+        $fi = $rec[3] . " 00:00:00";
+        $ff = $rec[4] . " 23:55:00";
+        $where = "agenda_empresa = " . $rec[6]. " AND agenda_fechaDesde > '". $fi . "'  AND agenda_fechaHasta < '". $ff . "'".
+                 " AND agenda_acta >= ". $rec[1] . " AND  agenda_acta <= ". $rec[2] ; 
+        $whereTema = "";
+        $whereAnexos = "";
+        $whereInvitado="";
+        if($rec[5] != ''){ $whereTema = " WHERE  (tema_titulo LIKE '%". $rec[5] ."%' OR tema_detalle  LIKE '%". $rec[5] .
+                                        "%' OR tema_desarrollo  LIKE '%". $rec[5] ."%' )";}
+        if($rec[7] != ''){ $whereAnexos = " (anexos_anexo = '%". $rec[7] ."%' OR anexos_descripcion = '%". $rec[7] ."%' ) ";  }  
+        if($rec[8] != ''){ $whereInvitado = " WHERE (invitado_nombre = '%". $rec[8] ."%' OR invitado_cargo = '%". $rec[8] ."%' ) ";  }  
+        if ($rec[0] >  0 ){ $where .= " AND agenda_comiteId = ". $rec[0];}   
+        
+        $query = " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme, " .
+                " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , comite_id, 'Tema' as tp," .
+                " CONCAT(tema_tipo, ': ', tema_titulo, ' ', tema_detalle) tema,  tema_desarrollo,  tema_responsable, " .
+                " CONCAT(tema_fechaAsigna, ' ', tema_fechaCumple) fechaDesde_Hasta, tema_agendaId  " .
+                " FROM mm_agendamiento  " . 
+                " LEFT JOIN mm_agendatemas ON tema_agendaId = agenda_id  " .
+                " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
+                $whereTema . 
+                " UNION  " .
+                " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
+                " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal ,  comite_nombre ,invitado_comite, 'Ínvitado' as tp, invitado_nombre,  " .
+                " invitado_cargo, invitado_celuar, invitado_asistio, invitado_agendaId  " .
+                " FROM mm_agendamiento  " .
+                " LEFT JOIN mm_agendainvitados ON invitado_agendaId = agenda_id  " . 
+                " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
+                $whereInvitado ;
+                if($rec[9] != 'N'){
+                $query .= " UNION  " .
+                " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
+                    " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , anexos_comiteid, 'Anexo' as tp, anexos_anexo,  " .
+                    " anexos_descripcion, '' as a, '' as b , anexos_agendaid  " .
+                    " FROM mm_agendamiento  " .
+                    " LEFT JOIN mm_agendaanexos ON anexos_agendaid = agenda_id  " . $whereAnexos .
+                    " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" ;
+                }
+            $query .=  " WHERE " . $where .                          
+                    "  ORDER BY comite_id desc, agenda_id, tp Desc ";       
+                 $result = mysqli_query($con, $query);
+                return $result;    
+
+    }
+    
         
     }
 

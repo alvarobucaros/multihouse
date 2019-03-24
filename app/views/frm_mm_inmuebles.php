@@ -209,7 +209,7 @@
         </div> 
 </div>
 
-<script src="controller/mm_inmuebles.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_inmuebles.ctrl.min.js" type="text/javascript"></script>
 
 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Wednesday,May 09, 2018 5:51:23   <<<<<<< -->

@@ -217,6 +217,6 @@
 
 
 
-<script src="controller/mm_usuarios.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_usuarios.ctrl.min.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Oct 24, 2017 11:30:34   <<<<<<< -->

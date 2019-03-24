@@ -42,20 +42,19 @@
                     <label class="milabel col-md-2" for="anexos_anexo">{{form_anexos_anexo}}</label>
                     
                     <div class="col-md-7">
-                        <input type="file" name="file" id="file" required  ng-click="botonOk()">                       
+                        <input type="file" name="file" id="file" required  accept="application/pdf"  ng-click="botonOk()">                       
                     </div> 
                     <div class="col-md-7" id = "btnCarga" ng-show="btnCarga">
                         <input type="submit" value='Carga Documento' class="submit" ng-click="recarga()">
                     </div>
-                    <div class="col-md-7" id = "btnCarga" ng-show="btnReCarga">
-                        <button class="btn btn-primary btn-xs" ng-show="show_form" 
-                        ng-click="actualizaLista()">{{form_btnRecarga}}<span class="glyphicon" aria-hidden="true"></span></button>
+                    <div class="col-md-7" id = "btnReCarga" style='display:block;' >
+                        <button class="btn btn-primary btn-xs" 
+                        ng-click="actualizaLista()">{{form_btnRecarga}}<span class="glyphicon" aria-hidden="true"></span></button>               
                     </div>
                 <div id="divRuedita" ng-show="ruedita">
                     <img src="img/progress.gif" alt=""/>                   
                 </div>
 
-                <br/>
                 </div>
                 <div class="clearfix"></div>
                 <div class="col-md-10">
@@ -80,18 +79,21 @@
                             </td>
                             </tr>
                         </table>
-                        <div  ng-show="datosOcultos"> 
+                        <div  id="divOcultos" ng-show="datosOcultos"> 
                             <input type="text" ng-model="registro.actaId" id ='actaId'  name ='actaId' value="{{registro.actaId}}"/>
                             <input type="text" ng-model="registro.comiteId" id ='anexos_id'  name ='anexos_id' value="{{registro.comiteId}}"/>
                             <input type="text" ng-model="registro.anno" id ='anno'  name ='' value="{{registro.anno}}"/>
-                            <input type="text" ng-model="registro.dibujo" id ='Dibujo'  name ='' value="C"/>
+                            <input type="text" ng-model="registro.dibujo" id ='Dibujo'  name ='' value="{{registro.dibujo}}"/>
+                            <input type="text" id ='control'  name ='' value="" onchange="actualizaLista();"/>
                         </div>                        
                     </div>
                 </div>
         </form>
     </div>
 </div>
-<script src="controller/mm_cargas.ctrl.js" type="text/javascript"></script>
-<script src="controller/mm_agendaanexos.ctrl.js" type="text/javascript"></script>
+<!--
+<script src="controller/min/mm_cargas.ctrl.min.js" type="text/javascript"></script>     
+<script src="controller/min/mm_agendaanexos.ctrl.min.js" type="text/javascript"></script>  -->
+<script src="controller/ctrl/mm_agendaanexos.ctrl.js" type="text/javascript"></script>
 
-
+<script src="controller/ctrl/mm_cargas.ctrl.js" type="text/javascript"></script>

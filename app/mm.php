@@ -33,6 +33,7 @@ if (!isset($_GET['op'])){
  else {
   $op=$_GET['op']; 
 }
+
  include_once 'inc/lenguageES.php'; 
  $nodo = '';
  $subNodo='';
@@ -55,10 +56,7 @@ if (!isset($_GET['op'])){
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>multiMeeting</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-
   <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
   <link href="css/AdminLTE.css" rel="stylesheet" type="text/css"/>
   <link href="css/_all-skins.min.css" rel="stylesheet" type="text/css"/>
@@ -69,8 +67,6 @@ if (!isset($_GET['op'])){
 <!-- para el tab -->  
     <link href="css/animate.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/angular.css" rel="stylesheet" type="text/css"/>
-
-
 </head>
 <body class="hold-transition skin-blue sidebar-mini"   ng-app="app" >
 <!-- Site wrapper -->
@@ -155,8 +151,9 @@ if (!isset($_GET['op'])){
           </a>
           <ul class="treeview-menu">
             <li><a href="mm.php?op=agSgmnto"><i class="fa fa-circle-o"></i>Agenda a seguir</a></li>
-            <li><a href="mm.php?op=agActas"><i class="fa fa-pencil"></i>Acta de reunión</a></li>
             <li><a href="mm.php?op=loadActa"><i class="fa fa-upload"></i>Carga documentos</a></li>
+            <li><a href="mm.php?op=agActas"><i class="fa fa-pencil"></i>Acta de reunión</a></li>
+           
           </ul>
         </li>
         ';
@@ -227,42 +224,39 @@ if (!isset($_GET['op'])){
   <script src="js/bootstrap.min.js" type="text/javascript"></script>
   <!-- Content Wrapper. Contains page content -->
   
-
-  
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div id="popup" style="display: none;">
             <div class="content-popup" style="width: 450px; height: 300px; border: 2px; border-color: greenyellow">
                 
-    <div id="dialog"  class="wrapp">
-        <h3 class="textos">Usuario, cambia de contraseña?</h3>
-        <form>
-            <table class="tablex">
-                <tr>
-                    <td>Nombre</td>
-                    <td><input type='text' readonly="yes" id='user_nombre' value='<?php echo $datos[0];?>'></td>
-                </tr>
-                <tr>
-                    <td>Contraseña actual</td>
-                    <td><input type='password' id='user_contraAhora' ></td> 
-                </tr> 
-                    <td>Nueva contraseña</td>
-                    <td><input type='password' id='user_contraNueva'></td>
-                </tr> 
-                    <td>Repite nva Contraseña</td>
-                    <td><input type='password' id='user_contraNuevaRep'></td>
-                </tr> 
-                <tr><td colspan="2"><a href="#" class="textos" id="close">Aceptar  <img src="img/aceptar.png" alt="Aceptar"/></a>
-                </td>
-                </tr>
+                <div id="dialog"  class="wrapp">
+                    <h3 class="textos">Usuario, cambia de contraseña?</h3>
+                    <form>
+                        <table class="tablex">
+                            <tr>
+                                <td>Nombre</td>
+                                <td><input type='text' readonly="yes" id='user_nombre' value='<?php echo $datos[0];?>'></td>
+                            </tr>
+                            <tr>
+                                <td>Contraseña actual</td>
+                                <td><input type='password' id='user_contraAhora' ></td> 
+                            </tr> 
+                                <td>Nueva contraseña</td>
+                                <td><input type='password' id='user_contraNueva'></td>
+                            </tr> 
+                                <td>Repite nva Contraseña</td>
+                                <td><input type='password' id='user_contraNuevaRep'></td>
+                            </tr> 
+                            <tr><td colspan="2"><a href="#" class="textos" id="close">Aceptar  <img src="img/aceptar.png" alt="Aceptar"/></a>
+                            </td>
+                            </tr>
 
-            </table>
-        </form>
-    </div> 
-   
-     </div>
- </div>
+                        </table>
+                    </form>
+                </div> 
+            </div>
+        </div>
   
         <?php
 
@@ -312,7 +306,7 @@ if (!isset($_GET['op'])){
         }
         
         if ($op ==  'agReu'){
-            include_once 'views/frm_mm_AgendamientoTab.php';
+            include_once 'views/frm_mm_Agendamiento.php';
         }			
 	
         if ($op ==  'asiGr'){
@@ -355,7 +349,7 @@ if (!isset($_GET['op'])){
             include_once 'views/frm_mm_llamalista.php';
         }
          if ($op ==  ''){
-             include_once 'views/frm_mm_news.php';
+            include_once 'views/frm_mm_news.php';
         }      
         ?>
      

@@ -1,8 +1,8 @@
 <?php
 /*
-* reporte  para la administracion de la tabla contaterceros
+* reporte  asistencia
 * author alvaro ortiz
-* fecha 9/8/2015 12:00 a. m.
+* fecha 9/8/2018 12:00 a. m.
 */
 
      require('fpdf.php');

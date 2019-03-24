@@ -1,3 +1,59 @@
+<?PHP
+//tomo el valor de un elemento de tipo texto del formulario 
+$cadenatexto = $_POST["cadenatexto"]; 
+echo "Escribió en el campo de texto: " . $cadenatexto . "<br><br>"; 
+print_r($_FILES);
+
+
+
+//Array ( //[userfile] => Array ( [name] => SERVICIOS.csv [type] => application/vnd.ms-excel [tmp_name] => C:\wamp\tmp\phpA863.tmp [error] => 0 [size] => 1315 ) ) C:\wamp\tmp\phpA863.tmp --- .... application/vnd.ms-excel ---- 1315La extensiÃ³n o el tamaÃ±o de los archivos no es correcta. 
+        
+//datos del arhivo 
+$nombre_archivo = $_FILES['userfile']['tmp_name'];  
+$tipo_archivo = $_FILES['userfile']['type']; 
+$tamano_archivo = $_FILES['userfile']['size']; 
+$fileName = $_FILES["userfile"]["name"];
+
+echo $nombre_archivo . ' --- ' .$fileName. ' .... ' . $tipo_archivo . '  ---- ' . $tamano_archivo;
+//compruebo si las características del archivo son las que deseo 
+if (!((strpos($tipo_archivo, "gif") || strpos($tipo_archivo, "ms-excel") || strpos($tipo_archivo,"png")))){
+    echo 'El tipo de archivo es errado';
+}
+if($tamano_archivo < 10000000) { 
+   	echo " el tamaño de los archivos no es correct"; 
+}else{ 
+   	if (move_uploaded_file($HTTP_POST_FILES['userfile']['tmp_name'], $nombre_archivo)){ 
+      	echo "El archivo ha sido cargado correctamente."; 
+   	}else{ 
+      	echo "Ocurrió algún error al subir el fichero. No pudo guardarse."; 
+   	} 
+} 
+
+
+$linea = 0;
+//Abrimos nuestro archivo
+$archivo = fopen($nombre_archivo, "r");
+//Lo recorremos
+while (($datos = fgetcsv($archivo, ",")) == true) 
+{
+  $num = count($datos);
+  $linea++;
+  //Recorremos las columnas de esa linea
+  for ($columna = 0; $columna < $num; $columna++) 
+      {
+         echo $datos[$columna] . "\n";
+     $arr  =explode(";", $columna) ;
+     $data =explode(';',$columna);
+      echo $columna;
+      echo '<br/>';
+      echo $data[0].' '. $data[1];echo '<br/>';
+     }
+}
+//Cerramos el archivo
+fclose($archivo);
+?>
+
+
 <style>
     #dropBox{
     border: 3px dashed #0087F7;
@@ -21,8 +77,7 @@
 } 
 </style>
 
-
-<form>      
+<!--<form>      
     <div id="dropBox">
         <p>Select file to upload</p>
     </div>
@@ -31,9 +86,9 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
-<!--https://www.codexworld.com/ajax-file-upload-using-jquery-php/-->
+https://www.codexworld.com/ajax-file-upload-using-jquery-php/
 
-<!--<script>
+<script>
  $(function(){
     //file input field trigger when the drop box is clicked
     $("#dropBox").click(function(){

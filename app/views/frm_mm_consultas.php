@@ -36,11 +36,6 @@
            </div>
 
        </div>          
-         
-         
-         
-         
-
        <div class="form-group">
             <label class=" milabel col-md-2" for="agenda_fechaDesde">{{form_agenda_fechaDesde}}</label>
             <div class="col-md-3">
@@ -69,50 +64,71 @@
                    ng-model="registro1.tema" value="{{registro1.tema}}" />
             </div>
         </div> 
-        
-       <div class="form-group alert alert-default navbar-brand search-box">                    
+        <div class="form-group">
+            <label class=" milabel col-md-2" for="comite_activo">{{form_titAnexos}}</label>
+            <div class="btn-group  col-md-2"  data-toggle="buttons">
+            <label>
+                <input type="radio" class=" milabel" name ="registro1.anexos" ng-model="registro1.anexos" value="S" ng-checked="chk">{{form_AnexoS}}
+            </label>
+            <label>
+            <input type="radio" class="milabel" name ="registro1.anexos" ng-model="registro1.anexos" value="N" >{{form_AnexoN}}
+            </label>
+            </div>
+
+            <label class=" milabel col-md-2" for="anexoDescripcion">{{form_titAnexoDescripcion}}</label>
+            <div class="col-md-3">
+            <input type="text" class="form-control mitexto" id="anexoDescripcion" name="anexoDescripcion"
+                  ng-model="registro1.anexoDescripcion" required 
+                  value="{{registro1.anexoDescripcion}}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class=" milabel col-md-2" for="asistente">{{form_titAsistente}}</label>
+            <div class="col-md-8">
+            <input type="text" class="form-control mitexto" id="asistente" name="asistente"
+                   ng-model="registro1.asistente" value="{{registro1.asistente}}" />
+            </div>
+        </div>          
+       <div class="form-group alert alert-default col-md-8">                    
             <button type="button" value="Actualizar" class="btn btn-custom pull-left btn-xs" 
                 ng-click="creaSolicitud(registro1)" id="send_btn">{{form_btnConsulta}}  
-            </button>
-         
- 
+            </button>  &nbsp; &nbsp; 
             <button class="btn btn-custom btn-xs" ng-click="exportToExcel(registro1)">
-               <span class="glyphicon glyphicon-share"></span> Exporta a Excel
+               <span class="btn btn-custom pull-left btn-xs" ></span> {{form_imprime}}
              </button>
-         </div> 
-         <div id="tableToExport">
+        </div> 
+         
+        <div class="form-group col-md-8" id="tableToExport" >
             <div class="table-responsive" style="overflow-y: scroll;">         
         
-            <table class="table table-hover tablex">
-           <tr>    
-               <th>DETALLE</th>
-               <th>FECHA</th>
-               <th>ACTA</th>
-               <th>ESTADO</th>
-               <th>TITULO</th>
-               <th>DETALLE</th>
-           </tr>
+                <table class="table table-hover tablex">
+                    <tr>  
+                      <th>COMITE</th>
+                      <th>DETALLE</th>
+                      <th>FECHA</th>
+                      <th>ACTA</th>
+                      <th>ESTADO</th>
+                      <th></th>
+                  </tr>
 
-            <tr ng-repeat="detailResponse in detailResponses| filter:search_query">
-                
-                <td>{{detailResponse.agenda_Descripcion}}</td>
-                <td>{{detailResponse.agenda_fechaDesde}}</td>
-                <td>{{detailResponse.agenda_acta}}</td>
-                <td>{{detailResponse.agenda_estado}}</td>
-                <td>{{detailResponse.tema_titulo}}</td>
-                <td>{{detailResponse.tema_detalle}}</td>               
-                
-                <td> 
-                    <button class="btn btn-warning btn-xs" ng-click="editDetailResponse(detailResponse)" title="{{form_btnConsulta}}">
-                       <span class="glyphicon glyphicon-book"></span></button>
-               </td>
+                   <tr ng-repeat="detailResponse in detailResponses| filter:search_query">
+                       <td>{{detailResponse.comite_nombre}}</td>     
+                       <td>{{detailResponse.agenda_Descripcion}}</td>
+                       <td>{{detailResponse.agenda_fechaDesde}}</td>
+                       <td>{{detailResponse.agenda_acta}}</td>
+                       <td>{{detailResponse.agenda_estado}}</td>
+              
+                       <td> 
+                           <button class="btn btn-warning btn-xs" ng-click="editDetailResponse(detailResponse)" title="{{form_btnConsulta}}">
+                              <span class="glyphicon glyphicon-book"></span></button>
+                      </td>
 
-           </tr>
-           </table>
-       </div>
-         </div> 
+                  </tr>
+               </table>
+            </div>
+        </div> 
       
-    </div>
+   
 
      </form> 
     </div>
@@ -120,4 +136,4 @@
     </div> 
 </div>
 
-<script src="controller/mm_consultas.ctrl.js" type="text/javascript"></script>
+<script src="controller/ctrl/mm_consultas.ctrl.js" type="text/javascript"></script>

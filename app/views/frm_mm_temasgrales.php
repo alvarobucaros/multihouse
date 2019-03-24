@@ -115,6 +115,6 @@
         </div>
 </div>
 
-<script src="controller/mm_temasgrales.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_temasgrales.ctrl.min.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Dec 26, 2017 10:19:17   <<<<<<< -->

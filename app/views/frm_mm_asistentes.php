@@ -173,6 +173,11 @@
         </div>
 </div>
 <script src="js/angular-resources.js" type="text/javascript"></script>
-<script src="controller/mm_asistentes.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_asistentes.ctrl.min.js" type="text/javascript"></script>
+
+<!--
+<script src="controller/ctrl/mm_asistentes.ctrl.js" type="text/javascript"></script>
+-->
+
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Friday,Oct 27, 2017 7:40:45   <<<<<<< -->

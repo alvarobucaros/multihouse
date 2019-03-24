@@ -98,5 +98,5 @@
 
 
 
-<script src="controller/mm_version.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_version.ctrl.min.js" type="text/javascript"></script>
 

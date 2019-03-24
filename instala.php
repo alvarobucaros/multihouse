@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="password">{{form_password}}</label>
                    <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="password" name="password"
+                       <input type="password" class="form-control mitexto" id="password" name="password"
                          ng-model="registro.password" required Placeholder="{{form_Phpassword}}" 
                          value="{{registro.password}}" />
                     </div>

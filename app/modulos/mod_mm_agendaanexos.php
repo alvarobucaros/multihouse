@@ -52,7 +52,6 @@ switch ($op)
                     " FROM mm_agendaanexos WHERE anexos_empresa = " .$empresa . 
                     "  AND anexos_comiteid = " . $comite . " AND  anexos_agendaid = " . $agenda .
                     "  ORDER BY anexos_anexo ";   
-//echo $query;
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -69,7 +68,17 @@ switch ($op)
     { 
         $objClase = new DBconexion(); 
         $con = $objClase->conectar(); 
-        $anexos_id = 0; 
+        $anexos_id = 0;
+        $query = "SELECT anexos_ruta FROM atominge_mmeetingu.mm_agendaanexos WHERE anexos_id=$data->anexos_id"; 
+        $result = mysqli_query($con, $query);
+        $base_directory='';
+        while ($row = mysqli_fetch_assoc($result)){
+            $base_directory=$row['anexos_ruta'];
+        } 
+        echo $base_directory+' ';
+        // ../actas/E00001/2019/comite4/acta1/12 - PROYECTO PRESUPUESTO DE INVERSIONES.pdf
+        if(unlink($base_directory.$_GET['file']))
+            echo "File Deleted.";
         $query = "DELETE FROM mm_agendaanexos WHERE anexos_id=$data->anexos_id"; 
         mysqli_query($con, $query); 
         echo 'Ok'; 
@@ -93,14 +102,23 @@ switch ($op)
         
         if($anexos_id  == 0) 
         { 
-           $query = "INSERT INTO mm_agendaanexos(anexos_empresa, anexos_comiteid, anexos_agendaid, anexos_usuario," .
-                    "  anexos_anno, anexos_anexo, anexos_ruta, anexos_fecha, anexos_descripcion )";
-           $query .= "  VALUES ('" .$anexos_empresa . "', '" . $anexos_comiteid."', '".$anexos_agendaid."', '".anexos_usuario.
-                     "', '".$anexos_anno. "', '" . $anexos_anexo."', '". $anexos_ruta. "', '" . anexos_fecha.
-                     "', '". anexos_descripcion."')";  
-//SELECT anexos_id,anexos_empresa, anexos_comiteid, anexos_agendaid, anexos_usuario, anexos_anno, anexos_anexo, anexos_usuario, anexos_anno, FROM mm_agendaanexos;        
-            mysqli_query($con, $query);
-            echo 'Ok';
+            $query = "SELECT count(*) AS Nr FROM mm_agendaanexos ".
+                     " WHERE anexos_empresa = '" .$anexos_empresa . "' and anexos_comiteid = '" .
+                      $anexos_comiteid . "' and anexos_anexo = '" . $anexos_anexo. "'";
+            $result = mysqli_query($con, $query); 
+            
+            while($row = mysqli_fetch_assoc($result)) { 
+                $Nr = $row['Nr'];
+                if ($Nr===0){
+                    $query = "INSERT INTO mm_agendaanexos(anexos_empresa, anexos_comiteid, anexos_agendaid, anexos_usuario," .
+                            "  anexos_anno, anexos_anexo, anexos_ruta, anexos_fecha, anexos_descripcion )";
+                    $query .= "  VALUES ('" .$anexos_empresa . "', '" . $anexos_comiteid."', '".$anexos_agendaid."', '".anexos_usuario.
+                            "', '".$anexos_anno. "', '" . $anexos_anexo."', '". $anexos_ruta. "', '" . anexos_fecha.
+                            "', '". anexos_descripcion."')";  
+                    mysqli_query($con, $query);
+                    echo 'Ok';                   
+                }
+           } 
         } 
         else 
         { 

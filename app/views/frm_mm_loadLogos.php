@@ -62,8 +62,8 @@
 </div>
 
 
-<script src="controller/mm_loadlogos.ctrl.js" type="text/javascript"></script>
-<script src="controller/mm_cargas.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_loadlogos.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/min/mm_cargas.ctrl.min.js" type="text/javascript"></script>
 
 
 

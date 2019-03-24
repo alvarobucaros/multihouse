@@ -29,7 +29,7 @@ app.controller("mainController",['$scope','$http', function($scope,$http){
 
     function getInfo(){
         empresa = $('#comite_empresa').val();
-        $http.post('modulos/mod_mm_Version.php?op=r',{'op':'r', 'empresa_id':empresa}).success(function(data, textStatus){
+        $http.post('../modulos/mod_mm_Version.php?op=r',{'op':'r', 'empresa_id':empresa}).success(function(data, textStatus){
 //        alert(data);
         dato=data.split('||'); 
     $scope.empresa_nombre=dato[3];

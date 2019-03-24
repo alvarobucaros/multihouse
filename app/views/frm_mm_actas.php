@@ -18,8 +18,7 @@
 
             </form>
         </div>
-        
-        
+     
         <div id='divEdit' class="col-md-6 col-md-offset-1">
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="formEdit"
                 ng-submit="insertInfo(registro2);"  ng-show="showEdit">
@@ -39,9 +38,7 @@
             </div>
         </div>        
 
-      
-        
-        
+    
 		<div class="clearfix"></div>
 		<div class="col-md-10">
             <!-- Table to show employee detalis -->
@@ -81,8 +78,8 @@
         </div>
 </div>
 
-<script src="controller/mm_actas.ctrl.js" type="text/javascript"></script>
 
-
+<script src="controller/ctrl/mm_actas.ctrl.js" type="text/javascript"></script>
+<!--script src="controller/min/mm_actas.ctrl.min.js" type="text/javascript"></script>
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Jan 09, 2018 10:54:14   <<<<<<< -->
 

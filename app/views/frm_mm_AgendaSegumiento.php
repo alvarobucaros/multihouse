@@ -3,7 +3,6 @@
         <h3 class="text-left">{{form_title}}</h3>
     </div>
 
-
        <div class="col-md-8 col-md-offset-1">
 <!--  Crea un nuevo invitado  -->
             <form class="form-horizontal alert alert-mm color-palette-set" name="terForm" id="idForm"
@@ -212,7 +211,7 @@
                 <div class="form-group">
                     <div class="col-md-5">
                         <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
-                                 ng-click="updateInfoTercero(registroTercero)" id="send_btn2UpdTer"  ng-disabled="!tercero2Form.$valid">{{form_btnActualiza}}
+                            ng-click="updateInfoTercero(registroTercero)" id="send_btn2UpdTer"  ng-disabled="!tercero2Form.$valid">{{form_btnActualiza}}
                        </button>
                      </div>  
                     <div class="col-md-1">
@@ -245,6 +244,7 @@
                               id="send_btnupd"  ng-disabled="!tercero2Form.$valid">{{form_nuevaActa}}
                    </button>                    
                     
+                    
                 </div>
             </div>     
             <div class="form-group col-md-12"  ng-show="resultado">
@@ -259,12 +259,13 @@
                     <label class="control-label milabel col-md-4" for="convocatoria">{{form_convocatoria}}</label>
                     <div class="col-md-7 ">
                         <input type="text"  width="2" class="form-control mitexto" id="convocatoria" name="convocatoria"
-                             ng-model="registroTercero.convocatoria"   value="{{registroTercero.convocatoria}}"                            
-                    
-                                <button class="btn btn-warning btn-xs" title="{{form_btnAdd}}"></button>                        
-                                <button class="btn btn-warning btn-xs mibottom" ng-click="convocatoria(registroTercero)" title="{{form_btnAcepta}}">
-                                    
-                        <span class="glyphicon glyphicon-certificate">{{form_btnAcepta}}</span></button>
+                               ng-model="registroTercero.convocatoria"   value="{{registroTercero.convocatoria}}"   >                         
+     
+                    </div>
+                    <div  class="col-md-2">
+                    <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
+                             ng-click="convocatoria(registroTercero)" title="{{form_btnAcepta}}">{{form_btnAcepta}}
+                   </button>                        
                     </div>
                                  
                 </div>
@@ -272,16 +273,14 @@
              
              <div class="form-group col-md-10"  ng-show="responseDiv">
                  
-                 <div class="table-responsive" style="overflow-y: scroll;">
-                     <u>
-                        <strong>Participantes</strong>                      
-                    </u>&nbsp;&nbsp;         
-
-                <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
-                    ng-click="createDetailAsiste()" title="{{form_btnAdd}}"  
-                    id="send_btnCreaTer"  ng-disabled="!tercero2Form.$valid">{{form_btnNuevoInv}}
-                </button>             
-                    
+                 <div class="table-responsive" style="overflow-y: scroll;">                  
+                    <div class="col-md-4" >    
+                         <strong>Participantes</strong>    
+                       <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
+                        ng-click="createDetailAsiste()" title="{{form_btnAdd}}"  
+                        id="send_btnCreaTer"  ng-disabled="!tercero2Form.$valid">{{form_btnNuevoInv}}
+                        </button> 
+                    </div>                     
          
                      <table class="table table-hover tablex">
                     <tr>    
@@ -322,8 +321,7 @@
              </div>
          </form>
         </div> 
-       
-       
+           
             <div class="col-md-8 col-md-offset-1"  ng-focus="focusfn()" ng-blur="blurfn()" >
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="temaForm" id="temaForm"
@@ -485,13 +483,13 @@
                 </div>
                 </div>                
                  <div class="form-group">
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
                                  ng-click="updateInfoAddTema(registroAddTema)" id="send_btnu"  
                                  ng-disabled="!addtemaForm.$valid">{{form_btnActualiza}}
                        </button>
                      </div>  
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                         <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
                                  ng-click="clearInfoAddTema()" 
                                  id="send_btna">{{form_btnAnula}}</button> 
@@ -505,11 +503,14 @@
         <form  name="tercero2Form" id="terceroForm2"
                  ng-submit="insertInfoTr(registroTercero);" ng-show="frmTemas">     
                 <div class="table-responsive">
-                    <u>
-                        <strong>Temas a tratar</strong>                      
-                    </u>&nbsp;&nbsp;         
-                        <button class="btn btn-warning btn-xs" ng-click="createDetailTema(detailTema)" title="{{form_btnAdd}}">
-                        <span class="glyphicon glyphicon-plus">Nuevo</span></button>
+                    <div class="col-md-4" >    
+                        <strong>Temas a Tratar</strong>   
+                        <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
+                            ng-click="createDetailTema(detailTema)" title="{{form_btnAdd}}"  
+                            id="send_btnCreaTema" > {{form_btnNuevoTema}} 
+                        </button> 
+                    </div> 
+                    
                     <table class="table table-hover tablex">
                     <tr>    
                        
@@ -517,24 +518,31 @@
                         <th>TITULO</th>
                         <th>DETALLE</th>
                         <th>DESARROLLO</th>
-                        <th>TIPO</th>
-                        <th>RESPONSABLE</th>
-                        <th>ESTADO</th>
+                        <th  style="width: 20px">TIPO</th>
+                        <th style="width: 40px">RESPONSABLE</th>
+                        <th style="width: 10px">ESTADO</th>
+                        <th style="width: 5px"></th><th style="width: 5px"></th>
                     </tr>
 
                     <tr ng-repeat="detailTema in detailTemas">
                     
                     <td>{{detailTema.tema_orden}}</td>
                     <td>{{detailTema.tema_titulo}}</td>
-                    <td>{{detailTema.tema_detalle}}</td>
-                    <td>{{detailTema.tema_desarrollo}}</td>
+                    <td style="width: 200px">{{detailTema.tema_detalle}}</td>
+                    <td style="width: 200px">{{detailTema.tema_desarrollo}}</td>
                     <td>{{detailTema.tema_tipo}}</td>
                     <td>{{detailTema.tema_responsable}}</td>
                     <td>{{detailTema.tema_estado}}</td>
                     <td> 
-                    <button class="btn btn-warning btn-xs" ng-click="editDetailTema(detailTema)" title="{{form_btnEdita}}">
-                            <span class="glyphicon glyphicon-edit"></span></button>
+                    <button class="btn btn-warning btn-xs" ng-click="editDetailTema(detailTema)">
+                            <span class="glyphicon glyphicon-edit"></span>
+                    </button>
                     </td>
+                    <td>
+                    <button class="btn btn-danger btn-xs" ng-click="deleteDetailTema(detailTema)" 
+                            confirm="Está seguro ?, {{form_btnElimina}}?" title="{{form_btnElimina}}"><span class="glyphicon glyphicon-trash"></span></button>
+                    </td>
+                    
                     </tr>
                     </table>
                 </div>            
@@ -543,8 +551,8 @@
 
 </div>
 
-     <script src="controller/mm_agendaSegumiento.ctrl.js" type="text/javascript"></script>
-
+   
+     <script src="controller/ctrl/mm_agendaSegumiento.ctrl.js" type="text/javascript"></script>
 
 
  

@@ -34,7 +34,6 @@
         $obj = new mm_agendamiento();
         $comite_td=$_GET['op'];
         $resultado = $obj->traeComite($comite_td);
-//  $this->Cell(80,12, $resultado,0,1,'C');
         $reg = array();
         $reg = explode('||', $resultado);
         $comite_nombre = $reg[0]; 
@@ -76,13 +75,7 @@
         $obj = new mm_agendamiento();
         $comite_td=$_GET['op'];
         $resultado = $obj->traeComite($comite_td);
-        $reg = array();
- // $pdf->MultiCell(80,6, $resultado); 
-        
-//        com||0||sal||ComitÃ© asesor de ventas||SLA||2018-09-25 14:00:00||2018-09-25 15:30:00||||1
-//        com||0||sal||ComitÃ© asesor de ventas||SLA||2018-09-25 14:00:00||2018-09-25 15:30:00||||1
-//  ACADEMICO||1||RECTORIA||de||Oficina del Rector||2019-01-24 13:30:00||2019-01-24 15:00:00||Junio 1 8am||1ACADEMICO||1||RECTORIA||de||Oficina del Rector||2019-01-24 13:30:00||2019-01-24 15:00:00||Junio 1 8am||1
-              
+        $reg = array();         
         $reg = explode('||', $resultado);
         $comite_nombre = $reg[0]; 
         $comite_consecActa = $reg[1];  
@@ -244,6 +237,7 @@
         {    
             $ln=$pdf->GetY();   
             $deta = trim($row['tema_orden']).'. '.utf8_decode(trim($row['tema_titulo'])). '  '.
+                    utf8_decode(trim($row['tema_detalle'])) . '  '.
                     utf8_decode(trim($row['tema_desarrollo']));
             $pdf->SetXY(35,$ln);
             $pdf->MultiCell(160, 6, $deta); 
@@ -286,7 +280,18 @@
         if ($row_cnt > 0){
             $ln += 8;
             $pdf->SetXY(30, $ln);
-            $pdf->Cell(80,6, 'Esta acta tiene '.$row_cnt.' anexos. Puede consultarlos en la Ap ',0,1,'L');
+            $pdf->Cell(80,6, 'Esta acta tiene '.$row_cnt. utf8_decode(' anexo(s) que puede consultar(los) en la Aplicación :'),0,1,'L');  
+            mysqli_data_seek($resultado, 0);
+            $anexos='';
+            while($row = mysqli_fetch_assoc($resultado))
+            {    
+                $anexos .= trim($row['anexos_descripcion']).',  ';  
+            }            
+            $ln=$pdf->GetY();
+            $pdf->SetXY(30,$ln);
+            $pdf->MultiCell(160, 6, $anexos); 
+            
+            
         }
 $pdf->Output($pdf->archivo.'.pdf',''); 
 $pdf->Output();

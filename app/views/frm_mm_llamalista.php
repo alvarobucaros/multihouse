@@ -61,10 +61,6 @@
                     <input type="text" style="width: 80px;"  id='semaforo' ng-model="semaforo" 
                            ng-style="{color:  {red: 'red', green: 'green'}[ color ]}">
                     
-<!--<div ng-app="app" ng-controller="MyCtrl" ng-style="{
-   color:       {blueish: 'blue', greenish: 'green'}[ color ], 
-  'font-size':  {0: '12px', 1: '18px', 2: '26px'}[ zoom ]
-}"></div>                    -->
                     
                 </div>
             </div>
@@ -129,6 +125,6 @@
         </div>
 </div>
 
-<script src="controller/mm_llamalista.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_llamalista.ctrl.min.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Aug 26, 2018 10:18:56   <<<<<<< -->

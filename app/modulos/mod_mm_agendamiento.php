@@ -49,6 +49,9 @@ switch ($op)
     case 'dtl':
         deleteTercerosLista($data); 
         break;
+    case 'dtm':
+        deleteTema($data); 
+        break;       
     case 'atl':
         adicionaTercerosLista($data);
         break;
@@ -181,10 +184,10 @@ function  leeUnRegistro($data)
        
             $query = "INSERT INTO mm_agendainvitados (invitado_agendaId, invitado_nombre, invitado_empresa, " . 
                    " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, " . 
-                   " invitado_orden, invitado_causa)" . 
+                   " invitado_orden, invitado_causa, invitado_comite, invitado_empresaID )" . 
                    " SELECT " . $last_id. " AS agenda_id, " . 
                    " asistente_nombre, asistente_empresa, asistente_cargo, asistente_celuar, " . 
-                   " asistente_email , 'S', asistente_titulo, 0 as orden,'' " . 
+                   " asistente_email , 'S', asistente_titulo, 0 as orden,'', asistente_comite, asistente_empresaId " . 
                    " FROM mm_asistentes WHERE asistente_comite = " . $rec[0];
             mysqli_query($con, $query);
             
@@ -392,7 +395,7 @@ function  leeUnRegistro($data)
                 " FROM mm_agendamiento ".
                 " INNER JOIN mm_comites ON agenda_comiteId = comite_id".
                 " INNER JOIN mm_salones ON agenda_salonId = salon_id ".
-                " WHERE agenda_comiteId = " . $comite_id . " AND agenda_enFirme= 'S' AND agenda_conCitacion = 'S'";
+                " WHERE agenda_comiteId = " . $comite_id . " AND agenda_enFirme= 'S' AND agenda_conCitacion = 'S' AND agenda_acta = 0";
         $result = mysqli_query($con, $query); 
         $info='';
          if(mysqli_num_rows($result) != 0)
@@ -421,9 +424,11 @@ function  leeUnRegistro($data)
         $empresa=$data->empresa;
         $query=" SELECT invitado_id, invitado_orden, invitado_nombre, invitado_empresa, invitado_cargo, invitado_asistio , " . 
                " CASE invitado_titulo WHEN 'S' THEN 'Secretario' WHEN 'T' THEN 'Transcriptor' WHEN 'P' " . 
-               " THEN 'Presidente' ELSE '' END AS  invitado_titulo, invitado_celuar, invitado_email ".
-               " FROM mm_agendainvitados  WHERE invitado_agendaId = " . $agendaId . ' ORDER BY invitado_orden' ;       
+               " THEN 'Presidente' ELSE '' END AS  invitado_titulo, invitado_celuar, invitado_email, invitado_comite, invitado_empresaId ".
+               " FROM mm_agendainvitados  WHERE invitado_agendaId = " . $agendaId . " AND invitado_empresaId = " .$empresa . 
+               " ORDER BY invitado_orden " ;       
         $result = mysqli_query($con, $query);
+//echo $query;        
         if(mysqli_num_rows($result) != 0)  
           { 
               while($row = mysqli_fetch_assoc($result)) { 
@@ -451,11 +456,23 @@ function  leeUnRegistro($data)
         return $info;
      }
     
+    function deleteTema($data){
+       $objClase = new DBconexion(); 
+        $con = $objClase->conectar();
+        $arr = array(); 
+        $tema_id = $data->tema_id; 
+        $query=" DELETE FROM mm_agendatemas WHERE tema_id = " . $tema_id;
+        $result = mysqli_query($con, $query);
+        $info = 'Ok';
+        echo $info;
+        return $info;
+    } 
+     
     function adicionaTercerosLista($data){
        $objClase = new DBconexion(); 
         $con = $objClase->conectar();
         $datos = $data->datos; 
-      
+//echo $datos;     //4||nomb||cargo||emp||S||N||||0||0||2||celu||ema||0||1 
         $invitado_orden = 0;
         $rec = explode("||",$datos);
         $query = "SELECT max(invitado_orden) + 1 AS orden FROM mm_agendainvitados";
@@ -467,10 +484,12 @@ function  leeUnRegistro($data)
               } 
           }
         $query="INSERT INTO mm_agendainvitados (invitado_agendaId, invitado_nombre, invitado_empresa, " . 
-               " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden) " . 
-               " VALUES ($rec[6], '". $rec[1] . "', '". $rec[2] . "', '". $rec[3] . "', '". $rec[4] . "', '". $rec[5] . 
-                "', 'S', '', '".$invitado_orden."') ";
+               " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden, invitado_causa, " .
+                "invitado_comite, invitado_empresaId) " . 
+               " VALUES ($rec[9], '". $rec[1] . "', '". $rec[3] . "', '". $rec[2] . "', '". $rec[10] . "', '". $rec[11] . 
+               "','S','" . $rec[5] . "', '".$invitado_orden."','',". $rec[0] . ",". $rec[13] . ") ";
         $result = mysqli_query($con, $query);
+//echo $query;        
         $info = 'Ok';
         echo $info;
         return $info;
@@ -496,19 +515,18 @@ function  leeUnRegistro($data)
                " VALUES (" .$rec[9] . ", '" .$rec[1] . "', '" .$rec[3] . "', '" .
                 $rec[2] . "', '" . $rec[10] . "', '" . $rec[11] . "', '". $rec[4] . "', '" .
                 $rec[5] . "', '" . $rec[8] . "','')" ;
+ //echo $query;                    
             }
         }
         
-  
-        
-        else {
+      else {
         $query="UPDATE mm_agendainvitados SET
                 invitado_agendaId =  " .$rec[9] . ", " .
                 " invitado_nombre =  '" .$rec[1] . "', " .
                 " invitado_empresa =  '" .$rec[3] . "', " .
                 " invitado_cargo =  '" .$rec[2] . "', " .
                 " invitado_asistio =  '" .$rec[4] . "', " .
-                " invitado_titulo =  '" .$rec[13] . "', " .
+                " invitado_titulo =  '" .$rec[5] . "', " .
                 " invitado_orden = '" .$rec[8] . "', " .
                 " invitado_causa =  '" .$rec[6] . "', " .
                 " invitado_celuar = '" .$rec[10] . "', " .
@@ -582,7 +600,8 @@ function  leeUnRegistro($data)
         $rec = explode("||",$datos);
         $tipo="GRAL";
         if ( $rec[6] != 'G'){$tipo="PDNT";}
-//print_r($datos);
+      
+/// print_r($datos);
         if($rec[0] == 0){        
             $tema_orden=0;
             $query="select max(tema_orden) + 1 As orden from mm_agendatemas where tema_agendaId =  ".  $rec[0];
@@ -594,10 +613,10 @@ function  leeUnRegistro($data)
                   } 
               }       
             $query="INSERT INTO mm_agendatemas (tema_agendaId, tema_empresa, tema_comite, tema_titulo, tema_detalle, ".
-                   " tema_tipo, tema_responsable,  tema_fechaAsigna,  tema_estado, tema_orden,  tema_fechaCumple ) ".
+                   " tema_tipo, tema_responsable,  tema_fechaAsigna,  tema_estado, tema_orden,  tema_fechaCumple, tema_desarrollo ) ".
                    " VALUES (" . $rec[1] . ", " .$rec[2] . ", '" . $rec[3] . "', '" . $rec[4] . "', '" . $rec[5] . 
                     "', '" . $tipo . "', '" .   $rec[7] .  "', '" . $rec[9] . "', '" .
-                    $rec[11] . "', '" .   $rec[13] .  "','000-00-00')";
+                    $rec[11] . "', '" .   $rec[13] .  "','".$rec[8]."', '" . $rec[10] . "')";
            
         }else{
             $query = "UPDATE mm_agendatemas SET " .
@@ -693,7 +712,7 @@ function  leeUnRegistro($data)
         $agenda_id = $data->agenda_id;
         $parametro = $data->parametro;
         
-        $query = "update  mm_agendamiento SET agenda_enFirme = 'N', agenda_conCitacion = 'N'";
+        $query = "update  mm_agendamiento SET agenda_enFirme = 'N', agenda_conCitacion = 'N', agenda_revisa = agenda_acta, agenda_acta = 0";
         if($parametro == 'I'){  
             $query .=  ", agenda_estado ='A' ,agenda_causal = ''";}       
         $query .=  " WHERE agenda_id = " . $agenda_id;
@@ -793,7 +812,7 @@ function  leeUnRegistro($data)
             $result = mysqli_query($con, $query); 
        if($horaIni<$horaFin){
            if($intervaloCalendario=='M'){
-               if($minuAux=='00')
+               if($minuAux==='00')
                {
                   $minuAux='30'; 
                }
@@ -816,8 +835,7 @@ function  leeUnRegistro($data)
   // echo $json;
         $query = "SELECT hora,detalle FROM mm_temp01 ORDER BY hora  "; 
         $result = mysqli_query($con, $query); 
-        $info='';
- 
+   
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)
          { 
@@ -836,29 +854,63 @@ function  leeUnRegistro($data)
         $rec = explode('||',$dato) ;
         $fi = $rec[3] . " 00:00:00";
         $ff = $rec[4] . " 23:55:00";
-        $query = "SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_enFirme,  ".
-                 " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , tema_titulo, tema_detalle  ".
-                 " FROM mm_agendamiento  ".
-                 " LEFT JOIN mm_agendatemas ON tema_agendaId = agenda_id  ".
-                 " WHERE agenda_empresa = ". $rec[6] . " AND agenda_comiteId = ". $rec[0] .
-                 " AND agenda_fechaDesde > '". $fi . "'  AND agenda_fechaDesde < '". $ff . "'".
+        $where = "agenda_empresa = " . $rec[6]. " AND agenda_fechaDesde > '". $fi . "'  AND agenda_fechaHasta < '". $ff . "'".
                  " AND agenda_acta >= ". $rec[1] . " AND  agenda_acta <= ". $rec[2] ; 
-        if( $rec[5] != ''){
-            $query .= "AND (tema_titulo LIKE '%".$rec[5]."%' OR  tema_detalle  LIKE '%".$rec[5]."%')" ;  
+        $whereTema = "";
+        $whereAnexos = "";
+        $whereInvitado="";
+        if($rec[5] != ''){ $whereTema = " WHERE  (tema_titulo LIKE '%". $rec[5] ."%' OR tema_detalle  LIKE '%". $rec[5] .
+                                        "%' OR tema_desarrollo  LIKE '%". $rec[5] ."%' )";}
+        if($rec[7] != ''){ $whereAnexos = " (anexos_anexo = '%". $rec[7] ."%' OR anexos_descripcion = '%". $rec[7] ."%' ) ";  }  
+        if($rec[8] != ''){ $whereInvitado = " WHERE (invitado_nombre = '%". $rec[8] ."%' OR invitado_cargo = '%". $rec[8] ."%' ) ";  }  
+        if ($rec[0] >  0 ){ $where .= " AND agenda_comiteId = ". $rec[0];}   
+        
+        $query = " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme, " .
+                " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , comite_id, 'Tema' as tp," .
+                " CONCAT(tema_tipo, ': ', tema_titulo, ' ', tema_detalle) tema,  tema_desarrollo,  tema_responsable, " .
+                " CONCAT(tema_fechaAsigna, ' ', tema_fechaCumple) fechaDesde_Hasta, tema_agendaId  " .
+                " FROM mm_agendamiento  " . 
+                " LEFT JOIN mm_agendatemas ON tema_agendaId = agenda_id  " .
+                " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
+                $whereTema . 
+                " UNION  " .
+                " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
+                " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal ,  comite_nombre ,invitado_comite, 'Invitado' as tp, invitado_nombre,  " .
+                " invitado_cargo, invitado_celuar, invitado_asistio, invitado_agendaId  " .
+                " FROM mm_agendamiento  " .
+                " LEFT JOIN mm_agendainvitados ON invitado_agendaId = agenda_id  " . 
+                " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
+                $whereInvitado ;
+                if($rec[9] != 'N'){
+                $query .= " UNION  " .
+                " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
+                    " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , anexos_comiteid, 'Anexo' as tp, anexos_anexo,  " .
+                    " anexos_descripcion, '' as a, '' as b , anexos_agendaid  " .
+                    " FROM mm_agendamiento  " .
+                    " LEFT JOIN mm_agendaanexos ON anexos_agendaid = agenda_id  " . $whereAnexos .
+                    " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" ;
                 }
-      
+        $query .=  " WHERE " . $where .                          
+                "  ORDER BY comite_id desc, agenda_id, tp Desc ";       
+
         $result = mysqli_query($con, $query); 
-        $info='';
- 
-         $arr = array(); 
-         if(mysqli_num_rows($result) != 0)
-         { 
-             while($row = mysqli_fetch_assoc($result)) {
-                 $arr[] = $row;
-              }
-         } 
-      echo $json_info = json_encode($arr); 
-  
+        if($rec[10] === 'P'){
+            $agenda=0;
+            $arr = array(); 
+            if(mysqli_num_rows($result) != 0)
+            { 
+                while($row = mysqli_fetch_assoc($result)) {
+                    if ($agenda != $row['agenda_id']){
+                    $arr[] = $row;
+                    $agenda = $row['agenda_id'];
+                 }
+                }
+            } 
+            echo $json_info = json_encode($arr); 
+        }  else {
+            echo $result;
+            return $result;
+        }
     }
     
  function convocatoria($data)
@@ -868,27 +920,34 @@ function  leeUnRegistro($data)
         $dt = $data->datos; 
         $dato = explode('||',$dt) ;
         $acta=0;
-        $query = "SELECT agenda_acta FROM mm_agendamiento  WHERE agenda_id = " . $dato[1] . " AND agenda_empresa = " . $dato[2];     
+        $agenda_revisa=0;
+        $query = "SELECT agenda_acta, agenda_revisa FROM mm_agendamiento  WHERE agenda_id = " . $dato[1] . " AND agenda_empresa = " . $dato[2];     
         $result = mysqli_query($con, $query); 
         if(mysqli_num_rows($result) != 0)  
         { 
             while($row = mysqli_fetch_assoc($result)) { 
                 $acta=$row['agenda_acta'];
+                $agenda_revisa = $row['agenda_revisa'];
            } 
         }
         
         if ($acta == 0){
-            $query = "UPDATE  mm_comites SET comite_consecActa =  comite_consecActa + 1 WHERE comite_id = " . $dato[0] . 
-                    "  AND comite_empresa = " . $dato[2];
-             
-            $result = mysqli_query($con, $query); 
-            $query = "SELECT comite_consecActa FROM mm_comites WHERE comite_id = " . $dato[0] . " AND comite_empresa = " . $dato[2];
-            $result = mysqli_query($con, $query); 
-            while($row = mysqli_fetch_assoc($result)) { 
-                $acta=$row['comite_consecActa'];            
+            if ($agenda_revisa > 0){
+                $acta = $agenda_revisa;
+            }
+            else{
+                $query = "UPDATE  mm_comites SET comite_consecActa =  comite_consecActa + 1 WHERE comite_id = " . $dato[0] . 
+                        "  AND comite_empresa = " . $dato[2];
+
+                $result = mysqli_query($con, $query); 
+                $query = "SELECT comite_consecActa FROM mm_comites WHERE comite_id = " . $dato[0] . " AND comite_empresa = " . $dato[2];
+                $result = mysqli_query($con, $query); 
+                while($row = mysqli_fetch_assoc($result)) { 
+                    $acta=$row['comite_consecActa'];            
+                    }
             }
         }
-        $query = "UPDATE mm_agendamiento SET agenda_ProxCitacion = '" . $dato[3] . "', agenda_acta = " . $acta . 
+        $query = "UPDATE mm_agendamiento SET agenda_ProxCitacion = '" . $dato[3] . "', agenda_acta = " . $acta . ", agenda_revisa = 0" .
                 " WHERE agenda_id = " . $dato[1] . " AND agenda_empresa = " . $dato[2];
         $result = mysqli_query($con, $query);
         $info = 'Ok||Se ha Creado/Actualizado el acta '.$acta;
