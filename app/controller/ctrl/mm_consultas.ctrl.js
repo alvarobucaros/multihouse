@@ -91,7 +91,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         dato= $scope.comiteId+'||'+$scope.registro1.agenda_actaDesde+'||'+$scope.registro1.agenda_actaHasta+'||'+$scope.registro1.agenda_fechaDesde
         +'||'+$scope.registro1.agenda_fechaHasta+'||'+$scope.registro1.tema+'||'+$scope.empresa+'||'+anexoDescripcion  +'||'+asistente 
         +'||'+anexos+'||P';
-        if (confirm('Va a imprimir la consulta. Continua ?'+dato)) { 
+        if (confirm('Va a imprimir la consulta. Continua ?')) { 
                 location.href="reports/rpt_mm_consulta.php?dt="+dato; 
         }      
     };

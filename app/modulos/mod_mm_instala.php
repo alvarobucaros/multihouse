@@ -211,6 +211,7 @@ graba($file,"	agenda_estado char(1) DEFAULT NULL,  ");
 graba($file,"   agenda_causal varchar(100) DEFAULT NULL, "); 
 graba($file,"	agenda_ProxCitacion varchar(45) DEFAULT NULL, "); 
 graba($file,"	agenda_revisa int(11) NULL DEFAULT 0, ") ;
+graba($file,"	agenda_cierraActa char(1) NULL DEFAULT 'N', ") ;
 graba($file,"	PRIMARY KEY (agenda_id))  ");
 graba($file,"	ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Ocupacion de los salones'; ");
 graba($file,"	 ");

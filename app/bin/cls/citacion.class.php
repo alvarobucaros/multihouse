@@ -1,6 +1,6 @@
 <?php  
      class mm_agendamiento{ 
-        function traeComite($comite_td){
+        function traeComite($agenda_id){
             include_once("../bin/cls/clsConection.php");
             $objClase = new DBconexion();
             $con = $objClase->conectar();	
@@ -10,7 +10,7 @@
                      " FROM  mm_comites " .  
                      " INNER JOIN mm_agendamiento ON agenda_comiteId = comite_id " .
                      " INNER JOIN mm_salones  ON agenda_salonId = salon_id " .
-                     " WHERE agenda_id = " . $comite_td;
+                     " WHERE agenda_id = " . $agenda_id;
             $result = mysqli_query($con, $query); 
                       
             while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
@@ -25,7 +25,7 @@
             return $retorno;   
         }
         
-        function traeTemasComite($comite_td){
+        function traeTemasComite($agenda_id){
             include_once("../modulos/mod_mm_llamalista.php");
             $objClase = new DBconexion();
             $con = $objClase->conectar();
@@ -33,7 +33,7 @@
             {
                 $query = "SELECT tema_titulo, tema_detalle, tema_tipo, tema_responsable, tema_orden, " .
                         " tema_desarrollo, tema_fechaAsigna, tema_fechaCumple ".
-                     " FROM mm_agendatemas WHERE tema_agendaId =  ". $comite_td .
+                     " FROM mm_agendatemas WHERE tema_agendaId =  ". $agenda_id .
                      " ORDER BY tema_orden ";
                 $result = mysqli_query($con, $query);
                 return $result;                            
@@ -43,7 +43,7 @@
             }
         }
         
-        function traeInitadosComite($comite_td){
+        function traeInitadosComite($agenda_id){
             include_once("../bin/cls/clsConection.php");
             $objClase = new DBconexion();
             $con = $objClase->conectar();
@@ -52,7 +52,7 @@
                 $query = "SELECT invitado_id, invitado_agendaId, invitado_nombre, invitado_empresa,  " .
                      " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden, invitado_comite, invitado_empresaID  " .
                      " FROM mm_agendainvitados " .
-                     " WHERE invitado_comite =  ". $comite_td .
+                     " WHERE invitado_agendaId =  ". $agenda_id .
                      " ORDER BY invitado_orden  ";
                 $result = mysqli_query($con, $query);
                 return $result;                            
@@ -124,8 +124,8 @@
                 $whereTema . 
                 " UNION  " .
                 " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
-                " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal ,  comite_nombre ,invitado_comite, 'Ínvitado' as tp, invitado_nombre,  " .
-                " invitado_cargo, invitado_celuar, invitado_asistio, invitado_agendaId  " .
+                " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal ,  comite_nombre ,invitado_comite, 'Invitado' as tp, invitado_nombre,  " .
+                " invitado_cargo, invitado_celuar, Concat(invitado_asistio,'|',invitado_causa), invitado_agendaId  " .
                 " FROM mm_agendamiento  " .
                 " LEFT JOIN mm_agendainvitados ON invitado_agendaId = agenda_id  " . 
                 " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
@@ -142,6 +142,7 @@
             $query .=  " WHERE " . $where .                          
                     "  ORDER BY comite_id desc, agenda_id, tp Desc ";       
                  $result = mysqli_query($con, $query);
+                 
                 return $result;    
 
     }

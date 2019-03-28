@@ -82,26 +82,22 @@
     $pdf=new PDF('L');
     $pdf->AliasNbPages();
     $pdf->AddPage();
-    $pdf->SetFont('Arial','',8);
+    $pdf->SetFont('Arial','',9);
     $ln=$pdf->GetY();
     $today= getdate();
     $ln+=8; 
     $dato = $_GET['dt'];
     $rec = explode('||',$dato) ;
-    //dato=actaDesde actaHasta fechaDesde fechaHasta tema empresa Descripcion asistente anexos P';
-    //4||0||9999||2019-01-01||2019-12-31||||1 ||||||S||P
-//     SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,  
-//             agenda_conCitacion, agenda_acta, agenda_estado , agenda_causal , comite_nombre , 
-//             comite_id, 'Tema' as tp, CONCAT(tema_tipo, ': ', tema_titulo, ' ', tema_detalle) tema,  
-//             tema_desarrollo,  tema_responsable, CONCAT(tema_fechaAsigna, ' ', tema_fechaCumple) 
-//             fechaDesde_Hasta, tema_agendaId  
+
         include_once("../bin/cls/citacion.class.php");
         $obj = new mm_agendamiento();
 
         $resultado = $obj->consultaAgendas($dato);
+    
         $agenda=0;
         $tipo='';
-        $ln = linea($ln);
+        $ln += 5;
+        $ln = linea($ln,$pdf);
 
         while($row = mysqli_fetch_assoc($resultado))
         { 
@@ -110,47 +106,64 @@
                 $tema=0;
                 $anexo=0;
                 $invitados=0;
-                $fecha = fechar($row['agenda_fechaDesde'] .$row['agenda_fechaHasta']);
-                $ln=$pdf->GetY();
-                $ln = linea($ln);
+                $fecha='';
+                $fecha = fechar($row['agenda_fechaDesde'] ,$row['agenda_fechaHasta']);
+                $ln += 5;
+                $ln=$pdf->GetY()+5;
+                $ln = linea($ln,$pdf);
                 $pdf->SetXY(12, $ln);
                 $pdf->Cell(180,6, 'COMITE : '.utf8_decode($row['comite_nombre']) .' ' . utf8_decode($row['agenda_Descripcion']) .' - '. $fecha  ,0,1,'L');
             }
             if($row['tp'] == 'Tema'){
-                $ln = linea($ln);
+                $ln=$pdf->GetY();
+                $ln = linea($ln,$pdf);
                 if ($tema==0){
                     $pdf->SetXY(12, $ln);
-                    $pdf->Cell(10,8,'Temas');
+                    $pdf->Cell(10,6,'Temas');
                 }
                     $tema+=1;
-                    $pdf->SetXY(22, $ln);
-                    $pdf->Cell(180,8, utf8_decode($row['tema']) . ' -> Responsable: ' . utf8_decode($row['tema_responsable']) .' - Fecha asigna, cumple: '. $row['fechaDesde_Hasta']  ,0,1,'L');
-                    $ln = linea($ln);
-                    $pdf->SetXY(22, $ln);
-                    $pdf->MultiCell(210, 6, utf8_decode($row['tema_desarrollo'])); 
+                    $pdf->SetXY(28, $ln);
+                    $pdf->SetFont('Arial','B',9);
+                    $pdf->MultiCell(250,6, utf8_decode($row['tema']) . ' -> Responsable: ' . utf8_decode($row['tema_responsable']) 
+                            .' - Fecha asigna: '. $row['agenda_fechaDesde'] .' - Fecha cumplimiento: '. $row['agenda_fechaHasta']);
+                    $pdf->SetFont('Arial','',9);
+                    $ln=$pdf->GetY();
+                   // $ln += 5;
+                    $ln = linea($ln,$pdf);
+                    $pdf->SetXY(28, $ln);
+                    $pdf->MultiCell(250, 6, utf8_decode($row['tema_desarrollo'])); 
                     
                 }            
              if($row['tp'] == 'Anexo'){
-                $ln = linea($ln);
+                $ln += 8;
+                 $ln = linea($ln,$pdf);
                 if ($anexo==0){
                     $pdf->SetXY(12, $ln);
                     $pdf->Cell(10,6,'Anexos');
                 }
                     $anexo+=1;
-                    $pdf->SetXY(22, $ln);
+                    $pdf->SetXY(28, $ln);
                     $pdf->Cell(180,6, utf8_decode($row['tema_desarrollo']) . ' -> Archivo: ' . utf8_decode($row['tema']) ,0,1,'L');
                 } 
              if($row['tp'] == 'Invitado'){
-                $ln = linea($ln);
+                $ln += 8;
+                $ln=$pdf->GetY();
+                $ln = linea($ln,$pdf);
                 if ($invitados==0){
                     $pdf->SetXY(12, $ln);
                     $pdf->Cell(10,6,'Invitados');
                 }
+                    $asistio = 'Asistió';
+                    $arr = explode('|', $row['fechaDesde_Hasta']);
+                    if($arr[0]==='N'){$asistio ='No Asisitió ' .$arr[1] ;}
                     $invitados+=1;
-                    $pdf->SetXY(30, $ln);
-                    $pdf->Cell(180,6, utf8_decode($row['tema']) . ' -> Cargo: ' . utf8_decode($row['tema_desarrollo']) ,0,1,'L');
+                    $pdf->SetXY(28, $ln);
+                    $pdf->Cell(180,6, utf8_decode($row['tema']) . ' -> Cargo: ' . utf8_decode($row['tema_desarrollo']) .
+                          ',  ' .  utf8_decode($asistio),0,1,'L');
                 }                 
         }
+    $ln=$pdf->GetY()+3;   
+    $pdf->Cell(180,6, ' ---  Fin del Informe' ,0,1,'L');  
         
 $pdf->Output($pdf->archivo.'.pdf',''); 
 $pdf->Output();
@@ -160,8 +173,7 @@ function fechar($desde, $hasta){
     $fch2 = explode(' ',$fch1[0]);
     $fch3 = explode(' ', $hasta);
     $fch=explode('-',$fch2[0]);
-//    $hraD = substr($desde, 11,5);
-//    $hraH = substr($hasta, 11,5);
+
     $mes = $fch[1] - 1;
     $nomMes=Array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
         'Agosto','Septiembre','Otubre','Noviembre','Diciembre');
@@ -170,8 +182,8 @@ function fechar($desde, $hasta){
     return $return;
 }
 
-    function linea($ln){
-        $ln+=5;
+    function linea($ln,$pdf){
+       // $ln+=5;
         if ($ln >= 180){
          $pdf->AddPage();
          $ln=$pdf->GetY()+15; 

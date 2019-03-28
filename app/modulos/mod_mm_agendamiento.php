@@ -61,6 +61,9 @@ switch ($op)
     case 'ctl':
         cambiaTercerosLista($data);
         break;  
+    case 'cra':
+        CierraActa($data);
+        break;      
     case 'ctml':       
         cambiaTemaLista($data);
         break;
@@ -683,10 +686,11 @@ function  leeUnRegistro($data)
         $query = "SELECT agenda_id, salon_nombre, agenda_Descripcion, agenda_fechaDesde, ".
                  " agenda_fechaHasta,CASE agenda_enFirme WHEN 'S' THEN 'Si' ELSE  'No' END agenda_enFirme , ".
                  " CASE agenda_conCitacion  WHEN 'S' THEN 'Si' ELSE  'No' END agenda_conCitacion, agenda_acta, agenda_estado, agenda_causal, ".
-                 " CASE agenda_estado WHEN 'A' THEN ' ' ELSE 'Aplazada' END agenda_observa ".
+                 " CASE agenda_estado WHEN 'A' THEN ' ' ELSE 'Aplazada' END agenda_observa, agenda_cierraActa ".
                  " FROM mm_agendamiento ".
                  " INNER JOIN mm_salones ON agenda_salonId = salon_id ".
-                 " WHERE agenda_comiteId  = " .  $comite_Id . ' AND agenda_empresa = '.$empresa;
+                 " WHERE agenda_comiteId  = " .  $comite_Id . ' AND agenda_empresa = '.$empresa .
+                 " AND agenda_acta > 0 ";
         if($param =='excluye'){
            $query .= "  AND (agenda_enFirme='S' AND agenda_conCitacion='S' ) OR agenda_estado = 'I' ORDER BY agenda_fechaDesde DESC, agenda_acta DESC";
         }
@@ -712,7 +716,7 @@ function  leeUnRegistro($data)
         $agenda_id = $data->agenda_id;
         $parametro = $data->parametro;
         
-        $query = "update  mm_agendamiento SET agenda_enFirme = 'N', agenda_conCitacion = 'N', agenda_revisa = agenda_acta, agenda_acta = 0";
+        $query = "update  mm_agendamiento SET agenda_enFirme = 'S', agenda_conCitacion = 'S', agenda_revisa = agenda_acta, agenda_acta = 0";
         if($parametro == 'I'){  
             $query .=  ", agenda_estado ='A' ,agenda_causal = ''";}       
         $query .=  " WHERE agenda_id = " . $agenda_id;
@@ -913,6 +917,23 @@ function  leeUnRegistro($data)
         }
     }
     
+    function CierraActa($data){
+        $objClase = new DBconexion(); 
+        $con = $objClase->conectar(); 
+        if($con ){
+            $empresa = $data->empresa;
+            $agenda = $data->agenda;
+            $query = "UPDATE mm_agendamiento SET agenda_cierraActa = 'S'" .
+                    " WHERE agenda_empresa = '" . $empresa . "' AND agenda_id = '" .
+                    $agenda ."' ";    
+            $result = mysqli_query($con, $query); 
+
+                echo "Acta cerrada Ok";
+                return;
+          
+        }
+    }
+
  function convocatoria($data)
     {
         $objClase = new DBconexion(); 

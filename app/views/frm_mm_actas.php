@@ -7,7 +7,7 @@
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm" >
                                
                 <div class="form-group col-md-10">
-                    <label class=" milabel col-md-3" for="agenda_comiteId">{{form_agenda_comiteId}}</label>
+                    <label class="col-md-3" for="agenda_comiteId">{{form_agenda_comiteId}}</label>
                     <div class="col-md-8">
                     <select id='agenda_comiteId' name='agenda_comiteId' ng-model='agenda_comiteId'   
                             ng-change="updateComite()">
@@ -25,12 +25,16 @@
                 <h4>{{tituloFormulario}}</h4>            
                 <nav class="">
                    
-                    <button class="btn btn-primary btn-xs"
+                    <button class="btn btn-primary btn-xs" ng-show="btnActualiza"
                     ng-click="actualizaRegistro(registro2)">{{form_btnActualiza}}</button>
 
-                    <button class="btn btn-primary btn-xs"
-                    ng-click="anulaRegistro()">{{form_btnRegreso}}</button>                                         
+                    <button class="btn btn-primary btn-xs" ng-show="btnActualiza"
+                    ng-click="cierraActa()">{{form_btnCierra}}</button>                                         
 
+                    <button class="btn btn-primary btn-xs"
+                    ng-click="anulaRegistro()">{{form_btnRegreso}}</button> 
+                    
+                    <span ng-model="aviso">{{aviso}}</span>
                  </nav>       
             </form>
             <div  ng-show="datosOcultos"> 
@@ -66,11 +70,11 @@
                     <td>{{detail.agenda_observa}}</td>
                     <td>
                     <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" 
-                            confirm="Está seguro ?, {{form_btnEdita}}?"  title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
+                            title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
                     </td>
                     <td>
                     <button class="btn btn-danger btn-xs" ng-click="printInfo(detail)" id="boton"
-                            confirm="Está seguro ?, {{form_btnPrint}}?" title="{{form_btnPrint}}"><span class="glyphicon glyphicon-print"></span></button>
+                            title="{{form_btnPrint}}"><span class="glyphicon glyphicon-print"></span></button>
                     </td>
                     </tr>
                 </table>
