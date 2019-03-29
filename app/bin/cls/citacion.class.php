@@ -100,6 +100,9 @@
         $objClase = new DBconexion(); 
         $con = $objClase->conectar(); 
      //   $dato = $data->dato; 
+//        comiteId+'||'+registro1.agenda_actaDesde+'||'+registro1.agenda_actaHasta+'||'+registro1.agenda_fechaDesde
+//        +'||'+registro1.agenda_fechaHasta+'||'+registro1.tema+'||'+empresa+'||'+anexoDescripcion  +'||'+asistente 
+//        +'||'+anexos+'||P'; 4||0||9999||2019-01-01||2019-12-31||temas||1%20||anexos||invita||S||P
         $rec = explode('||',$data) ;
         $fi = $rec[3] . " 00:00:00";
         $ff = $rec[4] . " 23:55:00";
@@ -110,8 +113,8 @@
         $whereInvitado="";
         if($rec[5] != ''){ $whereTema = " WHERE  (tema_titulo LIKE '%". $rec[5] ."%' OR tema_detalle  LIKE '%". $rec[5] .
                                         "%' OR tema_desarrollo  LIKE '%". $rec[5] ."%' )";}
-        if($rec[7] != ''){ $whereAnexos = " (anexos_anexo = '%". $rec[7] ."%' OR anexos_descripcion = '%". $rec[7] ."%' ) ";  }  
-        if($rec[8] != ''){ $whereInvitado = " WHERE (invitado_nombre = '%". $rec[8] ."%' OR invitado_cargo = '%". $rec[8] ."%' ) ";  }  
+        if($rec[7] != ''){ $whereAnexos = " (anexos_anexo LIKE '%". $rec[7] ."%' OR anexos_descripcion LIKE '%". $rec[7] ."%' ) ";  }  
+        if($rec[8] != ''){ $whereInvitado = " WHERE (invitado_nombre LIKE '%". $rec[8] ."%' OR invitado_cargo LIKE '%". $rec[8] ."%' ) ";  }  
         if ($rec[0] >  0 ){ $where .= " AND agenda_comiteId = ". $rec[0];}   
         
         $query = " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme, " .
@@ -136,13 +139,16 @@
                     " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , anexos_comiteid, 'Anexo' as tp, anexos_anexo,  " .
                     " anexos_descripcion, '' as a, '' as b , anexos_agendaid  " .
                     " FROM mm_agendamiento  " .
-                    " LEFT JOIN mm_agendaanexos ON anexos_agendaid = agenda_id  " . $whereAnexos .
+                    " LEFT JOIN mm_agendaanexos ON anexos_agendaid = agenda_id  "  .
                     " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" ;
                 }
-            $query .=  " WHERE " . $where .                          
-                    "  ORDER BY comite_id desc, agenda_id, tp Desc ";       
+            $query .=  " WHERE "  . $where ;
+            if ($whereAnexos != ''){
+                $query .=  " AND "  . $whereAnexos;
+            }
+                 $query .=   "  ORDER BY comite_id desc, agenda_id, tp Desc ";       
                  $result = mysqli_query($con, $query);
-                 
+          //    return $query;   
                 return $result;    
 
     }

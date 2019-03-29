@@ -20,7 +20,7 @@ else if($rec[6]=='A'){
 else{
      $carpeta='../reports/images';
 }
-print_r($_FILES);
+// print_r($_FILES);
 $pas=$carpeta.'/';   //emp+'||'+com+'||'+acta+'||'+anno+'||'+desc;
 if(isset($_FILES["file"]["type"]))
 {

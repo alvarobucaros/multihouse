@@ -129,7 +129,8 @@ $('#idForm').slideToggle();
          
             $http.post('modulos/mod_mm_agendaanexos.php?op=b',{'op':'b', 'anexos_id':info.anexos_id}).success(function(data){
             if (data === 'Ok') {
-                leeAnexos(com, ag);
+               
+                leeAnexos( $scope.comiteId, $scope.agendaId);
                 alert ('Registro Borrado ');
             }
             });

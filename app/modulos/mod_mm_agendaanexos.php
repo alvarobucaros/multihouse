@@ -74,11 +74,7 @@ switch ($op)
         $base_directory='';
         while ($row = mysqli_fetch_assoc($result)){
             $base_directory=$row['anexos_ruta'];
-        } 
-        echo $base_directory+' ';
-        // ../actas/E00001/2019/comite4/acta1/12 - PROYECTO PRESUPUESTO DE INVERSIONES.pdf
-        if(unlink($base_directory.$_GET['file']))
-            echo "File Deleted.";
+        }   
         $query = "DELETE FROM mm_agendaanexos WHERE anexos_id=$data->anexos_id"; 
         mysqli_query($con, $query); 
         echo 'Ok'; 

@@ -93,7 +93,8 @@
         $obj = new mm_agendamiento();
 
         $resultado = $obj->consultaAgendas($dato);
-    
+    //    $pdf->MultiCell(250,6,$resultado );
+          
         $agenda=0;
         $tipo='';
         $ln += 5;
@@ -135,8 +136,9 @@
                     
                 }            
              if($row['tp'] == 'Anexo'){
-                $ln += 8;
-                 $ln = linea($ln,$pdf);
+                $ln += 4;
+                $ln=$pdf->GetY();
+                $ln = linea($ln,$pdf);
                 if ($anexo==0){
                     $pdf->SetXY(12, $ln);
                     $pdf->Cell(10,6,'Anexos');
@@ -162,6 +164,7 @@
                           ',  ' .  utf8_decode($asistio),0,1,'L');
                 }                 
         }
+    $ln=$pdf->GetY();
     $ln=$pdf->GetY()+3;   
     $pdf->Cell(180,6, ' ---  Fin del Informe' ,0,1,'L');  
         
