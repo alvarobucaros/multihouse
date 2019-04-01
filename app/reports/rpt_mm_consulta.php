@@ -168,7 +168,7 @@
     $ln=$pdf->GetY()+3;   
     $pdf->Cell(180,6, ' ---  Fin del Informe' ,0,1,'L');  
         
-$pdf->Output($pdf->archivo.'.pdf',''); 
+$pdf->Output($pdf->archivo.'.pdf','D'); 
 $pdf->Output();
 
 function fechar($desde, $hasta){

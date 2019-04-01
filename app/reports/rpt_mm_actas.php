@@ -251,7 +251,7 @@
             $ln=$pdf->GetY();
             $ln+=5;
             $pdf->SetXY(30, $ln);
-            $pdf->Cell(88,6, 'CONVOCATORIA :',0,1,'L'); 
+            $pdf->Cell(88,6, 'PROXIMA CONVOCATORIA :',0,1,'L'); 
             $ln+=5;
             $pdf->SetXY(35, $ln);
             $pdf->Cell(88,6, $convocatoria,0,1,'L'); 
@@ -273,6 +273,10 @@
         $pdf->Cell(80,6, 'Transcriptor: '.utf8_decode(trim($trascriptor)),0,1,'L');
         $resultado = $obj->traeAnexos($empresa, $comite_id, $agenda_id);
         $row_cnt = 0;
+        if ($ln >= $maxlin){
+            $pdf->AddPage();
+            $ln=$pdf->GetY()+6; 
+         }
         while($row = mysqli_fetch_assoc($resultado))
         {
               $row_cnt = $resultado->num_rows;       
@@ -280,7 +284,11 @@
         if ($row_cnt > 0){
             $ln += 8;
             $pdf->SetXY(30, $ln);
-            $pdf->Cell(80,6, 'Esta acta tiene '.$row_cnt. utf8_decode(' anexo(s) que puede consultar(los) en la Aplicación :'),0,1,'L');  
+        //    $pdf->SetFont('Arial','B'); 
+        //    $pdf->Cell(80,2, 'NOTA: ',0,1,'L');
+        //    $pdf->SetFont('Arial','',8);
+           // $pdf->SetXY(38, $ln);
+            $pdf->Cell(80,6, 'NOTA :  Esta acta tiene '.$row_cnt. utf8_decode(' anexo(s) que puede consultar(los) en la Aplicación :'),0,1,'L');  
             mysqli_data_seek($resultado, 0);
             $anexos='';
             while($row = mysqli_fetch_assoc($resultado))
@@ -293,7 +301,8 @@
             
             
         }
-$pdf->Output($pdf->archivo.'.pdf',''); 
+$pdf->close();
+$pdf->Output($pdf->archivo.'.pdf','D'); 
 $pdf->Output();
 
 
