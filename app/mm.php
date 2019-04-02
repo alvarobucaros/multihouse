@@ -10,7 +10,6 @@ else{
  header('Content-Type: text/html; charset=utf-8');
  if(isset($_SESSION['mm'])) {
     $datos = explode('||',$_SESSION['mm']);
-  //  print_r($datos);
  } else {
     echo ('error en autenticacion');
     $start="Location:login.php?err=e&s=NoHay-Session_mm";

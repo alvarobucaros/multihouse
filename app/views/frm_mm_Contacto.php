@@ -37,13 +37,13 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-12 field">                                           
+                                <div class="col-md-6 field">                                           
                                         <input type="submit" id="submit_btn" class="btn btn-primary" ng-click="sendMail(registroMail)" value={{form_btnEnvia}}>
                                         <input type="button"class="btn btn-primary" ng-click="reset()" value={{form_btnBorra}}>
+                                </div>                            
+                                <div class="col-md-6 field" ng-show="retorno">
+                                    <input type="text" name="retorno" id="retorno" class="form-control"  ng-model="registroMail.retorno" readonly="yes" value="{{registroMail.retorno}}">
                                 </div>
-                            </div>
-                            <div class="col-md-12 field" ng-show="retorno">
-                                <input type="text" name="retorno" id="retorno" class="form-control"  ng-model="registroMail.retorno" readonly="yes" value="{{registroMail.retorno}}">
                             </div>
                     </form>
                 </div>
@@ -53,5 +53,5 @@
     </section>
 </div>
 
-    <script src="controller/min/mm_contacto.ctrl.min.js" type="text/javascript"></script>
+    <script src="controller/ctrl/mm_contacto.ctrl.js" type="text/javascript"></script>
  

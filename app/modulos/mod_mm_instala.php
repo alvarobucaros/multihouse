@@ -187,7 +187,7 @@ graba($file,"	invitado_empresa varchar(120) DEFAULT NULL,  invitado_cargo varcha
 graba($file,"	invitado_celuar varchar(20) DEFAULT NULL,  invitado_email varchar(120) DEFAULT NULL,  ");
 graba($file,"	invitado_asistio char(1) DEFAULT NULL,  invitado_titulo char(1) DEFAULT NULL,  ");
 graba($file,"	invitado_orden int(11) DEFAULT NULL,  invitado_causa varchar(45) DEFAULT NULL,  ");
-graba($file,"	invitado_comite int(11) DEFAULT NULL,  invitado_causa invitado_empresaID(11) DEFAULT NULL,  ");
+graba($file,"	invitado_comite int(11) DEFAULT NULL,  invitado_empresaID int(11) DEFAULT NULL,  ");
 
 graba($file,"	PRIMARY KEY (invitado_id) ");
 graba($file,"	) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ; ");            

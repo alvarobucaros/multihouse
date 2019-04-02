@@ -90,10 +90,10 @@
 
 </body>
 <script src="app/js/jQuery-2.2.0.min.js" type="text/javascript"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.1/angular.min.js" type="text/javascript"></script>
 <script src="app/js/bootstrap.js" type="text/javascript"></script>
 <script src="app/js/angular-script.js" type="text/javascript"></script>
-<script src="app/controller/mm_instala.ctrl.js" type="text/javascript"></script>
 
+<script src="app/js/angular.min.js" type="text/javascript"></script>
+<script src="app/controller/ctrl/mm_instala.ctrl.js" type="text/javascript"></script>
 </html>
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Nov 04, 2018 12:51:53   <<<<<<< -->

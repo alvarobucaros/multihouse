@@ -39,18 +39,18 @@ function enviaCorreo($data){
 
     $mail = new PHPMailer\PHPMailer\PHPMailer();
     $dato = $data->dato; 
-    $rec = explode("||",$dato);
+    $rec = explode("||",$dato); //Alvaro||temita||alvaro.oycsoft@#gmail.com||2468||este es un texto
     $mpre = explode("||",$empresa);
-    $nombre = 'MMeeting'; //$rec[0];
+    $nombre = 'MMeeting '. $rec[0];
     $tema = $rec[1];
-    $address = $rec[2];
+    $address = $mpre[9];
     $celular = $rec[3];
-
+    $mensage = $rec[4];
     $cuerpo= '<p>'.'Empresa: '.$mpre[0]. ' Nit: ' . $mpre[1]. ' Dirección: ' .$mpre[2]. ' Teléfono: ' . $mpre[3]. 
                 ' Ciudad: ' .$mpre[4].'</p>';
-     $cuerpo .= '<p>'.' APP: ' . $mpre[6]. ' DB: ' .$mpre[7]. '</p>';
-     $cuerpo .= '<p>'.' Mensage: '. $rec[4]. '</p>'; 
-    $emailFrom = $mpre[9];
+    $cuerpo .= '<p>'.' APP: ' . $mpre[6]. ' DB: ' .$mpre[7]. '</p>';
+    $cuerpo .= '<p>'.' Mensage: '. $mensage. '</p>'; 
+    $emailFrom = $rec[2];
     $nombreFrom=$mpre[0];
  //echo $emailFrom;    
     $mail->SMTPDebug = 2;
@@ -58,11 +58,12 @@ function enviaCorreo($data){
     $mail->setFrom($emailFrom, $nombre );
     $mail->addAddress($address, $nombreFrom );
     $mail->Subject  = $tema;
-   // $mail->Body     = $message;
-     $mail->MsgHTML($cuerpo);
+
+    $mail->MsgHTML($cuerpo);
+   
     $mail->IsHTML(true); 
     $mail->CharSet="utf-8";
-    $info='El mensaje se ha enviado';
+    $info='El mensaje se ha enviado a '. $nombre . ' ' . $address . '\n Revise también en la carpeta de span !!!' ;
     if(!$mail->send()) {
       $info = 'El mesaje no se pudo enviar: ';
       $info .= 'Error: ' . $mail->ErrorInfo;
