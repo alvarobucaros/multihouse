@@ -511,14 +511,15 @@ function  leeUnRegistro($data)
             while($row = mysqli_fetch_assoc($result)) { 
                   $Nr = $row['Nr']; 
               } 
-            if($Nr==0){  
-            $query = "INSERT INTO mm_agendainvitados(invitado_agendaId, invitado_nombre, invitado_empresa, " . 
-               " invitado_cargo, invitado_celuar,  invitado_email," . 
-               "  invitado_asistio, invitado_titulo, invitado_orden, invitado_causa) " . 
+            if($Nr==0){                      
+        $query="INSERT INTO mm_agendainvitados (invitado_agendaId, invitado_nombre, invitado_empresa, " . 
+               " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden, invitado_causa, " .
+                "invitado_comite, invitado_empresaId) " .                     
+                    
                " VALUES (" .$rec[9] . ", '" .$rec[1] . "', '" .$rec[3] . "', '" .
                 $rec[2] . "', '" . $rec[10] . "', '" . $rec[11] . "', '". $rec[4] . "', '" .
-                $rec[5] . "', '" . $rec[8] . "','')" ;
- //echo $query;                    
+                $rec[5] . "', '" . $rec[8] . "','','". $rec[0] . "', '" . $rec[14] . "')" ;      
+        
             }
         }
         
@@ -604,7 +605,7 @@ function  leeUnRegistro($data)
         $tipo="GRAL";
         if ( $rec[6] != 'G'){$tipo="PDNT";}
       
-/// print_r($datos);
+/// print_r($datos); 0||4||1 ||2||te||deta||G||resp|| ||2019-4-4|| ||A||0||3
         if($rec[0] == 0){        
             $tema_orden=0;
             $query="select max(tema_orden) + 1 As orden from mm_agendatemas where tema_agendaId =  ".  $rec[0];

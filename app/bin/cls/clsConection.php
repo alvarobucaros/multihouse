@@ -97,8 +97,8 @@ class DBconexion{
             $Clave = $this->funde($data[3]); 
             $Ctrl = $this->funde($data[4]); 
             $mictl = $Servidor .'||' . $BaseDatos .'||' . $Usuario  .'||' . $Clave.'||' . $dat[0]   .'||' . $dat[1];
-//            echo $mictl;
-//           return  localhost||mmeeting||root||123||admin@com.co||123Array
+//           echo $mictl;
+//          return  localhost||mmeeting||root||123||admin@com.co||123Array
             
             $obj = new DBconexion();
             $con = $obj->conectar();
@@ -169,7 +169,7 @@ class DBconexion{
                                     $result .= "Error: Registro incorrecto . " . $autenticaCon;
                                 }
                             }else{
-                                $result .= "Error: Clave invalida";
+                                $result .= "Error: Clave invalida " ;
                             }
                           }else{
                             $result .= "Error: Usuario con fecha de ingreso expirada";

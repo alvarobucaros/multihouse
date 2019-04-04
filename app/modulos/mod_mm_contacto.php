@@ -118,6 +118,7 @@ function enviaInvitacionComite($data){
     $cuerpo .= '<p>'.$empresaDir. '</p>';
     $invitado_id=0;
     $info='';
+    ob_end_clean();
     $enviados=0;
     $mensaje='';
     $nombre = 'MMeeting';
@@ -173,7 +174,7 @@ function enviaInvitacionComite($data){
         }else{$enviados +=1;}  
     }
     if ($info == ''){
-        $info= 'Ok||' . $enviados;
+        $info .= 'Ok||' . $enviados;
     }
     //  Actuaiza citacion y lo deja en firme
     $objClase = new DBconexion(); 

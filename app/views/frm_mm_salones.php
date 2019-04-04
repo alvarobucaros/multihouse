@@ -151,6 +151,6 @@
 </div>
 
 
-<script src="controller/min/mm_salones.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrl/mm_salones.ctrl.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por:   Alvaro Ortiz Wednesday,Oct 26, 2016 3:38:47   <<<<<<< -->

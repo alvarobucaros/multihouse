@@ -131,6 +131,8 @@ $scope.registro = function(info){ alert ('inserta');};
     {
         er='';
         em=$('#e').val();
+        ob = $('#salon_observaciones').val();
+        if(ob===undefined){ob='No hay';}
         $('#salon_empresa').val(em);
         if($('#salon_id').val()===''){er+='falta id			\n';}
         if($('#salon_empresa').val()===''){er+='falta empresa\n';}
@@ -140,14 +142,16 @@ $scope.registro = function(info){ alert ('inserta');};
         if($('#salon_apoyovisual').val()===''){er+='falta apoyos\n';}
         if($('#salon_responsable').val()===''){er+='falta responsable\n';}
         if($('#salon_activo').val()===''){er+='falta activo\n';}
-        if($('#salon_observaciones').val()===''){$('#salon_observaciones').val('No hay');}
+      
+       
+// alert(ob); return;
         info.salon_empresa= em;
         $('#salon_empresa').val(em);
         if (er==''){
         $http.post('modulos/mod_mm_salones.php?op=a',{'op':'a', 'salon_id':info.salon_id, 'salon_empresa':info.salon_empresa, 
             'salon_nombre':info.salon_nombre, 'salon_ubicacion':info.salon_ubicacion, 'salon_capacidad':info.salon_capacidad, 
             'salon_apoyovisual':info.salon_apoyovisual, 'salon_responsable':info.salon_responsable, 'salon_activo':info.salon_activo, 
-            'salon_observaciones':info.salon_observaciones}).success(function(data){
+            'salon_observaciones':ob}).success(function(data){
         if (data === 'Ok') {
             getInfo($scope.empresa);
             alert ('Registro Actualizado ');

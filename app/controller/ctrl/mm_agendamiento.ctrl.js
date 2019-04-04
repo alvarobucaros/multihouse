@@ -222,13 +222,14 @@ function getIni()
     };
  
      $scope.updateInfoTercero = function(detailAsiste){
+        empresa= $scope.empresa; 
         var datos = $scope.registro1.agenda_comiteId+'||'+$scope.registroTercero.asistente_nombre+'||'+$scope.registroTercero.asistente_cargo
         datos += '||'+ $scope.registroTercero.asistente_empresa + '||N||'
         datos += $scope.registroTercero.asistente_titulo + '|| ||'
         datos += $scope.registroTercero.asistente_id + '||'+  $scope.registroTercero.asistente_orden +'||'+$scope.agenda_id+'||';
         datos += $scope.registroTercero.asistente_celular + '||'+  $scope.registroTercero.asistente_email+ '||'
-        datos += $scope.registro1.invitado_id  + '||'+  $scope.registroTercero.asistente_titulo
-        $http.post('modulos/mod_mm_agendamiento.php?op=ctl',{'op':'ctl', 'datos':datos}).success(function(data){           
+        datos += $scope.registro1.invitado_id  + '||'+  $scope.registroTercero.asistente_titulo+ '||'+   empresa;
+        $http.post('modulos/mod_mm_agendamiento.php?op=ctl',{'op':'ctl', 'datos':datos}).success(function(data){    
         if (data === 'Ok') {
            traeInvitados($scope.agenda_id);
             $scope.registroTercero={};
@@ -430,27 +431,27 @@ function getIni()
     };
     
     $scope.vaAnularRegistro = function(registro5){
-        datos = $scope.registro5.agenda_Id +'||'+ $scope.registro5.agenda_comiteCausaAnulacion+'||I||Anula';       
-        $http.post('modulos/mod_mm_agendamiento.php?op=ara',{'op':'ara', 'datos':datos}).success(function(data){           
-            rec = data.split('||');
-            if (rec[0] === 'Ok') {
-                $scope.modelTab3 = false;
-                $scope.modelTab4 = false;
-                $scope.modelTab5 = false;
-                $scope.listaComite = false;
-                $scope.registro1 ={};
-                alert (rec[1]);                
+        nota = 'Va a dejar Inactivo el comité: ' +$scope.agenda_Descripcion;
+        if (confirm( nota +' continúa ?')) { 
+            datos = $scope.registro5.agenda_Id +'||'+ $scope.registro5.agenda_comiteCausaAnulacion+'||I||Anula';       
+            $http.post('modulos/mod_mm_agendamiento.php?op=ara',{'op':'ara', 'datos':datos}).success(function(data){           
+                rec = data.split('||');
+                if (rec[0] === 'Ok') {
+                    $scope.modelTab3 = false;
+                    $scope.modelTab4 = false;
+                    $scope.modelTab5 = false;
+                    $scope.listaComite = false;
+                    $scope.registro1 ={};
+                    alert (rec[1]);                
+                }
+            });
         }
-        });
-        
     };
     
     $scope.vaAcitarRegistro = function(registro5){
         $scope.enviaImg = true;
         datos = $scope.registro5.agenda_Id +'||'+ $scope.registro5.agenda_comiteNotaCitacion;  
-//alert(datos);
-        $http.post('modulos/mod_mm_contacto.php?op=eic',{'op':'eic','dato':datos}).success(function(data){
-//aletr(data);            
+        $http.post('modulos/mod_mm_contacto.php?op=eic',{'op':'eic','dato':datos}).success(function(data){            
             rec = data.split('||');
             if (rec[0] === 'Ok') {
               $scope.registro5.respuestaMail = "Se han enviado " + rec[1] + "citaciones";
