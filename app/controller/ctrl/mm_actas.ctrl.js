@@ -67,12 +67,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         agenda=$scope.agenda_id;        
         param=$scope.parametro; 
    
-        alert('Cierra acta ' + $scope.acta + ' ' + $scope.nota);      
-        empresa=$scope.empresa;
-        $http.post('modulos/mod_mm_agendamiento.php?op=cra',{'op':'cra','empresa':empresa,'agenda':agenda}).success(function(data){ 
-        alert (data);
-//        alert($scope.formato);
-         });  
+        aviso = 'Cierra acta ' + $scope.acta + ' ' + $scope.nota;     
+        if (confirm(aviso+' continua?')) {  
+            empresa=$scope.empresa;
+            $http.post('modulos/mod_mm_agendamiento.php?op=cra',{'op':'cra','empresa':empresa,'agenda':agenda}).success(function(data){ 
+            alert (data);
+             });
+        }
     }
     
     $scope.editInfo = function (detail){ 
@@ -99,17 +100,18 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     
     $scope.actualizaRegistro = function(detail){
         agenda=$scope.agenda_id;        
-        param=$scope.parametro;        
-        $http.post('modulos/mod_mm_agendamiento.php?op=ha',{'op':'ha', 'agenda_id':agenda,'parametro':param}).success(function(data){
-    //    alert(data);
+        param=$scope.parametro; 
+        if (confirm('A esta cta se le podrá hacer m odificaciones. Continua ?')) {
+            $http.post('modulos/mod_mm_agendamiento.php?op=ha',{'op':'ha', 'agenda_id':agenda,'parametro':param}).success(function(data){
             if(data === 'Ok'){
                 traeAgendamientos();
                 alert('Comité habilitado. ');
-        }
-        else{
-          alert(data);
-        }
-       });     
+            }
+            else{
+              alert(data);
+            }
+           }); 
+       }
     };
     
     $scope.printInfo = function(detail){   
