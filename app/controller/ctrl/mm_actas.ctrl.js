@@ -67,12 +67,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         agenda=$scope.agenda_id;        
         param=$scope.parametro; 
    
-        alert('Cierra acta ' + $scope.acta + ' ' + $scope.nota);      
-        empresa=$scope.empresa;
-        $http.post('modulos/mod_mm_agendamiento.php?op=cra',{'op':'cra','empresa':empresa,'agenda':agenda}).success(function(data){ 
-        alert (data);
-//        alert($scope.formato);
-         });  
+        aviso = 'Cierra acta ' + $scope.acta + ' ' + $scope.nota;     
+        if (confirm(aviso+' continua?')) {  
+            empresa=$scope.empresa;
+            $http.post('modulos/mod_mm_agendamiento.php?op=cra',{'op':'cra','empresa':empresa,'agenda':agenda}).success(function(data){ 
+            alert (data);
+             });
+        }
     }
     
     $scope.editInfo = function (detail){ 
@@ -99,28 +100,28 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     
     $scope.actualizaRegistro = function(detail){
         agenda=$scope.agenda_id;        
-        param=$scope.parametro;        
-        $http.post('modulos/mod_mm_agendamiento.php?op=ha',{'op':'ha', 'agenda_id':agenda,'parametro':param}).success(function(data){
-    //    alert(data);
+        param=$scope.parametro; 
+        if (confirm('A esta acta se le podrá hacer modificaciones. Continua ?')) {
+            $http.post('modulos/mod_mm_agendamiento.php?op=ha',{'op':'ha', 'agenda_id':agenda,'parametro':param}).success(function(data){
             if(data === 'Ok'){
                 traeAgendamientos();
                 alert('Comité habilitado. ');
-        }
-        else{
-          alert(data);
-        }
-       });     
+            }
+            else{
+              alert(data);
+            }
+           }); 
+       }
     };
     
     $scope.printInfo = function(detail){   
         agenda=detail.agenda_id; 
         empresa=$scope.empresa;
-        $http.post('modulos/mod_mm_agendamiento.php?op=rfa',{'op':'rfa','empresa':empresa}).success(function(data){ 
-        $scope.formato = data;
-//        alert($scope.formato);
+        $http.post('modulos/mod_mm_agendamiento.php?op=rfa',{'op':'rfa','empresa':empresa,'agenda':agenda}).success(function(data){ 
+        $scope.formato = data;  // formato de impresion de actas
          });  
-        if (confirm('Va a imprimir el acta. Continua ?')) { 
-                location.href="reports/rpt_mm_actas.php?op="+agenda+"&em="+empresa; 
+        if (confirm('Va a imprimir el acta. Continua ?' + $scope.formato + empresa + agenda)) { 
+            location.href="reports/rpt_mm_actas.php?op="+agenda+"&em="+empresa+"&em="+empresa+"&frm="+$scope.formato;
         }
     }; 
     

@@ -171,93 +171,115 @@ function  leeUnRegistro($data)
         $rec = explode('||',$dato) ;        
         if($rec[4] === '0') 
         { 
-           $fchDsde=$rec[5] .":" . $rec[7];
-           $fchHsta=$rec[6] .":" . $rec[8];  
-    
-           $query = "INSERT INTO mm_agendamiento (agenda_empresa, agenda_salonId, " . 
-                   " agenda_Descripcion, agenda_comiteId, agenda_fechaDesde, agenda_fechaHasta,  " . 
-                   " agenda_comiteAnteriorId, agenda_usuario, agenda_enFirme, agenda_conCitacion, agenda_acta, " . 
-                   " agenda_estado, agenda_causal) VALUES ('";
-            $query .=  $rec[3] ."', '" . $rec[9] ."', '" . $rec[1] ."', '" .
-                      $rec[0] ."', '" . $fchDsde ."', '" . $fchHsta ."', '" .
-                      $rec[2] ."', '" . $rec[10] ."', 'N','N','0','A','')";
-  
-            mysqli_query($con, $query);
-            $last_id = $con->insert_id;
-       
-            $query = "INSERT INTO mm_agendainvitados (invitado_agendaId, invitado_nombre, invitado_empresa, " . 
-                   " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, " . 
-                   " invitado_orden, invitado_causa, invitado_comite, invitado_empresaID )" . 
-                   " SELECT " . $last_id. " AS agenda_id, " . 
-                   " asistente_nombre, asistente_empresa, asistente_cargo, asistente_celuar, " . 
-                   " asistente_email , 'S', asistente_titulo, 0 as orden,'', asistente_comite, asistente_empresaId " . 
-                   " FROM mm_asistentes WHERE asistente_comite = " . $rec[0];
-            mysqli_query($con, $query);
-            
-            $query = "INSERT INTO mm_agendatemas (tema_agendaId, tema_empresa, tema_comite, tema_titulo,  " . 
-                   " tema_detalle, tema_tipo, tema_responsable, tema_desarrollo, tema_fechaAsigna,  " . 
-                   " tema_fechaCumple, tema_estado, tema_orden) " . 
-                   " SELECT " . $last_id. " AS agenda,  " . 
-                   " temasGrales_empresa, temasGrales_comiteId,  temasGrales_titulo, temasGrales_detalle,  " . 
-                   " 'GRAL' as tipo, '' as responsable, '' as desarrollo, '" . $fchDsde . "' AS fechaA, '' as fechaC,  " . 
-                   " temasGrales_estado, 0 as orden  " . 
-                   "  FROM mm_temasgrales WHERE temasGrales_estado = 'A' AND temasGrales_comiteId  = " . $rec[0];
-            mysqli_query($con, $query);
-         
-                   $query = "INSERT INTO mm_agendatemas (tema_agendaId, tema_empresa, tema_comite, tema_titulo,  " . 
-                   " tema_detalle, tema_tipo, tema_responsable, tema_desarrollo, tema_fechaAsigna,  " . 
-                   " tema_fechaCumple, tema_estado, tema_orden) " . 
-                   " SELECT " . $last_id. " AS  tema_agendaId, " .
-                   " tema_empresa, tema_comite, tema_titulo, tema_detalle, tema_tipo, tema_responsable, tema_desarrollo, " .
-                   " tema_fechaAsigna, tema_fechaCumple, tema_estado, tema_orden FROM mm_agendatemas WHERE tema_tipo='PDNTE' " .
-                   " AND tema_comite = " . $rec[0] . " AND tema_estadon= 'A' " .
-                   " AND tema_agendaId = (  SELECT MAX(tema_agendaId) FROM  mm_agendatemas WHERE tema_tipo='PDNTE' AND " .
-                   " tema_comite = " . $rec[0] . " ) ";
-            mysqli_query($con, $query);
-          //  asigna orden de temas y de invitados
-            $query = "SELECT invitado_id FROM mm_agendainvitados WHERE invitado_agendaId = " .  $last_id;
-            $result = mysqli_query($con, $query); 
-            if(mysqli_num_rows($result) != 0)
-            $orden = 1;    
-            { 
-                while($row = mysqli_fetch_assoc($result)) {
-                    $id = $row['invitado_id'];
-                    $query = "UPDATE mm_agendainvitados SET invitado_orden = " . $orden . "  WHERE invitado_id = " .  $id;
-                    $orden += 1;
-                    $resultar = mysqli_query($con, $query); 
-                } 
+            $fchDsde=$rec[5] .":" . $rec[7];
+            $fchHsta=$rec[6] .":" . $rec[8]; 
+            $fDsde=$rec[5] ." " . $rec[7].":00";
+            $fHsta=$rec[6] ." " . $rec[8].":00";  
+            $siga=0;
+            $query = "SELECT IFNULL(count(*),0) as siga  FROM mm_agendamiento " .
+                     " WHERE  agenda_empresa = '" .$rec[3] ."' AND agenda_Descripcion = '" . $rec[1]  . 
+                    "' AND agenda_fechaDesde  = '" . $fchDsde . "' AND agenda_fechaHasta = '" .$fchHsta . "' ";
+echo $query;
+            $result = mysqli_query($con, $query);
+            while($row = mysqli_fetch_assoc($result)) {
+                $siga=$row['siga'];
             }
-            
-            $query = "SELECT tema_id FROM mm_agendatemas WHERE tema_agendaId = " .  $last_id;
-            $result = mysqli_query($con, $query); 
-            if(mysqli_num_rows($result) != 0)
-            $orden = 1;    
-            { 
-                while($row = mysqli_fetch_assoc($result)) {
-                    $id = $row['tema_id'];
-                    $query = "UPDATE mm_agendatemas SET tema_orden = " . $orden . "  WHERE tema_id = " .  $id;
-                    $orden += 1;
-                    $resultar = mysqli_query($con, $query); 
-                } 
-            }
-            
-            echo 'Ok||'.$last_id;
-        } 
-        else 
-        { 
-            $query = "UPDATE mm_agendamiento  SET agenda_empresa = '".$agenda_empresa.
-                    "', agenda_salonId = '".$agenda_salonId."', agenda_Descripcion = '".$agenda_Descripcion.
-                    "', agenda_comiteId = '".$agenda_comiteId."', agenda_fechaDesde = '".$agenda_fechaDesde.
-                    "', agenda_fechaHasta = '".$agenda_fechaHasta."', agenda_comiteAnteriorId = '".$agenda_comiteAnteriorId.
-                    "', agenda_usuario = '".$agenda_usuario."', agenda_enFirme = '".$agenda_enFirme.
-                    "', agenda_conCitacion = '".$agenda_conCitacion."' WHERE agenda_id = ".$agenda_id;
-            mysqli_query($con, $query); 
-            echo 'Ok||'.$agenda_id;
-        } 
+            if ($siga==0){
+                $query = "INSERT INTO mm_agendamiento (agenda_empresa, agenda_salonId, " . 
+                       " agenda_Descripcion, agenda_comiteId, agenda_fechaDesde, agenda_fechaHasta,  " . 
+                       " agenda_comiteAnteriorId, agenda_usuario, agenda_enFirme, agenda_conCitacion, agenda_acta, " . 
+                       " agenda_estado, agenda_causal) VALUES ('";
+                $query .=  $rec[3] ."', '" . $rec[9] ."', '" . $rec[1] ."', '" .
+                          $rec[0] ."', '" . $fchDsde ."', '" . $fchHsta ."', '" .
+                          $rec[2] ."', '" . $rec[10] ."', 'N','N','0','A','')";
 
- 
+                mysqli_query($con, $query);
+                $last_id = $con->insert_id;
+
+                $query = "INSERT INTO mm_agendainvitados (invitado_agendaId, invitado_nombre, invitado_empresa, " . 
+                       " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, " . 
+                       " invitado_orden, invitado_causa, invitado_comite, invitado_empresaID )" . 
+                       " SELECT " . $last_id. " AS agenda_id, " . 
+                       " asistente_nombre, asistente_empresa, asistente_cargo, asistente_celuar, " . 
+                       " asistente_email , 'S', asistente_titulo, 0 as orden,'', asistente_comite, asistente_empresaId " . 
+                       " FROM mm_asistentes WHERE asistente_comite = " . $rec[0];
+                mysqli_query($con, $query);
+
+                $query = "INSERT INTO mm_agendatemas (tema_agendaId, tema_empresa, tema_comite, tema_titulo,  " . 
+                       " tema_detalle, tema_tipo, tema_responsable, tema_desarrollo, tema_fechaAsigna,  " . 
+                       " tema_fechaCumple, tema_estado, tema_orden) " . 
+                       " SELECT " . $last_id. " AS agenda,  " . 
+                       " temasGrales_empresa, temasGrales_comiteId,  temasGrales_titulo, temasGrales_detalle,  " . 
+                       " 'GRAL' as tipo, '' as responsable, '' as desarrollo, '" . $fchDsde . "' AS fechaA, '' as fechaC,  " . 
+                       " temasGrales_estado, 0 as orden  " . 
+                       "  FROM mm_temasgrales WHERE temasGrales_estado = 'A' AND temasGrales_comiteId  = " . $rec[0];
+                mysqli_query($con, $query);
+
+                       $query = "INSERT INTO mm_agendatemas (tema_agendaId, tema_empresa, tema_comite, tema_titulo,  " . 
+                       " tema_detalle, tema_tipo, tema_responsable, tema_desarrollo, tema_fechaAsigna,  " . 
+                       " tema_fechaCumple, tema_estado, tema_orden) " . 
+                       " SELECT " . $last_id. " AS  tema_agendaId, " .
+                       " tema_empresa, tema_comite, tema_titulo, tema_detalle, tema_tipo, tema_responsable, tema_desarrollo, " .
+                       " tema_fechaAsigna, tema_fechaCumple, tema_estado, tema_orden FROM mm_agendatemas WHERE tema_tipo='PDNT' " .
+                       " AND tema_comite = " . $rec[0] . " AND tema_estado = 'A' " .
+                       " AND tema_agendaId = (  SELECT MAX(tema_agendaId) FROM  mm_agendatemas WHERE tema_tipo='PDNT' AND " .
+                       " tema_comite = " . $rec[0] . " ) ";
+                mysqli_query($con, $query);
+              //  asigna orden de temas y de invitados
+                $query = "SELECT invitado_id FROM mm_agendainvitados WHERE invitado_agendaId = " .  $last_id;
+                $result = mysqli_query($con, $query); 
+                if(mysqli_num_rows($result) != 0)
+                $orden = 1;    
+                { 
+                    while($row = mysqli_fetch_assoc($result)) {
+                        $id = $row['invitado_id'];
+                        $query = "UPDATE mm_agendainvitados SET invitado_orden = " . $orden . "  WHERE invitado_id = " .  $id;
+                        $orden += 1;
+                        $resultar = mysqli_query($con, $query); 
+                    } 
+                }
+
+                $query = "SELECT tema_id FROM mm_agendatemas WHERE tema_agendaId = " .  $last_id;
+                $result = mysqli_query($con, $query); 
+                if(mysqli_num_rows($result) != 0)
+                $orden = 1;    
+                { 
+                    while($row = mysqli_fetch_assoc($result)) {
+                        $id = $row['tema_id'];
+                        $query = "UPDATE mm_agendatemas SET tema_orden = " . $orden . "  WHERE tema_id = " .  $id;
+                        $orden += 1;
+                        $resultar = mysqli_query($con, $query); 
+                    } 
+                }
+
+                echo 'Ok||'.$last_id. $siga;
+            } 
+            else 
+            { 
+                $query = "UPDATE mm_agendamiento  SET agenda_empresa = '".$rec[3].
+                        "', agenda_salonId = '".$rec[9]."', agenda_Descripcion = '".$rec[1].
+                        "', agenda_comiteId = '".$rec[0]."', agenda_fechaDesde = '".$fDsde.
+                        "', agenda_fechaHasta = '".$fHsta."', agenda_comiteAnteriorId = '".$rec[2].
+                        "', agenda_usuario = '".$rec[10]."' WHERE agenda_id = ".$agenda_id;
+                mysqli_query($con, $query); 
+                echo 'Ok||'.$agenda_id;
+            } 
+
+        }
     } 
  
+    
+//         dato= $scope.agenda_comiteIdtmp+'||'+$scope.registro1.agenda_Descripcion+'||';
+//        dato+=$scope.registro1.agenda_comiteAnteriorId+'||';
+//        dato+=$scope.registro1.agenda_empresa+'||'+$scope.agenda_agendaIdtmp+'||';
+//        dato+=$scope.registro1.agenda_fechaDesde+'||'+$scope.registro1.agenda_fechaHasta+'||';
+//        dato+=$scope.registro1.agenda_horaDesde+'||'+$scope.registro1.agenda_horaHasta+'||';
+//        dato+=$scope.registro1.agenda_salonId+'||'+ $scope.registro1.agenda_usuario;  
+// alert(dato); 1||ojodetalle||2||1 ||0||2019-04-06||2019-04-06||08:00||10:00||1||2     
+//    
+//    
+//    
+    
     function buscaRegistroComite($data){
         $objClase = new DBconexion(); 
         $con = $objClase->conectar();	 
@@ -761,7 +783,7 @@ function  leeUnRegistro($data)
                 $formatoActa=$row['empresa_FormatoActa'];
            } 
         }
-        echo $formatoActa;
+        echo  $formatoActa;
         return $formatoActa;
     }
     

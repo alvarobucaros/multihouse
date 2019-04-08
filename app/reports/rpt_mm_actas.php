@@ -74,6 +74,7 @@
         include_once("../bin/cls/citacion.class.php");
         $obj = new mm_agendamiento();
         $comite_td=$_GET['op'];
+        $empresa=$_GET['em'];
         $resultado = $obj->traeComite($comite_td);
         $reg = array();         
         $reg = explode('||', $resultado);
@@ -156,7 +157,7 @@
         $noAsistio=0;
         
         $resultado = $obj->traeInitadosComite($comite_td);
-            
+          
         while($row = mysqli_fetch_assoc($resultado))
         {    
             $ln=$pdf->GetY();
@@ -217,8 +218,12 @@
         {    
             $ln=$pdf->GetY();
       //      $ln+=7;
+            $noto='';
+            if($row['tema_tipo']== 'PDNT'){
+               $noto='(Pendiente)'; 
+            }          
             $deta = trim($row['tema_orden']).'. '.utf8_decode(trim($row['tema_titulo'])). '  '.
-                    utf8_decode(trim($row['tema_detalle']));
+                    utf8_decode(trim($row['tema_detalle'])).' '.$noto;
             if($row['tema_responsable'] != ''){ $deta .= ' Responsable '. utf8_decode(trim($row['tema_responsable']));}
             $pdf->SetXY(35,$ln);
             $pdf->MultiCell(160, 6, $deta); 

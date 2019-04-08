@@ -363,6 +363,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         empresa = $scope.empresa.trim();
         var datos =  $scope.sgmnto_comiteId+'||'+$scope.comite_id+'||'+empresa+'||'+$scope.registroTercero.convocatoria;
         $http.post('modulos/mod_mm_agendamiento.php?op=conv',{'op':'conv', 'datos':datos}).success(function(data){
+//alert(data);            
         res = data.split("||");
         if (res[0] === 'Ok') {            
             alert (res[1]);
