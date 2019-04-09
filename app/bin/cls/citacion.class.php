@@ -49,13 +49,14 @@
             $con = $objClase->conectar();
             if($con==true)
             {
-                $query = "SELECT invitado_id, invitado_agendaId, invitado_nombre, invitado_empresa,  " .
-                     " invitado_cargo, invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden, invitado_comite, invitado_empresaID  " .
+                $query = "SELECT invitado_id, invitado_agendaId, invitado_nombre, invitado_empresa, invitado_cargo,  " .
+                     " invitado_celuar, invitado_email, invitado_asistio, invitado_titulo, invitado_orden, invitado_comite, invitado_empresaID  " .
                      " FROM mm_agendainvitados " .
                      " WHERE invitado_agendaId =  ". $agenda_id .
                      " ORDER BY invitado_orden  ";
                 $result = mysqli_query($con, $query);
-                return $result;                            
+                
+                return $query; // $result;                            
             }
             else{
                 return 'No hay conexion a la BD. ';

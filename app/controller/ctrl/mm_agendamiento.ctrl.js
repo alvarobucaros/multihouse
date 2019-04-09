@@ -307,9 +307,10 @@ function getIni()
         dato+=$scope.registro1.agenda_empresa+'||'+$scope.agenda_agendaIdtmp+'||';
         dato+=$scope.registro1.agenda_fechaDesde+'||'+$scope.registro1.agenda_fechaHasta+'||';
         dato+=$scope.registro1.agenda_horaDesde+'||'+$scope.registro1.agenda_horaHasta+'||';
-        dato+=$scope.registro1.agenda_salonId+'||'+ $scope.registro1.agenda_usuario;   
-        $http.post('modulos/mod_mm_agendamiento.php?op=a',{'op':'a', 'dato':dato}).success(function(data){ 
- //alert('crea'+data);           
+        dato+=$scope.registro1.agenda_salonId+'||'+ $scope.registro1.agenda_usuario;  
+ alert(dato); // 1||ojodetalle||2||1 ||0||2019-04-06||2019-04-06||08:00||10:00||1||2      
+        $http.post('modulos/mod_mm_agendamiento.php?op=a',{'op':'a', 'dato':dato}).success(function(data){  
+ alert(data);           
         rec = data.split('||');
         if (rec[0] === 'Ok') {
             $scope.agenda_agendaIdtmp=rec[1];
