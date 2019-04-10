@@ -235,6 +235,15 @@
 
             </div>                
         </div>
+         <div class="" ng-show="btnActualizar">
+            <div class="alert alert-default navbar-brand search-box">                    
+                <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
+                    ng-click="creaSolicitud(registro1)" id="send_btn"  ng-disabled="!formato1.$valid">{{form_btnActualiza}}
+                </button>
+
+            </div>                
+        </div>       
+       
     </nav>
 
     </form>

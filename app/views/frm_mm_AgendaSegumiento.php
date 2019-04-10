@@ -231,20 +231,25 @@
 
             <div class="form-group col-md-10">
                 <label class=" milabel col-md-3" for="agenda_comiteId">{{form_agenda_comiteId}}</label>
-                <div class="col-md-6">
+                <div class="col-md-5">
                 <select id='sgmnto_comiteId' name='sgmnto_comiteId' ng-model='sgmnto_comiteId'   
                         ng-change="updateComite()">
                  <option ng-repeat='operator1 in operators1' value = " {{operator1.comite_id}}">{{operator1.comite_nombre}}</option>
                 </select>
                </div>
-                <div class="col-md-2" ng-show="vista">
+                <div class="col-md-1" ng-show="vista">
                     
                     <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
                               ng-click="createActa(registroTercero)" title="{{form_nuevaActa}}"  
                               id="send_btnupd"  ng-disabled="!tercero2Form.$valid">{{form_nuevaActa}}
-                   </button>                    
-                    
-                    
+                    </button>                    
+    
+                </div>
+                <div class="col-md-2" ng-show="vistaReorganiza">                 
+                    <button type="button" value="Reorganiza" class="btn btn-custom pull-right btn-xs" 
+                              ng-click="reorganiza(registroTercero)" title="{{form_reorganiza}}" id="reorganiza" > 
+                        {{form_reorganiza}}                               
+                    </button>
                 </div>
             </div>     
             <div class="form-group col-md-12"  ng-show="resultado">

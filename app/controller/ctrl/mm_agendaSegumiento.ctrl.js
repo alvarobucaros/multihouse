@@ -3,6 +3,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_title = 'Seguimiento de reunión (Desarrollo)';
 
     $scope.form_nuevaActa= ' Crea acta ';
+    $scope.form_reorganiza=' Renumera invitados/temas'
     $scope.form_titleTerc='Adiciona participanteCambios en el tercero';
     $scope.form_titleTercero='Modifica datos del invitado';
     $scope.form_titleaddTema='Modifica tema ';
@@ -47,6 +48,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_convocatoria='Fecha y hora  próxima reunión';
     
     $scope.vista=false;
+    $scope.vistaReorganiza  = false;
     $scope.registroTr = {};
     $scope.detailAsiste = {};
     $scope.registroTm = {};
@@ -148,6 +150,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
        $http.post('modulos/mod_mm_agendamiento.php?op=sel',{'op':'sel','agenda_id': $scope.comite_id,'opc':'I'}).success(function(data){
        $scope.registroTr.asistente_orden = data; 
        $scope.registroTr.titulo = 'N';
+       $scope.vistaReorganiza  = true;
        });   
        
        $scope.tercForm = 'true';
@@ -213,6 +216,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
 
 
     $scope.createDetailTema = function(){
+        
         $scope.form_titleaddTema='Adiciona un nuevo tema';
         $scope.registroAddTema={};
         $scope.registroAddTema.tema_estado = 'A';
@@ -233,6 +237,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.registroAddTema.tema_fechaCumple = fechaHoy; 
         $('#addtemaForm').show();
         $scope.addtemaTema = 'true';
+        $scope.vistaReorganiza  = true;
     };
     
     
@@ -255,6 +260,19 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     };
     
     
+    $scope.reorganiza = function(registroTercero){
+        empresa = $scope.empresa.trim();
+        var datos =  'T||'+$scope.comite_id+'||'+empresa+'||'+$scope.agenda_id;
+        $http.post('modulos/mod_mm_agendamiento.php?op=reor',{'op':'reor', 'datos':datos}).success(function(data){        
+        $scope.detailTemas = data;
+        }); 
+        var datos =  'I||'+$scope.comite_id+'||'+empresa+'||'+$scope.agenda_id;
+        $http.post('modulos/mod_mm_agendamiento.php?op=reor',{'op':'reor', 'datos':datos}).success(function(data){        
+        $scope.detailAsistes = data;
+        }); 
+        alert('renumeracion Ok');
+        $scope.vistaReorganiza  = false;
+    };
 
    
     
@@ -369,6 +387,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
             alert (res[1]);
         }
          $scope.Convocatoria = false;
+         $scope.vistaReorganiza  = true;
         });
       };
       

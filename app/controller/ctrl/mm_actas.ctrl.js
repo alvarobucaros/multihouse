@@ -101,11 +101,9 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.actualizaRegistro = function(detail){
         agenda=$scope.agenda_id;        
         param=$scope.parametro; 
-<<<<<<< HEAD
-        if (confirm('A esta cta se le podrá hacer m odificaciones. Continua ?')) {
-=======
+
         if (confirm('A esta acta se le podrá hacer modificaciones. Continua ?')) {
->>>>>>> 5dea7a6b3ecb2ab04efd39d7a09be9676ebca654
+
             $http.post('modulos/mod_mm_agendamiento.php?op=ha',{'op':'ha', 'agenda_id':agenda,'parametro':param}).success(function(data){
             if(data === 'Ok'){
                 traeAgendamientos();
@@ -120,11 +118,14 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     
     $scope.printInfo = function(detail){   
         agenda=detail.agenda_id; 
+        var formato='';
         empresa=$scope.empresa;
         $http.post('modulos/mod_mm_agendamiento.php?op=rfa',{'op':'rfa','empresa':empresa,'agenda':agenda}).success(function(data){ 
-        $scope.formato = data;  // formato de impresion de actas
+        $scope.formato = data; 
+        formato = data;
+        // formato de impresion de actas
          });  
-        if (confirm('Va a imprimir el acta. Continua ?' + $scope.formato + empresa + agenda)) { 
+        if (confirm('Va a imprimir el acta. ' + detail.agenda_acta + ' '+ detail.agenda_Descripcion + '...  Continua ?' )) { 
             location.href="reports/rpt_mm_actas.php?op="+agenda+"&em="+empresa+"&em="+empresa+"&frm="+$scope.formato;
         }
     }; 

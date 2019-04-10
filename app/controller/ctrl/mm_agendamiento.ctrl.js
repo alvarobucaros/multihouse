@@ -74,7 +74,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.temaNuevo= false;
     $scope.listaComite = false;
     $scope.btnBusca = true;
-    
+    $scope.btnActualizar=false;
     $scope.agenda_salonIdtmp=0;
     $scope.agenda_comiteIdtmp=0;
     $scope.agenda_agendaIdtmp=0;
@@ -185,7 +185,8 @@ function getIni()
         $scope.modelTab3 = true;  
         $scope.modelTab4 = true;  
         $scope.modelTab5 = true;
-        $scope.btnBusca = false;     
+        $scope.btnBusca = false; 
+        $scope.btnActualizar=true;
         $scope.registro5.agenda_Id=$scope.registro1.agenda_agendaId;
    
         traeInvitados($scope.agendaId);
@@ -264,8 +265,7 @@ function getIni()
     
     function traeInvitados(agendaId){
         $http.post('modulos/mod_mm_agendamiento.php?op=ti',{'op':'ti','agenda_id':agendaId,'empresa':$scope.empresa}).success(function(data){ 
-//alert(data);
-            if(data != 'No Hay'){          
+            if(data !== 'No Hay'){          
             $scope.detailAsistes = data;
             }
          });  
@@ -273,7 +273,7 @@ function getIni()
     
     function traeTemas(agendaId){
         $http.post('modulos/mod_mm_agendamiento.php?op=tt',{'op':'tt','agenda_id':agendaId,'empresa':$scope.empresa}).success(function(data){  
-        if(data != 'No Hay'){   
+        if(data !== 'No Hay'){   
             $scope.detail4s = data;
         }
         });  
@@ -297,20 +297,20 @@ function getIni()
         if (typeof $scope.registro1.agenda_horaDesde == 'undefined' ||typeof $scope.registro1.agenda_horaHasta == 'undefined'){
           er+='Revizar hora desde y hora hasta\n';  
         }
-        if (er !=''){
+        if (er !==''){
             alert(er);
             return;
         }
-        $scope.agenda_agendaIdtmp=0
+        
         dato= $scope.agenda_comiteIdtmp+'||'+$scope.registro1.agenda_Descripcion+'||';
         dato+=$scope.registro1.agenda_comiteAnteriorId+'||';
         dato+=$scope.registro1.agenda_empresa+'||'+$scope.agenda_agendaIdtmp+'||';
         dato+=$scope.registro1.agenda_fechaDesde+'||'+$scope.registro1.agenda_fechaHasta+'||';
         dato+=$scope.registro1.agenda_horaDesde+'||'+$scope.registro1.agenda_horaHasta+'||';
         dato+=$scope.registro1.agenda_salonId+'||'+ $scope.registro1.agenda_usuario;  
- alert(dato); // 1||ojodetalle||2||1 ||0||2019-04-06||2019-04-06||08:00||10:00||1||2      
+        dato+='||'+$scope.agenda_id  
         $http.post('modulos/mod_mm_agendamiento.php?op=a',{'op':'a', 'dato':dato}).success(function(data){  
- alert(data);           
+//alert(data);
         rec = data.split('||');
         if (rec[0] === 'Ok') {
             $scope.agenda_agendaIdtmp=rec[1];
@@ -318,7 +318,12 @@ function getIni()
             $scope.registro1.agenda_id=rec[1]; 
             traeTemas($scope.agenda_id);          
             traeInvitados($scope.agenda_id);
-            alert ('Solicitud creada. Incluya invitados y temas a tratar, actualice en confirmar ');
+            if(rec[2] === 'C'){
+                alert ('Solicitud creada. Incluya invitados y temas a tratar, actualice en confirmar ');
+            }
+            else{
+                alert ('Solicitud modificada. Revise invitados y temas a tratar, actualice en confirmar ');   
+            }
             $scope.modelTab3 = true;
             $scope.modelTab4 = true;
             $scope.modelTab5 = true;
@@ -377,7 +382,6 @@ function getIni()
                     $scope.registro4.tema_tipo+'||'+tema_responsable+'|| ||'+
                     tema_fechaAsigna+'|| ||'+$scope.registro4.tema_estado+'||0||'+$scope.registro4.tema_orden;  
         $http.post('modulos/mod_mm_agendamiento.php?op=atm',{'op':'atm', 'datos':datos}).success(function(data){
-  //          alert (data);
         if (data === 'Ok') {
             traeTemas($scope.agenda_id);
             $scope.temaNuevo = false;
@@ -387,9 +391,10 @@ function getIni()
       };
         
         
-    $scope.updateComite = function() {  // nc=nombre comite
+    $scope.updateComite = function() {  
       empresa=$scope.empresa
       $scope.btnBuscaReg=false;
+      $scope.btnActualizar=true;
       $scope.listaComite=false;
       $http.post('modulos/mod_mm_agendamiento.php?op=nc',{'op':'nc', 'comiteId':$scope.registro1.agenda_comiteId,empresa:empresa}).success(function(data){
           $rec = data.split("||");
@@ -397,7 +402,7 @@ function getIni()
           $scope.registro1.agenda_comiteAnteriorId=$rec[1];
           $scope.agenda_comiteIdtmp =$rec[2]; 
           $scope.comite_id =$rec[2]; 
-          if($rec[3]!=0){$scope.btnBuscaReg=true; $scope.listaComite=true;}
+          if($rec[3]!=0){$scope.btnBuscaReg=true; $scope.listaComite=true;$scope.btnActualizar=false;}
       });
        $scope.modelTab2 = true;  
       $scope.tema_comite=$scope.comite_nombreResul;
@@ -411,7 +416,7 @@ function getIni()
     };
 
 
-    $scope.updateSalon = function() { // ns=nombre salón
+    $scope.updateSalon = function() { 
        $scope.agenda_salonIdtmp = $scope.registro1.agenda_salonId;
    //    alert('salon  '.$scope.agenda_salonIdtmp);
        $http.post('modulos/mod_mm_agendamiento.php?op=ns',{'op':'ns', 'salonId':$scope.registro1.agenda_salonId}).success(function(data){
@@ -542,9 +547,7 @@ function getIni()
         }else{alert (er);}  
     };
     
-
-
-    
+   
     $scope.clearInfo =function(info)
     {
         console.log('empty');
