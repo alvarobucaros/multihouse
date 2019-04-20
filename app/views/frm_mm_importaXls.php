@@ -39,47 +39,46 @@
  }
 ?>
 <div class="container "  ng-controller="mainController">
-        <h3 class="text-left">{{form_titleImportar}}</h3>
-        <br/>
-        <div class="form-group">
-            <div class="col-md-1"></div>
+    <h3 class="text-left">{{form_titleImportar}}</h3>
+    <br/>
+    <div class="form-group">
+        <div class="col-md-1"></div>
             <div class="col-md-8">
             <span> <p>{{nota1}}</p> </span>
             <span> <p>{{nota2}}</p> </span>
             <span> <p>{{nota3}}</p> </span>
             <br/>
+        </div>
+
+        <form name="importar" action='<?php echo $_SERVER["PHP_SELF"];?>' method="POST" enctype="multipart/form-data">
+
+            <table name ="tabImport" id="tabImport" class="tablex">
+                <tr>
+                    <td colspan='2'>    
+                </tr>
+
+                <tr class="col-md-8">
+                    <td style="text-align: center;">
+                        <input type="file" name="file" id="fileUpload" value=""  accept=".csv" width="70"  /> 
+                        <a href="mm.php" ><img src="img/escape.png" alt="Regresa al menu"  title="Regresa al menu"></a>
+                    </td> 
+
+                </tr>
+
+            </table> 
+            <div id='progreso' ng-show="progress">
+                <img src="img/progress.gif" alt=""/>
             </div>
+            <div id='datempresa' style='display: none'>  
 
-    <form name="importar" action='<?php echo $_SERVER["PHP_SELF"];?>' method="POST" enctype="multipart/form-data">
-  
-    <table name ="tabImport" id="tabImport" class="tablex">
-        <tr>
-            <td colspan='2'>    
-        </tr>
-        
-        <tr class="col-md-8">
-            <td style="text-align: center;">
-                <input type="file" name="file" id="fileUpload" value=""  accept=".csv" width="70"  /> 
-                <a href="mm.php" ><img src="img/escape.png" alt="Regresa al menu"  title="Regresa al menu"></a>
-            </td> 
-
-        </tr>
-        
-    </table> 
-        <div id='progreso' ng-show="progress">
-            <img src="img/progress.gif" alt=""/>
-        </div>
-    <div id='datempresa' style='display: none'>  
-       
-        <?php echo "<input type='text' id='archivo' value='' </input>" ?>  
-        <?php echo "<input type='text' id='tamano' value='' </input>" ?>  
-        <?php echo "<input type='text' id='empresa' value='' </input>" ?>
-        <?php echo "<input type='text' id='informe' value='' </input>" ?>
-    </div> 
-    </form>              
-            
-        </div>
+                <?php echo "<input type='text' id='archivo' value='' </input>" ?>  
+                <?php echo "<input type='text' id='tamano' value='' </input>" ?>  
+                <?php echo "<input type='text' id='empresa' value='' </input>" ?>
+                <?php echo "<input type='text' id='informe' value='' </input>" ?>
+            </div> 
+        </form>              
     </div>
+</div>
 
 <script src="bin/js/jquery.csv.min.js" type="text/javascript"></script>
 <!--

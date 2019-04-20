@@ -81,33 +81,44 @@ switch ($op)
                     $codigo = $row['listactrl_codigo']; 
                 } 
             }               
-       }
+        }
 
-           $query = "SELECT count(*) AS nr FROM  mm_llamalista WHERE " .
-                    "lista_empresa = " . $empresa . " AND  lista_codigo = '" . $codigo ."' ";
-            $result = mysqli_query($con, $query);
-            while($row = mysqli_fetch_assoc($result)) { 
-                        $nr = $row['nr']; 
-                    } 
-            if($nr == 0 && $opcion == 'N')  
+        $query = "SELECT count(*) AS nr FROM  mm_llamalista WHERE " .
+                 "lista_empresa = " . $empresa . " AND  lista_codigo = '" . $codigo ."' ";
+         $result = mysqli_query($con, $query);
+         while($row = mysqli_fetch_assoc($result)) { 
+                     $nr = $row['nr']; 
+                 } 
+         if($nr == 0 && $opcion == 'N')  
             {
             $query = "INSERT INTO mm_llamalista (lista_empresa, lista_codigo, " .
                     " lista_inmueble, lista_asiste1,  lista_asiste2,  lista_asiste3, " .
-                    "lista_asiste4,  lista_asiste5,  lista_asiste6, lista_obervacion, " .
+                    " lista_asiste4,  lista_asiste5,  lista_asiste6, lista_obervacion, " .
                     " lista_area, lista_coeficiente, lista_descripcion, ".
                     " lista_propietario,lista_cedula) " .
                     " SELECT inmueble_empresa, '" .$codigo . "', inmueble_codigo," .
                     " '0', '0', '0', '0', '0', '0', '', inmueble_area, inmueble_coeficiente, ".
                     " inmueble_descripcion, inmueble_propNombre, inmueble_propCedula " .
                     " FROM mm_inmuebles WHERE inmueble_empresa = '" .
-                    $empresa ."' ORDER BY inmueble_codigo ";
-//echo $query;            
+                    $empresa ."' ORDER BY inmueble_codigo ";           
                     $result = mysqli_query($con, $query);
+            $atreaTot=0;        
+            $query = "select sum(lista_area) atreaTot " .
+                     " FROM  mm_llamalista WHERE lista_empresa= " .$empresa .
+                     " AND lista_codigo = '".$codigo . "' ";
+                     while($row = mysqli_fetch_assoc($result)) { 
+                        $atreaTot = $row['atreaTot']; 
+                     } 
+            $query = "UPDATE mm_llamalista SET lista_coeficiente = lista_area / " .
+                    $atreaTot . " WHERE lista_empresa= " .$empresa .
+                     " AND lista_codigo = '".$codigo . "'  and lista_id>0 ";
+
+                     
             $query = "INSERT INTO mm_listactrl (listactrl_empresa, listactrl_codigo, listactrl_estado, " .
                     " listactrl_llamado ) VALUES ('".$empresa . "','".$codigo. "','A',1)";
                     $result = mysqli_query($con, $query);
             }
- //echo $query;            
+           
             $query = "SELECT  lista_id, lista_empresa, lista_codigo, lista_inmueble, " .
                     "  lista_obervacion, lista_area, lista_coeficiente, " .
                     " lista_asiste1, lista_asiste2,  lista_asiste3, lista_asiste4,  " .

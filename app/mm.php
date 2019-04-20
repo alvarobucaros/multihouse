@@ -190,7 +190,7 @@ if (!isset($_GET['op'])){
           <ul class="treeview-menu">
             <li><a href="mm.php?op=udr"><i class="fa fa-building"></i> <span>Unidades residenciales</span></a></li>
             <li><a href="mm.php?op=impo"><i class="fa fa-file-excel-o"></i> <span>Cragar desde Excel</span></a></li>
-            <li><a href="mm.php?op=lst"><i class="fa fa-calculator"></i> <span>Asistencia Asamblea</span></a></a></li>
+            <li><a href="mm.php?op=lst"><i class="fa fa-calculator"></i> <span>Lista de asistencia</span></a></a></li>
           </ul>
         </li> ';
      

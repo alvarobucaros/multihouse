@@ -109,10 +109,11 @@
     $ln+=8;
     setlocale(LC_MONETARY, 'es_CO');
 
-    include_once("../bin/cls/clsconection.php");
-    $obj = new  DBconexion();
+    include_once("../bin/cls/citacion.class.php");
+    $obj = new  mm_agendamiento();
 
-    $result = $obj->llamaLista($empresa, $codigo)  ;
+    $result = $obj->llamaLista($empresa, $codigo);
+    $pdf->MultiCell(160, 6, $result); 
     $pdf->SetXY(25,$ln);
     while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
    

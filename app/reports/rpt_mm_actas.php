@@ -78,6 +78,9 @@
         $resultado = $obj->traeComite($comite_td);
         $reg = array();         
         $reg = explode('||', $resultado);
+    //    ACADEMICO||1||PROFESORES PRIMARIA||Reunión mes de Abril||Primer piso||2019-04-15 07:30:00||2019-04-15 09:00:00||mayo 12 de 2019||1
+   //     ACADEMICO||1||PROFESORES PRIMARIA||Reunión mes de Abril||Primer piso||2019-04-15 07:30:00||2019-04-15 09:00:00||mayo 12 de 2019||1
+            
         $comite_nombre = $reg[0]; 
         $comite_consecActa = $reg[1];  
         $salon_nombre = $reg[2]; 
@@ -157,7 +160,7 @@
         $noAsistio=0;
         
         $resultado = $obj->traeInitadosComite($comite_td);
-          
+      
         while($row = mysqli_fetch_assoc($resultado))
         {    
             $ln=$pdf->GetY();

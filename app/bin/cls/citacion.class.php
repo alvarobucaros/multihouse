@@ -21,7 +21,7 @@
                         $reg['agenda_fechaDesde'].'||'.$reg['agenda_fechaHasta'].'||'.$reg['agenda_ProxCitacion'].'||'.
                         $reg['comite_id'];  
             }
-            echo $retorno;
+         //   echo $retorno;
             return $retorno;   
         }
         
@@ -56,7 +56,7 @@
                      " ORDER BY invitado_orden  ";
                 $result = mysqli_query($con, $query);
                 
-                return $query; // $result;                            
+                return $result;                            
             }
             else{
                 return 'No hay conexion a la BD. ';
@@ -90,10 +90,10 @@
                      " lista_asiste1,lista_asiste2,lista_asiste3,lista_asiste4," .
                      " lista_asiste5,lista_asiste6,lista_area,lista_coeficiente," .
                      " lista_cedula,lista_obervacion,lista_descripcion " .
-                     " FROM mm_llamalista WHERE lista_codigo = " . $codigo .
-                     " AND lista_empresa = '" . $empresa . " ORDER BY lista_inmueble";       
+                     " FROM mm_llamalista WHERE lista_codigo = '" . $codigo .
+                     "' AND lista_empresa = '" . $empresa . "' ORDER BY lista_inmueble";       
          $result = mysqli_query($con, $query); 
-      echo $result; 
+      echo $query;// $result; 
     }
     
      function consultaAgendas($data)

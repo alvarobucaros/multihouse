@@ -1,6 +1,6 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Asamblea - Llamado a lista';
+    $scope.form_title = 'Asamblea o reunión - Llamado a lista';
     $scope.form_btnNuevo = 'Crear lista';
     $scope.form_btnGuarda = 'Guarda la lista';
     $scope.form_btnEdita = 'Edita';
@@ -25,6 +25,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.td5=false;
     $scope.td6=false;
     $scope.nroAsisten=0;
+    $scope.porcQuorum=50.5;
     $scope.semaforo=0;
 
     $scope.empresa = $('#e').val();
@@ -33,8 +34,9 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.pages = [];
     $scope.registro = [];   
     $scope.detalles = [];
+    $scope.numeroLlamado=0;
     
-    getInfo2($scope.empresa);
+    getInfo($scope.empresa);
     getCombos($scope.empresa);
     
     function getInfo2(empresa){
@@ -101,8 +103,9 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     
     $scope.selecCodigo = function(){        
         empresa=$('#e').val();
+        lista=$scope.numeroLlamado;
         id = $scope.registro.lista_codigo;
-        $http.post('modulos/mod_mm_llamalista.php?op=dl',{'op':'dl', 'id':id}).success(function(data){            
+        $http.post('modulos/mod_mm_llamalista.php?op=dl',{'op':'dl', 'id':id,'lista':lista}).success(function(data){            
             var res = data.split("||");
             $scope.registro.lista_id = res[0];
             $scope.numeroLlamado = res[1];
@@ -122,17 +125,20 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.nuevaLista = function(){
         i = $scope.numeroLlamado;
         $scope.nombreLlamado = nomLista(i);
+        ccontador(i);
         $scope.semaforo = sumaCoeficientes(i);
     };
     
     $scope.cuentaLista = function(fila){
+        ccontador(fila)
+    };
+    
+    function ccontador(fila){
         var u = $scope.nroAsisten;
         var c = parseFloat($scope.semaforo/100);
         var q = parseFloat($scope.porcQuorum);
-        var lista = $scope.registro.lista_id;
+        var lista = $scope.numeroLlamado; //$scope.registro.lista_id;
         $scope.detalles = $scope.details[fila];
-//        if (isNaN(u)){u=0;}
-//        if (isNaN(c)){c=0;}
         var coef = parseFloat($scope.detalles.lista_coeficiente);
         var action = '';
         if(lista === '1'){action=$scope.detalles.lista_asiste1;}
@@ -141,15 +147,15 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         if(lista === '4'){action=$scope.detalles.lista_asiste4;}
         if(lista === '5'){action=$scope.detalles.lista_asiste5;}
         if(lista === '6'){action=$scope.detalles.lista_asiste6;}
- alert ('act '+action);      
+ //alert ('action '+action);      
         if (action === '1'){
             u+=1; c+=coef; 
         } else {
             u-=1; c-=coef;}
         $scope.nroAsisten = u;
         $scope.semaforo = c*100;
-        if (c > q){$scope.color = 'green';} else {$scope.color = 'red';}
-    };
+        if (c > q){$scope.color = 'green';} else {$scope.color = 'red';}   
+    }
     
     function nomLista(i){
         $scope.td1=false;
@@ -177,18 +183,36 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         i=Math.ceil($scope.details.length );
         coef=0.0;
         nr=0;
+        ar=[];
+        ll='lista_asiste'+lista;
         for(x=0;x<i;x++){
-            if(lista===1 && $scope.datos[x].lista_asiste1 === '1'){
+            ar=$scope.datos[x];
+            if ((lista==='1' && ar['lista_asiste1'] === '1')||
+                (lista==='2' && ar['lista_asiste2'] === '1')){
                 coef += parseFloat($scope.datos[x].lista_coeficiente);
                 nr +=1;
             }
         }
 
         $scope.nroAsisten = nr;
-        $scope.semaforo = coef*100;
-         if (coef > q){ $scope.colorClass = { verde:true};} else {$scope.colorClass =  { rojo:true};}
+        nr=coef*100;
+        $scope.nroQuorum =  nr.toFixed(2);
+        if (coef > q){ return "smaforored";} else {return smaforogreen}
+        //if (coef > q){ $scope.colorClass = { verde:true};} else {$scope.colorClass =  { rojo:true};}
    }
-    
+   
+    $scope.semaforo = function(){
+        co= $scope.nroQuorum;
+        q = parseFloat($scope.porcQuorum);
+        if (coef*100 > q){ $scope.semaforo= "smaforored";} else { $scope.semaforo="semaforogreen"}
+//     if(someValue=="first")
+//            return "ClassA"
+//     else if(someValue=="second")
+//         return "ClassB";
+//     else
+//         return "ClassC";
+    }
+        
     $scope.configPages = function() {
         $scope.pages.length = 0;
         var ini = $scope.currentPage - 4;
@@ -265,7 +289,7 @@ $('#idForm').slideToggle();
         if (confirm('Va a imprimir el listado de asistencia con nombre\n c:/tmp/asistenciaAsamblea'+codigo+'.pdf. \n Antes se debe crear la carpeta c:/tmp   Continua ?')) { 
             location.href="reports/rpt_mm_listas.php?co="+codigo+"&em="+empresa; 
         }
-        return;
+       // return;
         empresa = $scope.empresa;
         codigo = $scope.registro.codigo;
            $http.post('modulos/mod_mm_llamalista.php?op=imp',{'op':'imp',

@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-1"> 
                     <input type="text" style="width: 50px; background-color:  gainsboro "  
-                           id='lista_quorum' readonly="yes" ng-model="nroQuorum"> 
+                         id='nroQuorum' readonly="yes" ng-model="nroQuorum"> 
                 </div>
 
                 <div class="col-md-2"> 
@@ -53,16 +53,16 @@
                     <input type="text" style="width: 60px;  background-color: gainsboro"  
                            id='nombreLlamado' readonly="yes"  ng-model="nombreLlamado">
                 </div>
-                <div class="col-md-1"> 
+                <div class="col-md-1 "  ng-class="semaforo"> 
                     <input type="text" style="width: 50px; background-color: gainsboro; text-align: left"  id='nroAsisten' 
-                     ng-model="nroAsisten"  > 
+                       ng-model="nroAsisten"  > 
                 </div>
-                <div class="col-md-2"> 
+                <!--div class="col-md-2"> 
                     <input type="text" style="width: 80px;"  id='semaforo' ng-model="semaforo" 
                            ng-style="{color:  {red: 'red', green: 'green'}[ color ]}">
                     
                     
-                </div>
+                </div-->
             </div>
         </nav>
         <div>
@@ -125,6 +125,6 @@
         </div>
 </div>
 
-<script src="controller/min/mm_llamalista.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrl/mm_llamalista.ctrl.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Aug 26, 2018 10:18:56   <<<<<<< -->

@@ -56,8 +56,9 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.editDetailResponse = function(detailResponse){
         agenda=detailResponse.agenda_id; 
         empresa=$scope.empresa;
+        com=$scope.comiteId;
         if (confirm('Consulta el acta con la información ?')) { 
-            location.href="reports/rpt_mm_actas.php?op="+agenda+"&em="+empresa; 
+            location.href="reports/rpt_mm_actas.php?op="+agenda+"&em="+empresa+"&co="+com; 
         }
     };
     

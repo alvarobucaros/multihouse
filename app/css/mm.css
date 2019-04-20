@@ -266,3 +266,12 @@ close {
  overflow:auto;
  background-color:#fff;
 }
+
+.smaforored{
+  border: 2px solid red;
+  border-radius: 55px;
+}
+.smaforogreen{
+  border: 2px solid green;
+  border-radius: 55px;
+}

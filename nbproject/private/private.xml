@@ -2,19 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group>
-            <file>file:/C:/wamp/www/multimeeting/app/mm.php</file>
-            <file>file:/C:/wamp/www/multimeeting/app/views/frm_mm_Agendamiento.php</file>
-            <file>file:/C:/wamp/www/multimeeting/app/controller/ctrl/mm_agendamiento.ctrl.js</file>
-            <file>file:/C:/wamp/www/multimeeting/app/controller/ctrl/mm_actas.ctrl.js</file>
-            <file>file:/C:/wamp/www/multimeeting/app/modulos/mod_mm_contacto.php</file>
-            <file>file:/C:/wamp/www/multimeeting/app/modulos/mod_mm_agendamiento.php</file>
-            <file>file:/C:/wamp/www/multimeeting/app/bin/cls/citacion.class.php</file>
-            <file>file:/C:/wamp/www/multimeeting/app/views/frm_mm_actas.php</file>
-        </group>
-=======
         <group/>
->>>>>>> 5dea7a6b3ecb2ab04efd39d7a09be9676ebca654
     </open-files>
 </project-private>

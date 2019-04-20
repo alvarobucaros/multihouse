@@ -52,22 +52,21 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
             var data = null;
             var file =   evt.target.files[0];  
             var reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload = function(event)
-            
+            reader.readAsText(file, 'ISO-8859-1');
+          //  reader.onload = function(event)
+            if(reader.result !='')
             {
-                var csvData = event.target.result;
+                var csvData = reader.result; //event.target.result;
                 data =  $.csv.toArrays(csvData); 
                 var name =  $('#archivo').val();
                 var empresa  = $('#empresa').val();
-                if (confirm('importa los datos a la tabla  desde el archivo '+name)){
+                if (confirm('importa los datos a la tabla  desde el archivo... '+name)){
                      $scope.progress = true;
                      for(i=1;i<data.length;i++){
-                      estr= data[i].toString(); 
-   //                alert(estr+' <> '+estr.toString());
-                    sinTildes(estr);
-                    condicion = empresa+'||'+name+'||'+data[i];               
-                    $.post("inc/opcGrales.php", {accion:'importaDatos', condicion:condicion}, function(data){ 
+                        estr= data[i].toString(); 
+
+                        condicion = empresa+'||'+name+'||'+data[i];               
+                        $.post("inc/opcGrales.php", {accion:'importaDatos', condicion:condicion}, function(data){ 
                      }) 
                      }
                       alert('Importó -' + i + '- filas. correcto !!!');
@@ -81,19 +80,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
                 alert('No puede leer  ' + file.fileName);
             };
         } 
- 
-    function sinTildes(str){
-        salida='';
- 
-        for (ii=0;ii <str.length; ii++) 
-        {
-        salida += str.substr(ii,1).charCodeAt(0) + ' ' ;
-        }
-        alert(str+' <> '+salida);
-        // s.charCodeAt(0)
-        // var res = String.fromCharCode(65);  convierte a letra                
-    }
-    
+   
     function browserSupportFileUpload() {
         var isCompatible = false;
         if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -127,7 +114,6 @@ function carga(){
 
     var filename = $('#fileUpload').val();
     _this.html(filename);
-// alert(filename);
    
 });
 
