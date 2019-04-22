@@ -550,18 +550,18 @@ graba($file,"	lista_id  int(11) NOT NULL AUTO_INCREMENT, ");
 graba($file,"	lista_empresa INT(11) NULL , ");
 graba($file,"	lista_codigo VARCHAR(10) NULL , ");
 graba($file,"	lista_inmueble VARCHAR(10) NULL , ");
-graba($file,"    lista_asiste1 CHAR(1) NULL , ");
+graba($file,"   lista_asiste1 CHAR(1) NULL , ");
 graba($file,"	lista_asiste2 CHAR(1) NULL , ");
-graba($file,"    lista_asiste3 CHAR(1) NULL , ");
+graba($file,"   lista_asiste3 CHAR(1) NULL , ");
 graba($file,"	lista_asiste4 CHAR(1) NULL , ");
 graba($file,"	lista_asiste5 CHAR(1) NULL , ");
 graba($file,"	lista_asiste6 CHAR(1) NULL , ");
-graba($file,"    lista_area DECIMAL(12,2) NULL , ");
+graba($file,"   lista_area DECIMAL(12,2) NULL , ");
 graba($file,"	lista_coeficiente DECIMAL(12,8) NULL , ");
 graba($file,"	lista_propietario VARCHAR(60) NULL , ");
 graba($file,"	lista_cedula VARCHAR(12) NULL , ");
-graba($file,"    lista_obervacion VARCHAR(45) NULL , ");
-graba($file,"    lista_descripcion VARCHAR(45) NULL , ");
+graba($file,"   lista_obervacion VARCHAR(45) NULL , ");
+graba($file,"   lista_descripcion VARCHAR(45) NULL , ");
 graba($file,"  PRIMARY KEY (lista_id) ) ");
 graba($file,"   ENGINE=InnoDB AUTO_INCREMENT=1    DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;   ");               
 graba($file,"	    ");
@@ -578,8 +578,7 @@ graba($file,"   ENGINE=InnoDB AUTO_INCREMENT=1    DEFAULT CHARSET=utf8 COLLATE=u
 graba($file,"	    ");
 graba($file,"	SELECT 'Tabla mm_listactrl creada'; "); 
 graba($file," "); 
-
- graba($file,"  CREATE TABLE IF NOT EXISTS ".$BaseDatos .".mm_agendamiento ( "); 
+graba($file,"  CREATE TABLE IF NOT EXISTS ".$BaseDatos .".mm_agendamiento ( "); 
 graba($file,"	agenda_id int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',  ");
 graba($file,"	agenda_empresa int(11) DEFAULT NULL,  ");
 graba($file,"	agenda_salonId int(11) DEFAULT NULL COMMENT 'SALON', "); 
@@ -627,20 +626,8 @@ graba($file,"    ");
                         <a href="documentation/instalacion.pdf" class="btn btn-primary btn-block btn-flat"> 
                         Ver manual instalaciòn</a>
                     ';           
- //           }
-            
-           // $err = 'Esta Instalación ya fue efectuada ' ;
-     
         }
  
-//        else { 
-//            mysqli_set_charset($mysqli,"utf8");   
-//            }
-            
-//    echo $err;  
-//    error_reporting(E_ALL);
-//    } 
-
 function grabar($ar,$ln){
     str_replace('|','"',$ln);
     fputs($ar,$ln);

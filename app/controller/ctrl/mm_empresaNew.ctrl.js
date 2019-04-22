@@ -40,7 +40,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresa_intervaloCalendario = 'INTERVALO CALENDARIO';
     $scope.form_empresa_FormatoActa = 'FORMATO ACTA';
     $scope.form_empresa_cresidencial = "ES CONJUNTO RESIDENCIAL";
-
+    $scope.form_empresa_ctrl = 'CELULAR USUARIO';
     $scope.form_Phempresa_id = 'Digite id';
     $scope.form_Phempresa_nombre = 'Digite nombre';
     $scope.form_Phempresa_nit = 'Digite nit';
@@ -61,7 +61,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_Phempresa_horarioTermina = 'Digite horario termina';
     $scope.form_Phempresa_intervaloCalendario = 'Digite intervalo calendario';
     $scope.form_Phempresa_FormatoActa = 'Digite formato acta';
-   
+    $scope.form_Phempresa_ctrl = 'Número de celular del administrador';
+    
+    $scope.registro = [];
+    $scope.empresa = $('#e').val();
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.pages = [];
     
     var defaultForm= {
         empresa_id:0,
@@ -71,57 +77,71 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         empresa_direccion:'',
         empresa_telefonos:'',
         empresa_ciudad:'',
-        empresa_logo:'',
-        empresa_autentica:'',
-        empresa_lenguaje:'',
+        empresa_logo:'logoEmpresa.png',
+        empresa_autentica:'C',
+        empresa_lenguaje:'ESP',
         empresa_versionPrd:'',
         empresa_versionBd:'',
         empresa_clave:'',
         empresa_email:'',
-        empresa_registrsoXpagina:0,
-        empresa_diasTrabaja:'',
-        empresa_horarioInicio:'',
-        empresa_horarioTermina:'',
-        empresa_intervaloCalendario:'',
-        empresa_FormatoActa:'',
+        empresa_registrsoXpagina:10,
+        empresa_diasTrabaja:'L-M-M-J-V',
+        empresa_horarioInicio:'7:00',
+        empresa_horarioTermina:'18:00',
+        empresa_intervaloCalendario:'M',
+        empresa_FormatoActa:'Estandard',
         empresa_cresidencial:'N'
    };
-    
-    
+     
     getInfo();
     
  $('#idForm').slideToggle();
 
     function getInfo(){
-        empresa = $('#e').val();
-        $http.post('modulos/mod_mm_empresa.php?op=r',{'op':'r','empresa':empresa}).success(function(data){
+   
+        $http.post('modulos/mod_mm_empresaNew.php?op=r',{'op':'r'}).success(function(data){
         $scope.details = data;
-        $scope.registro.empresa_id = data[0].empresa_id; 
-        $scope.registro.empresa_nombre = data[0].empresa_nombre; 
-        $scope.registro.empresa_nit = data[0].empresa_nit; 
-        $scope.registro.empresa_web = data[0].empresa_web; 
-        $scope.registro.empresa_direccion = data[0].empresa_direccion; 
-        $scope.registro.empresa_telefonos = data[0].empresa_telefonos; 
-        $scope.registro.empresa_ciudad = data[0].empresa_ciudad; 
-        $scope.registro.empresa_logo = data[0].empresa_logo; 
-        $scope.registro.empresa_autentica = data[0].empresa_autentica; 
-        $scope.registro.empresa_lenguaje = data[0].empresa_lenguaje; 
-        $scope.registro.empresa_versionPrd = data[0].empresa_versionPrd; 
-        $scope.registro.empresa_versionBd = data[0].empresa_versionBd; 
-        $scope.registro.empresa_clave = data[0].empresa_clave; 
-        $scope.registro.empresa_email = data[0].empresa_email; 
-        $scope.registro.empresa_registrsoXpagina = data[0].empresa_registrsoXpagina; 
-        $scope.registro.empresa_diasTrabaja = data[0].empresa_diasTrabaja; 
-        $scope.registro.empresa_horarioInicio = data[0].empresa_horarioInicio; 
-        $scope.registro.empresa_horarioTermina = data[0].empresa_horarioTermina; 
-        $scope.registro.empresa_intervaloCalendario = data[0].empresa_intervaloCalendario; 
-        $scope.registro.empresa_FormatoActa = data[0].empresa_FormatoActa; 
-        $scope.registro.empresa_cresidencial = data[0].empresa_cresidencial;
-        });   
+        $scope.configPages();
+        console.log('empty');
+        $('#idForm').slideToggle();
+        });       
     }
 
+    $scope.configPages = function() {
+        $scope.pages.length = 0;
+        var ini = $scope.currentPage - 4;
+        var fin = $scope.currentPage + 5;
+        if (ini < 1) {
+            ini = 1;
+            if (Math.ceil($scope.details.length / $scope.pageSize) > 10)
+                fin = 10;
+            else
+                fin = Math.ceil($scope.details.length / $scope.pageSize);
+        }
+        else {
+            if (ini >= Math.ceil($scope.details.length / $scope.pageSize) - 10) {
+                ini = Math.ceil($scope.details.length / $scope.pageSize) - 10;
+                fin = Math.ceil($scope.details.length / $scope.pageSize);
+            }
+        }
+        if (ini < 1) ini = 1;
+        for (var i = ini; i <= fin; i++) {
+            $scope.pages.push({no: i});
+        }
+
+        if ($scope.currentPage >= $scope.pages.length)
+            $scope.currentPage = $scope.pages.length - 1;
+    };
+
+    $scope.setPage = function(index) {
+        $scope.currentPage = index - 1;
+    };
+    
+    $scope.show_form = true;
+
+
     function getCombos(){
-} 
+    } 
  
 $scope.show_form = true;
 // Function to add toggle behaviour to form
@@ -158,7 +178,6 @@ $scope.registro = function(info){ alert ('inserta');};
                 'empresa_intervaloCalendario':empresa_intervaloCalendario, 'empresa_FormatoActa':empresa_FormatoActa, 
                 'empresa_cresidencial':empresa_cresidencial}).success(function(data){
             $scope.show_form = true;
-    alert(data);
             if (data === true) {
             getInfo();
             }
@@ -201,8 +220,6 @@ $scope.registro = function(info){ alert ('inserta');};
         if($('#empresa_logo').val()===''){er+='falta logo\n';}
         if($('#empresa_autentica').val()===''){er+='falta autentica\n';}
         if($('#empresa_lenguaje').val()===''){er+='falta lenguaje\n';}
-        if($('#empresa_versionPrd').val()===''){er+='falta version app\n';}
-        if($('#empresa_versionBd').val()===''){er+='falta version bd\n';}
         if($('#empresa_clave').val()===''){er+='falta clave\n';}
         if($('#empresa_email').val()===''){er+='falta email\n';}
         if($('#empresa_registrsoXpagina').val()===''){er+='falta registrso pagina\n';}
@@ -213,7 +230,7 @@ $scope.registro = function(info){ alert ('inserta');};
         if($('#empresa_FormatoActa').val()===''){er+='falta formato acta\n';}
         
         if (er==''){
-        $http.post('modulos/mod_mm_empresa.php?op=a',{'op':'a', 'empresa_id':info.empresa_id, 'empresa_nombre':info.empresa_nombre, 
+        $http.post('modulos/mod_mm_empresaNew.php?op=a',{'op':'a', 'empresa_id':info.empresa_id, 'empresa_nombre':info.empresa_nombre, 
             'empresa_nit':info.empresa_nit, 'empresa_web':info.empresa_web, 'empresa_direccion':info.empresa_direccion,
             'empresa_telefonos':info.empresa_telefonos, 'empresa_ciudad':info.empresa_ciudad, 'empresa_logo':info.empresa_logo, 
             'empresa_autentica':info.empresa_autentica, 'empresa_lenguaje':info.empresa_lenguaje, 'empresa_versionPrd':info.empresa_versionPrd,

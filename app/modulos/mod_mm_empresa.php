@@ -24,12 +24,11 @@ switch ($op)
         break;
 }
   
-
- 
     function  leeRegistros($data) 
     { 
       $objClase = new DBconexion(); 
       $con = $objClase->conectar(); 
+      $empresa = $data->empresa;
        { 
             $query = "SELECT  empresa_id, empresa_nombre, empresa_nit, empresa_web, "
                     . "empresa_direccion, empresa_telefonos, empresa_ciudad, empresa_logo, "
@@ -37,7 +36,7 @@ switch ($op)
                     . " empresa_versionBd, empresa_clave, empresa_email, empresa_registrsoXpagina, "
                     . " empresa_diasTrabaja, empresa_horarioInicio, empresa_horarioTermina, "
                     . " empresa_intervaloCalendario, empresa_FormatoActa, empresa_cresidencial " 
-                    . " FROM mm_empresa ORDER BY empresa_nombre ";             
+                    . " FROM mm_empresa WHERE empresa_id = '". $empresa ."' ORDER BY empresa_nombre ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  

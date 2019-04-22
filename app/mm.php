@@ -25,6 +25,8 @@ $cr=$datos[7];  // conjunto residencial
 $ctrl=$datos[9];  // conjunto residencial
 $avatar = 'photo/'.$datos[6]; // avatar
 $logo = 'reports/images/'.$datos[8]; // logo empresa
+$idioma="lenguage".$datos[10].".php";
+include_once 'inc/'.$idioma;
 
 if (!isset($_GET['op'])){
     $op='ini';
@@ -33,7 +35,6 @@ if (!isset($_GET['op'])){
   $op=$_GET['op']; 
 }
 
- include_once 'inc/lenguageES.php'; 
  $nodo = '';
  $subNodo='';
 
@@ -230,7 +231,7 @@ if (!isset($_GET['op'])){
             <div class="content-popup" style="width: 450px; height: 300px; border: 2px; border-color: greenyellow">
                 
                 <div id="dialog"  class="wrapp">
-                    <h3 class="textos">Usuario, cambia de contraseña?</h3>
+                    <h3 class="textos"><?php echo $ztmm01 ?></h3>
                     <form>
                         <table class="tablex">
                             <tr>
@@ -267,7 +268,9 @@ if (!isset($_GET['op'])){
         if ($op ==  'agSgmnto'){
             include_once 'views/frm_mm_AgendaSegumiento.php';
         }
-        
+         if ($op ==  'emprnew'){
+            include_once 'views/frm_mm_empresaNew.php';
+        }       
         if ($op ==  'empr'){
             include_once 'views/frm_mm_empresa.php';
         }

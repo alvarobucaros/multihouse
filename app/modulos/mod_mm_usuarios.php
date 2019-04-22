@@ -135,11 +135,13 @@ switch ($op)
     } 
  
 	 
-    function lista0() 
+    function lista0($data) 
     { 
         $objClase = new DBconexion(); 
-        $con = $objClase->conectar();	 
-         $query = "SELECT perfil_codigo,   perfil_nombre FROM mm_perfiles ORDER BY   perfil_nombre";
+        $con = $objClase->conectar();
+        $empresa = $data->empresa;
+        $query = "SELECT perfil_codigo, perfil_nombre FROM mm_perfiles WHERE perfil_empresa = '" .$empresa . "' ORDER BY   perfil_nombre";
+     
          $result = mysqli_query($con, $query); 
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)

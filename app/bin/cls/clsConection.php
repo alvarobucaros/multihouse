@@ -12,12 +12,7 @@ class DBconexion{
         var $er;
         
 	function DBconexion(){
-//		$this->BaseDatos = "atominge_mmeeting";
-//		$this->Servidor = "localhost";
-//		$this->Usuario = "atominge_mm123";
-//		$this->Clave = "mmCien1000";   
-            
-            ini_set('track_errors', 1);
+          ini_set('track_errors', 1);
             $fd = fopen('../bin/cls/mm.ctl', 'r');
 
             $datos=fread($fd,filesize('../bin/cls/mm.ctl')); 
@@ -118,10 +113,9 @@ class DBconexion{
                         " usuario_empresa, empresa_nombre, empresa_nit, empresa_id,  " .
                         " empresa_web, empresa_direccion, empresa_telefonos, empresa_ciudad, " .
                         " empresa_logo, empresa_autentica, empresa_lenguaje, empresa_cresidencial,  " .
-                        " empresa_ctrl FROM mm_usuarios " .
+                        " empresa_ctrl,usuario_celular FROM mm_usuarios " .
                         " INNER JOIN mm_empresa ON empresa_id = usuario_empresa WHERE " . $where;
                $result = ''; 
-//echo $strSql;
                 $resultado =  mysqli_query($con, $strSql);
                 $totRec =   $resultado->num_rows;  ///$número_filas = mysql_num_rows($resultado);  
                 if ($totRec > 0) {
@@ -146,7 +140,7 @@ class DBconexion{
                                 if($usuario['empresa_autentica']=='U' && $usuario['usuario_user']==$email ){
                                    $ok=true;
                                 }
-                                if($usuario['empresa_autentica']=='C' && $usuario['empresa_telefonos']==$email ){
+                                if($usuario['empresa_autentica']=='C' && $usuario['usuario_celular']==$email ){
                                    $ok=true;
                                 }  
                                 if ($ok){
@@ -160,6 +154,7 @@ class DBconexion{
                                     $mm .= '||'.$usuario['usuario_id'].'||'.$usuario['usuario_empresa'];
                                     $mm .= '||'.$usuario['empresa_nombre'].'||'.$usuario['usuario_avatar']; 
                                     $mm .= '||'.$usuario['empresa_cresidencial'].'||'.$usuario['empresa_logo'].'||'.$Ctrl; 
+                                    $mm .= '||'.$usuario['empresa_lenguaje'];
                                     setcookie("mm",$mm);
                                     $_SESSION = array();
                                     $_SESSION['mm']=$mm;
@@ -182,8 +177,7 @@ class DBconexion{
                 }
             }else{
                     $result.="Error: Base de datos no conecta";
-                }
-       
+                }      
            return $result;
         }
           

@@ -1,7 +1,12 @@
 <?php
-include_once("../bin/cls/clsConection.php");
-$objClase = new DBconexion();
-$con = $objClase->conectar();
+
+    include_once("../bin/cls/clsConection.php");
+    $objClase = new DBconexion();
+    $con = $objClase->conectar();
+    $data = json_decode(file_get_contents("php://input")); 
+    $op = mysqli_real_escape_string($con, $data->op);
+   
+    $empresa = $data->empresa;
     $fd = fopen('../bin/cls/mm.ctl', 'r');
 
     $datos=fread($fd,filesize('../bin/cls/mm.ctl')); 
@@ -9,7 +14,7 @@ $con = $objClase->conectar();
     fclose($fd);
     
     $ctrl=$data[0] . '||' . $data[1] . '||' . $data[2] . '||' . $data[3];
-   // echo $ctrl;
+
     $servidor = funde($data[0]);
     $baseDatos = funde($data[1]);
     $usuario = funde($data[2]);
@@ -21,7 +26,7 @@ $con = $objClase->conectar();
       if ($con){
        {
             $query = "SELECT empresa_versionPrd, empresa_versionBd, empresa_clave, " . 
-                     "empresa_nombre, empresa_nit FROM mm_empresa LIMIT 1;";                 
+                     "empresa_nombre, empresa_nit FROM mm_empresa WHERE empresa_id = '" . $empresa ."'";                 
             $result = mysqli_query($con, $query);
             if(mysqli_num_rows($result) != 0) 
                 {

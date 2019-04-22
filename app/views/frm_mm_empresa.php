@@ -1,12 +1,9 @@
-
     <div class="container "  ng-controller="mainController">
         <h3 class="text-left">{{form_title}}</h3>
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
                   ng-submit="insertInfo(registro);" hidden="">
-
-   
 
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresa_nombre">{{form_empresa_nombre}}</label>
@@ -219,13 +216,11 @@
                   ?>
                 <div style='display: none'>
                 <input type="text"	 ng-model="registro.empresa_id" id ='empresa_id'  name ='empresa_id' value="{{registro.empresa_id}}"/>
-
-   
                 </div>
             </form>
 	</div>
 </div>
 
-<script src="controller/min/mm_empresa.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrl/mm_empresa.ctrl.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Oct 23, 2017 9:07:44   <<<<<<< -->

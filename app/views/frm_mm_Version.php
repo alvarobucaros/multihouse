@@ -1,6 +1,3 @@
-
-<!--FRMVERSION-->
-
     <div class="container "  ng-controller="mainController">
         <h3 class="text-left">{{form_title1}}<strong>{{form_title2}}</strong></h3>
         <h4 class="text-left">{{form_subTitle}}</h4>
@@ -98,5 +95,5 @@
 
 
 
-<script src="controller/min/mm_version.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrl/mm_version.ctrl.js" type="text/javascript"></script>
 

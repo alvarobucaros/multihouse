@@ -23,14 +23,12 @@ app.controller("mainController",['$scope','$http', function($scope,$http){
     $scope.form_empresa_baseDatos = 'Nombre Base de Datos';
     $scope.form_empresa_version = 'Versión';
     $scope.form_btnActualiza= 'Al menu';
- 
+    $scope.empresa = $('#e').val();
     getInfo();
- 
 
     function getInfo(){
-        empresa = $('#comite_empresa').val();
-        $http.post('modulos/mod_mm_Version.php?op=r',{'op':'r', 'empresa_id':empresa}).success(function(data, textStatus){
-//        alert(data);
+        empresa=  $('#e').val();
+        $http.post('modulos/mod_mm_Version.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
         dato=data.split('||'); 
     $scope.empresa_nombre=dato[3]+' Nit:'+dato[4]; 
     $scope.empresa_versionPrd=dato[0]; 

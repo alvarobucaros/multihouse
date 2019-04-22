@@ -32,3 +32,6 @@ $btntitIngresa="Ingreso";
 
 $chkactivo="Activo";
 $chkinactivo="Inactivo";
+
+$ztmm01="Usuario, cambia de contraseña?"
+

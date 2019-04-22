@@ -24,8 +24,6 @@
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
                   ng-submit="insertInfo(registro);" hidden="">
 
-   
-
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="usuario_nombre">{{form_usuario_nombre}}</label>
                    <div class="col-md-6">

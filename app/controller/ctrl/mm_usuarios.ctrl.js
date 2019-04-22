@@ -80,12 +80,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     }
 
     function getCombos(){
-         $http.post('modulos/mod_mm_usuarios.php?op=0',{'op':'0'}).success(function(data){
+        empresa=$scope.empresa;
+         $http.post('modulos/mod_mm_usuarios.php?op=0',{'op':'0', empresa:empresa}).success(function(data){
          $scope.operators0 = data;
          });
 } 
 
-	$scope.configPages = function() {
+    $scope.configPages = function() {
         $scope.pages.length = 0;
         var ini = $scope.currentPage - 4;
         var fin = $scope.currentPage + 5;

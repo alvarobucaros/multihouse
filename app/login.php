@@ -1,8 +1,14 @@
 <?php
 session_start();
-
 $version = phpversion();
-$idioma="lenguageES.php";
+ if(isset($_SESSION['mm'])) {
+    $datos = explode('||',$_SESSION['mm']);
+    $id=$datos[10];
+    $idioma="lenguage".$id.".php";
+ } else{
+     $idioma="lenguageES.php";
+ }
+
 include_once 'inc/'.$idioma;
 error_reporting(E_ALL);
 ?>
@@ -79,11 +85,8 @@ error_reporting(E_ALL);
         if (msg==''){
          
             ant=$('#autentica').val();
-
-            parametro= $('#mail').val()+'||'+ $('#pwd').val()+'||'+ ant
-   
+            parametro= $('#mail').val()+'||'+ $('#pwd').val()+'||'+ ant   
             $.post("inc/opcGrales.php", {accion:'valiUser', condicion:parametro}, function(data){
-      //       alert(data);
                 if (data.substr(0,5)=='Error'){
                      alert(data);        
                 }
