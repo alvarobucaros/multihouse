@@ -125,9 +125,7 @@
                     </tr>
                    
                      <tr ng-repeat="detail in details| filter:search_query  | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-<!--                <td>{{detail.tema_id}}</td>
-                    <td>{{detail.tema_agendaId}}</td>
-                    <td>{{detail.tema_empresa}}</td>-->
+
                     <td>{{detail.comite_nombre}}</td>
                     <td>{{detail.tema_titulo}}</td>
                     <td>{{detail.tema_detalle}}</td>
@@ -153,6 +151,6 @@
         </div>
 </div>
 
-<script src="controller/mm_agendatemas.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_agendatemas.ctrl.min.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Dec 26, 2017 5:02:00   <<<<<<< -->

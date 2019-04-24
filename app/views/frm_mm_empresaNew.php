@@ -297,6 +297,6 @@
         </div>
 </div>
 
-<script src="controller/ctrl/mm_empresaNew.ctrl.js" type="text/javascript"></script>
-	 
+<script src="controller/min/mm_empresaNew.ctrl.min.js" type="text/javascript"></script>
+
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Saturday,Apr 20, 2019 3:15:22   <<<<<<< -->

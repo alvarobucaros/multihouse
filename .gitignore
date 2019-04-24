@@ -2,6 +2,13 @@
 Thumbs.db
 ehthumbs.db
 
+# mis eliminados.
+*.dat
+sinUsar/
+DibujosVarios/
+imagenesPPTyDocumentos/
+E000*/
+
 # Folder config file
 Desktop.ini
 

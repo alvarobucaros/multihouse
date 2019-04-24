@@ -52,7 +52,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
        $scope.comiteId = $scope.registro.agenda_comiteId;
        $scope.registro.comiteId = $scope.comiteId;    
        $http.post('modulos/mod_mm_agendaanexos.php?op=1',{'op':'1','comite':$scope.comiteId, 'empresa':empresa}).success(function(data){
-//alert(data);
         $scope.operators1 = data;
         });      
     };
@@ -61,8 +60,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.agendaId = $scope.registro.agenda_id;
         $scope.registro.actaId = $scope.agendaId;
         $http.post('modulos/mod_mm_agendaanexos.php?op=fch',{'op':'fch','agenda':$scope.agendaId}).success(function(data){
-        $scope.registro.anno = data;
-//alert($scope.comiteId +' '+ $scope.agendaId) ;       
+        $scope.registro.anno = data;   
         leeAnexos($scope.comiteId, $scope.agendaId);
         });    
     };

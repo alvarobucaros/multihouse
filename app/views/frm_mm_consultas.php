@@ -136,4 +136,4 @@
     </div> 
 </div>
 
-<script src="controller/ctrl/mm_consultas.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_consultas.ctrl.min.js" type="text/javascript"></script>

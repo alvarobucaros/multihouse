@@ -116,7 +116,6 @@ switch ($op)
                     " agenda_fechaDesde, agenda_fechaHasta, agenda_comiteAnteriorId, agenda_usuario, agenda_enFirme, " .
                     " agenda_conCitacion, agenda_acta, agenda_estado,agenda_causal " .
                     " FROM mm_agendamiento ORDER BY agenda_empresa ";  
-            echo $query;
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -221,11 +220,10 @@ function  leeUnRegistro($data)
                        " AND tema_agendaId = (  SELECT MAX(tema_agendaId) FROM  mm_agendatemas WHERE tema_tipo='PDNT' AND " .
                        " tema_comite = " . $rec[0] . " ) ";
                 mysqli_query($con, $query);
-              //  asigna orden de temas y de invitados
+                $orden = 1;
                 $query = "SELECT invitado_id FROM mm_agendainvitados WHERE invitado_agendaId = " .  $last_id;
                 $result = mysqli_query($con, $query); 
-                if(mysqli_num_rows($result) != 0)
-                $orden = 1;    
+                if(mysqli_num_rows($result) !== 0)                   
                 { 
                     while($row = mysqli_fetch_assoc($result)) {
                         $id = $row['invitado_id'];
@@ -234,11 +232,10 @@ function  leeUnRegistro($data)
                         $resultar = mysqli_query($con, $query); 
                     } 
                 }
-
+                $orden = 1;
                 $query = "SELECT tema_id FROM mm_agendatemas WHERE tema_agendaId = " .  $last_id;
                 $result = mysqli_query($con, $query); 
-                if(mysqli_num_rows($result) != 0)
-                $orden = 1;    
+                if(mysqli_num_rows($result) != 0)                   
                 { 
                     while($row = mysqli_fetch_assoc($result)) {
                         $id = $row['tema_id'];

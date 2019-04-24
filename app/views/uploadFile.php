@@ -86,31 +86,31 @@ $sqlSelect = "SELECT inmueble_id, inmueble_empresa, inmueble_codigo, inmueble_de
 $result = mysqli_query($conn, $sqlSelect);
 if (mysqli_num_rows($result) > 0) {
 ?>
-<table id='userTable'>
-<thead>
-<tr>
-<th>User ID</th>
-<th>User Name</th>
-<th>First Name</th>
-<th>Last Name</th>
+    <table id='userTable'>
+    <thead>
+    <tr>
+    <th>User ID</th>
+    <th>User Name</th>
+    <th>First Name</th>
+    <th>Last Name</th>
 
-</tr>
-</thead>
-<?php
-while ($row = mysqli_fetch_array($result)) {
-?>
-<tbody>
-<tr>
-<td><?php echo $row['inmueble_codigo']; ?></td>
-<td><?php echo $row['inmueble_descripcion']; ?></td>
-<td><?php echo $row['inmueble_propNombre']; ?></td>
-<td><?php echo $row['inmueble_propCedula']; ?></td>
-</tr>
-<?php
-}
-?>
-</tbody>
-</table>
+    </tr>
+    </thead>
+    <?php
+    while ($row = mysqli_fetch_array($result)) {
+    ?>
+        <tbody>
+        <tr>
+        <td><?php echo $row['inmueble_codigo']; ?></td>
+        <td><?php echo $row['inmueble_descripcion']; ?></td>
+        <td><?php echo $row['inmueble_propNombre']; ?></td>
+        <td><?php echo $row['inmueble_propCedula']; ?></td>
+        </tr>
+        <?php
+        }
+        ?>
+        </tbody>
+    </table>
 <?php } ?>
 </div>
 </div>

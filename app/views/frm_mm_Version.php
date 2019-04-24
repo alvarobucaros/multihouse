@@ -26,7 +26,6 @@
                         ng-model="empresa_clave"  value="{{empresa_clave}}" readonly="yes"/>
                     </div>
                 </div> 
-<!--SELECT grupo_id, grupo_empresa, empresa_nombre, empresa_clave, grupo_comite, grupo_activo FROM mm_grupos-->
                 <div class="form-group">
                     <label class="control-label col-md-4" for="empresa_versionPrd">{{form_empresa_versionPrd}}</label>
                     <div class="col-md-6">
@@ -95,5 +94,5 @@
 
 
 
-<script src="controller/ctrl/mm_version.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_version.ctrl.min.js" type="text/javascript"></script>
 

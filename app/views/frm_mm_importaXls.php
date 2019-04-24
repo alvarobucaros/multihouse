@@ -81,7 +81,5 @@
 </div>
 
 <script src="bin/js/jquery.csv.min.js" type="text/javascript"></script>
-<!--
+
 <script src="controller/min/mm_importaXls.ctrl.min.js" type="text/javascript"></script>
--->
-<script src="controller/ctrl/mm_importaXls.ctrl.js" type="text/javascript"></script>

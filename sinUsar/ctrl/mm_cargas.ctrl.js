@@ -1,6 +1,3 @@
-
-
-
 $(document).ready(function (e) {
 $("#uploadimage").on('submit',(function(e) {
 e.preventDefault();
@@ -51,7 +48,7 @@ var imagefile = file.type;
 
 var match= ["application/pdf","application/pdf"];
 if (dibujo !== 'C'){var match= ["image/jpeg","image/png"];}
-//if (dibujo === 'C'){var match= ["application/png","application/jpg"];}
+
 if(!((imagefile===match[0]) || (imagefile===match[1])))
 {
     err="Solo carga documentos PDF\nConvierta el documento a PDF";
@@ -81,20 +78,9 @@ $("#file").css("color","green");
 
     function leeAnexos(comite, agenda){ 
          $('#btnReCarga').show();
-//        empresa = $('#e').val().trim();
-//        $http.post('modulos/mod_mm_agendaanexos.php?op=r',{'op':'r','empresa':empresa, 'comite':comite, 'agenda':agenda}).success(function(data){           
-//        $scope.details = data;
-//        }); 
-//        $('#divRuedita').hide();
     }
 // 
    function actualiza(id, comiteid, agendaid , anexo, descripcion, empresa, anno){  
-//            $http.post('modulos/mod_mm_agendaanexos.php?op=a',{'op':'a', 'anexos_id':id, 'anexos_comiteid':comiteid, 'anexos_agendaid':agendaid, 
-//                'anexos_anexo':anexo, 'anexos_descripcion':descripcion, 'anexos_empresa':empresa, 'anexos_empresa':empresa}).success(function(data){
-//            if (data === 'Ok') {
-//            leeAnexos(comite, agenda);
-//            }
-//            });
      };
 });
 

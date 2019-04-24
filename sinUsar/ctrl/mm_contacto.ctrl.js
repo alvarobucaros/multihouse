@@ -4,7 +4,12 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_subtitle = 'Comuníquenos sus apreciaciones, inquietudes o incidencias';   
     $scope.form_btnEnvia = 'Enviar';
     $scope.form_btnBorra = 'Limpiar';
-    
+    $scope.Nombre = 'Nombre';
+    $scope.tema = 'Tema';
+    $scope.celular = 'Celular';
+    $scope.email='Email';
+    $scope.mensaje='Mensaje';
+    $scope.alinicio= 'Ir al Inicio';
     $scope.registroMail = {};
     $scope.retorno = false;
     

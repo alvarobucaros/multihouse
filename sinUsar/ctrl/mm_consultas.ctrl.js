@@ -97,14 +97,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         }      
     };
     
-//    function aExcel(parametros){
-//            $.post("includes/opcAdmParam.php", {accion:'aExcelUsuarios', condicion:parametros}, function(data){
-//            $('#miExcel').html(data); 
-//            alert('exporta a Excel. Cargue y renombre el documento... ');
-//            window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
-//        }); 
-//    }
-
 
     }]);
 	 

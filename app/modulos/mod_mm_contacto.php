@@ -118,6 +118,7 @@ function enviaInvitacionComite($data){
     $cuerpo .= '<p>'.$empresaDir. '</p>';
     $invitado_id=0;
     $info='';
+    $agenda = $rec[0];
     ob_end_clean();
     $enviados=0;
     $mensaje='';
@@ -127,7 +128,7 @@ function enviaInvitacionComite($data){
     $query = "SELECT invitado_id, invitado_nombre, invitado_empresa, invitado_cargo, invitado_celuar, invitado_email,  " .
              " tema_orden , tema_titulo, tema_detalle, tema_tipo, tema_responsable  " .
              " FROM mm_agendainvitados INNER JOIN mm_agendatemas ON invitado_agendaId = tema_agendaId   " .
-             " WHERE invitado_agendaId = " .$rec[0] .
+             " WHERE invitado_agendaId = " . $agenda .
              " ORDER BY invitado_id, tema_orden ";
     $result = mysqli_query($con, $query); 
 

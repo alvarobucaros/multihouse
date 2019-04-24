@@ -103,73 +103,68 @@
         </ul>
     </div>
 	
-	
-	
-<div class="col-md-6">    
-      <ul>   
-         <a href="../documentation/listaTemasPermanantes.pdf">
-        <img src="img/pdf-dist.png" alt="Temas"/> Temas Recurrentes</a>     
-    </ul>
-</div>
-<div class="col-md-6">
-     <ul>
-          <a href="../documentation/" class="external">
-         <img src="img/video.jpg" alt=""/> Desarrollo de la reunión </a>          
-     </ul>
-</div>    
+    <div class="col-md-6">    
+          <ul>   
+             <a href="../documentation/listaTemasPermanantes.pdf">
+            <img src="img/pdf-dist.png" alt="Temas"/> Temas Recurrentes</a>     
+        </ul>
+    </div>
+    <div class="col-md-6">
+         <ul>
+              <a href="../documentation/" class="external">
+             <img src="img/video.jpg" alt=""/> Desarrollo de la reunión </a>          
+         </ul>
+    </div>    
+
+    <div class="col-md-6">    
+        <ul>   
+             <a href="../documentation/agendaReunion.pdf">
+            <img src="img/pdf-dist.png" alt="Temas"/> Agenda reuniones</a>     
+        </ul>
+    </div>
+    <div class="col-md-6">
+         <ul>
+              <a href="../documentation/" class="external">
+             <img src="img/video.jpg" alt=""/> Consultas </a>          
+         </ul>
+    </div>        
+  
     
-    
-    
-<div class="col-md-6">    
-    <ul>   
-         <a href="../documentation/agendaReunion.pdf">
-        <img src="img/pdf-dist.png" alt="Temas"/> Agenda reuniones</a>     
-    </ul>
-</div>
-<div class="col-md-6">
-     <ul>
-          <a href="../documentation/" class="external">
-         <img src="img/video.jpg" alt=""/> Consultas </a>          
-     </ul>
-</div>        
-    
-    
-    
-<div class="col-md-6">      
-    <ul>   
-        <a href="../documentation/LaEmpresa.pdf">
-        <img src="img/pdf-dist.png" alt="La empresa"> Parámetros de la empresda</a>
-    </ul>
-</div>
-<div class="col-md-6">
-     <ul>
-          <a href="../documentation/" class="external">
-         <img src="img/video.jpg" alt=""/> Administración </a>          
-     </ul>
-</div>       
-<div class="col-md-6">
-    <ul>   
-        <a href="../documentation/administracion.pdf">
-        <img src="img/pdf-dist.png" alt="Administración"/> Parámetros administrativos</a>
-    </ul> 
-</div>
-<div class="col-md-6">
+    <div class="col-md-6">      
+        <ul>   
+            <a href="../documentation/LaEmpresa.pdf">
+            <img src="img/pdf-dist.png" alt="La empresa"> Parámetros de la empresda</a>
+        </ul>
+    </div>
+    <div class="col-md-6">
+         <ul>
+              <a href="../documentation/" class="external">
+             <img src="img/video.jpg" alt=""/> Administración </a>          
+         </ul>
+    </div>       
+    <div class="col-md-6">
+        <ul>   
+            <a href="../documentation/administracion.pdf">
+            <img src="img/pdf-dist.png" alt="Administración"/> Parámetros administrativos</a>
+        </ul> 
+    </div>
+    <div class="col-md-6">
      <ul>
           <a href="../documentation/" class="external">
          <img src="img/video.jpg" alt=""/> Conjuntos residenciales </a>          
      </ul>
-</div>       
-<div class="col-md-6">
-    <ul>   
-        <a href="../documentation/ayudas.pdf" class="external">
-        <img src="img/pdf-dist.png" alt="Ayudas"/> Ayudas de la aplicación</a>     
-    </ul>
-</div> 
-<div class="col-md-6">
-     <ul>
-          <a href="../documentation/" class="external">
-         <img src="img/video.jpg" alt=""/> Ayudas </a>          
-     </ul>
-</div>       
-</div>
+    </div>       
+    <div class="col-md-6">
+        <ul>   
+            <a href="../documentation/ayudas.pdf" class="external">
+            <img src="img/pdf-dist.png" alt="Ayudas"/> Ayudas de la aplicación</a>     
+        </ul>
+    </div> 
+    <div class="col-md-6">
+         <ul>
+              <a href="../documentation/" class="external">
+             <img src="img/video.jpg" alt=""/> Ayudas </a>          
+         </ul>
+    </div>       
+    </div>
 <script src="controller/min/mm_documentacion.ctrl.min.js" type="text/javascript"></script>

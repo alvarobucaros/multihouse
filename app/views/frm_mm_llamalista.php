@@ -125,6 +125,6 @@
         </div>
 </div>
 
-<script src="controller/ctrl/mm_llamalista.ctrl.js" type="text/javascript"></script>
+<script src="controller/min/mm_llamalista.ctrl.min.js" type="text/javascript"></script>
 	 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Aug 26, 2018 10:18:56   <<<<<<< -->

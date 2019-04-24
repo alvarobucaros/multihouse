@@ -502,19 +502,11 @@
            <div class="col-md-2" ng-show="enviaImg" >
                <img src="img/loader.gif" alt=""/>
            </div>
-        </div>         
-        
-        
-        
-        
+        </div>            
     </form>
 </div>
  </div>
-
- <script src="controller/ctrl/mm_agendamiento.ctrl.js" type="text/javascript"></script>
-<!--
-<script src="controller/min/mm_agendamiento.ctrl.min.js" type="text/javascript"></script>
--->
+ <script src="controller/min/mm_agendamiento.ctrl.min.js" type="text/javascript"></script>
 <script>
 $('ul.tabs').each(function(){
   // For each set of tabs, we want to keep track of

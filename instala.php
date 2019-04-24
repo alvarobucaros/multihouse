@@ -94,6 +94,7 @@
 <script src="app/js/angular-script.js" type="text/javascript"></script>
 
 <script src="app/js/angular.min.js" type="text/javascript"></script>
-<script src="app/controller/ctrl/mm_instala.ctrl.js" type="text/javascript"></script>
+<script src="app/controller/min/mm_instala.ctrl.min.js" type="text/javascript"></script>
+
 </html>
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Nov 04, 2018 12:51:53   <<<<<<< -->

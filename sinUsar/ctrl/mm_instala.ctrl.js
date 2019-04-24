@@ -11,7 +11,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_estado51 = 'ONLINE';
 
     $scope.form_id = 'ID';
-    $scope.form_servidor = 'SERVIDOR'
+    $scope.form_servidor = 'SERVIDOR';
     $scope.form_basedatos = 'BASEDATOS';
     $scope.form_usuario = 'USUARIO';
     $scope.form_password = 'PASSWORD';

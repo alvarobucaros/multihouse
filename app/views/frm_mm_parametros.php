@@ -34,9 +34,7 @@
                 ng-model="horarioInicio" Placeholder="{{form_PhhorarioInicio}}"/>
             </div>
         </div>
-<!--// param_empresaid, param_registrsoXpagina, param_diasTrabaja, param_horarioInicio, param_horarioTermina, param_intervaloCalendario 
 
-   -->
         <div class="form-group">
             <label class="control-label col-md-4" for="horarioTermina">{{form_horarioTermina}}</label>
             <div class="col-md-6">

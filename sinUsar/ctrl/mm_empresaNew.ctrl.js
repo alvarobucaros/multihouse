@@ -1,6 +1,6 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Parámetros Empresa';
+    $scope.form_title = 'Crea/Actualiza Empresa';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
@@ -190,9 +190,6 @@ $scope.registro = function(info){ alert ('inserta');};
     {  
         $scope.registro =  info;  
         $('#idForm').slideToggle();
-       // if(registro.grupo_activo=='A'){registro.grupoactivo=true;}
-       // else{registro.grupoinactivo=true;}
-
     };
 
     $scope.deleteInfo =function(info)

@@ -205,12 +205,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         co= $scope.nroQuorum;
         q = parseFloat($scope.porcQuorum);
         if (coef*100 > q){ $scope.semaforo= "semaforored";} else { $scope.semaforo="semaforogreen"}
-//     if(someValue=="first")
-//            return "ClassA"
-//     else if(someValue=="second")
-//         return "ClassB";
-//     else
-//         return "ClassC";
     }
         
     $scope.configPages = function() {

@@ -53,5 +53,5 @@
     </section>
 </div>
 
-    <script src="controller/ctrl/mm_contacto.ctrl.js" type="text/javascript"></script>
+    <script src="controller/min/mm_contacto.ctrl.min.js" type="text/javascript"></script>
  

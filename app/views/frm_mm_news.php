@@ -45,9 +45,7 @@
                         ng-model="empresa_versionBd"  value="{{empresa_versionBd}}" readonly="yes"/>
                     </div>
                 </div> 
-<!--
-            <div> <img src="www.http://atomingenieria.com/reune3a.jpg>" </div>
--->
+
             </form>
         </div>
         <div class="clearfix"></div>

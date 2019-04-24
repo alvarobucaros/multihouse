@@ -45,7 +45,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_tema_responsable = 'RESPONSABLE';
     $scope.form_tema_fechaAsigna = 'FECHA ASIGNA';
     $scope.form_tema_estado = 'ESTADO';
-
     $scope.form_Activo90 = 'INACTIVO';
     $scope.form_Activo91 = 'ACTIVO';
 
@@ -158,8 +157,7 @@ function getIni()
         empresa =   $('#e').val();
         $http.post('modulos/mod_mm_agendamiento.php?op=lur',{'op':'lur','agenda_id':$scope.registro1.agenda_agendaId,
             'empresa':empresa}).success(function(data){
- //    alert(data);       
-            
+         
         rec = data.split('||');  
         $scope.registro1.agenda_empresa = rec[0];
         $scope.registro1.agenda_salonId = rec[1];
@@ -310,7 +308,6 @@ function getIni()
         dato+=$scope.registro1.agenda_salonId+'||'+ $scope.registro1.agenda_usuario;  
         dato+='||'+$scope.agenda_id  
         $http.post('modulos/mod_mm_agendamiento.php?op=a',{'op':'a', 'dato':dato}).success(function(data){  
-//alert(data);
         rec = data.split('||');
         if (rec[0] === 'Ok') {
             $scope.agenda_agendaIdtmp=rec[1];
@@ -418,7 +415,6 @@ function getIni()
 
     $scope.updateSalon = function() { 
        $scope.agenda_salonIdtmp = $scope.registro1.agenda_salonId;
-   //    alert('salon  '.$scope.agenda_salonIdtmp);
        $http.post('modulos/mod_mm_agendamiento.php?op=ns',{'op':'ns', 'salonId':$scope.registro1.agenda_salonId}).success(function(data){
        $scope.salon_nombreResul=data;
        });
@@ -447,8 +443,7 @@ function getIni()
                     $scope.modelTab4 = false;
                     $scope.modelTab5 = false;
                     $scope.listaComite = false;
-                    $scope.registro1 ={};
-                    alert (rec[1]);                
+                    $scope.registro1 ={};             
                 }
             });
         }
@@ -456,8 +451,8 @@ function getIni()
     
     $scope.vaAcitarRegistro = function(registro5){
         $scope.enviaImg = true;
-        datos = $scope.registro5.agenda_Id +'||'+ $scope.registro5.agenda_comiteNotaCitacion;  
-        $http.post('modulos/mod_mm_contacto.php?op=eic',{'op':'eic','dato':datos}).success(function(data){            
+        datos = $scope.agenda_id +'||'+ $scope.registro5.agenda_comiteNotaCitacion; 
+        $http.post('modulos/mod_mm_contacto.php?op=eic',{'op':'eic','dato':datos}).success(function(data){ 
             rec = data.split('||');
             if (rec[0] === 'Ok') {
               $scope.registro5.respuestaMail = "Se han enviado " + rec[1] + "citaciones";
@@ -483,138 +478,18 @@ function getIni()
     $scope.registro = function(info){ alert ('inserta');};
 
 
-    $scope.registro =function(info){ 
-    //        alert ('actualiza');   
+    $scope.registro =function(info){  
             $http.post('modulos/mod_mm_agendamiento.php?op=a',{'op':'a', 'agenda_id':agenda_id, 'agenda_empresa':$scope.agenda_empresa, 
                 'agenda_salonId':agenda_salonId, 'agenda_Descripcion':$scope.agenda_Descripcion, 'agenda_comiteId':agenda_comiteId, 
                 'agenda_fechaDesde':agenda_fechaDesde, 'agenda_fechaHasta':agenda_fechaHasta, 
                 'agenda_comiteAnteriorId':$scope.agenda_comiteAnteriorId}).success(function(data){
-            $scope.show_form = true;
-            alert(data);
-            if (data === true) {
-            getInfo();
+                $scope.show_form = true;
+                alert(data);
+                if (data === true) {
+                    getInfo();
+                }
             }
-            }
-                    
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                );
+        );
      };
 
     $scope.registro = {};

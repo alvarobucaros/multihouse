@@ -304,8 +304,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         var datos = $scope.sgmnto_comiteId+'||'+$scope.registroTr.asistente_nombre+'||'+$scope.registroTr.asistente_cargo +'||'+
                     $scope.registroTr.asistente_empresa+'||S||'+titulo+'||||0||0||'+$scope.agenda_id+'||'+
                     $scope.registroTr.asistente_celuar+'||'+ registroTr.asistente_email+'||0||'+empresa;
-        $http.post('modulos/mod_mm_agendamiento.php?op=atl',{'op':'atl', 'datos':datos}).success(function(data){
-//alert(data);            
+        $http.post('modulos/mod_mm_agendamiento.php?op=atl',{'op':'atl', 'datos':datos}).success(function(data){           
         if (data === 'Ok') {
         traeInvitados($scope.comite_id);
         $scope.tercForm = false;
@@ -324,9 +323,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         datos += titulo + '||'+  $scope.registroTercero.asistente_causa + '||';
         datos += $scope.registroTercero.asistente_id + '||'+  $scope.registroTercero.asistente_orden +'||'+$scope.comite_id + '||';
         datos += $scope.registroTercero.asistente_celular + '||'+  $scope.registroTercero.asistente_email +'||'+$scope.registroTercero.asistente_id;
-//alert(datos);
-        $http.post('modulos/mod_mm_agendamiento.php?op=ctl',{'op':'ctl', 'datos':datos}).success(function(data){
-//alert(data);            
+        $http.post('modulos/mod_mm_agendamiento.php?op=ctl',{'op':'ctl', 'datos':datos}).success(function(data){           
         if (data === 'Ok') {
             traeInvitados($scope.comite_id);
             $scope.terceroForm = false;
@@ -381,7 +378,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         empresa = $scope.empresa.trim();
         var datos =  $scope.sgmnto_comiteId+'||'+$scope.comite_id+'||'+empresa+'||'+$scope.registroTercero.convocatoria;
         $http.post('modulos/mod_mm_agendamiento.php?op=conv',{'op':'conv', 'datos':datos}).success(function(data){
-//alert(data);            
+         
         res = data.split("||");
         if (res[0] === 'Ok') {            
             alert (res[1]);
@@ -408,7 +405,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     function traeInvitados(agendaId){
         empresa = $scope.empresa;
         $http.post('modulos/mod_mm_agendamiento.php?op=ti',{'op':'ti','agenda_id':agendaId,'empresa':empresa}).success(function(data){
-//alert (data);        
+       
             if(data=='NO HAY'){
              alert ('No hay invitados a la reunión definidos');
           }

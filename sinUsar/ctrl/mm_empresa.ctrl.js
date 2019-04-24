@@ -61,7 +61,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_Phempresa_horarioTermina = 'Digite horario termina';
     $scope.form_Phempresa_intervaloCalendario = 'Digite intervalo calendario';
     $scope.form_Phempresa_FormatoActa = 'Digite formato acta';
-   
     
     var defaultForm= {
         empresa_id:0,
@@ -86,8 +85,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         empresa_FormatoActa:'',
         empresa_cresidencial:'N'
    };
-    
-    
+      
     getInfo();
     
  $('#idForm').slideToggle();
@@ -158,7 +156,6 @@ $scope.registro = function(info){ alert ('inserta');};
                 'empresa_intervaloCalendario':empresa_intervaloCalendario, 'empresa_FormatoActa':empresa_FormatoActa, 
                 'empresa_cresidencial':empresa_cresidencial}).success(function(data){
             $scope.show_form = true;
-    alert(data);
             if (data === true) {
             getInfo();
             }
@@ -171,9 +168,6 @@ $scope.registro = function(info){ alert ('inserta');};
     {  
         $scope.registro =  info;  
         $('#idForm').slideToggle();
-       // if(registro.grupo_activo=='A'){registro.grupoactivo=true;}
-       // else{registro.grupoinactivo=true;}
-
     };
 
     $scope.deleteInfo =function(info)

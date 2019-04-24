@@ -6,7 +6,7 @@ $version = phpversion();
     $id=$datos[10];
     $idioma="lenguage".$id.".php";
  } else{
-     $idioma="lenguageES.php";
+     $idioma="lenguageESP.php";
  }
 
 include_once 'inc/'.$idioma;
@@ -35,7 +35,7 @@ error_reporting(E_ALL);
       <div class="login-box-msg" id='ini'><span></span></div>  
     <!-- /.login-logo -->
     <div class="login-box-body">
-        <p class="login-box-msg"><?php echo$inicioTitulo ?></p>
+        <p class="login-box-msg"><?php echo $inicioTitulo ?></p>
         <span class="textos" id="subtit"></span>
         <form>
             <div class="form-group has-feedback">
