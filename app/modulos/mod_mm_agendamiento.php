@@ -388,13 +388,14 @@ function  leeUnRegistro($data)
         $objClase = new DBconexion(); 
         $con = $objClase->conectar();	 
         $comite_id = $data->comiteId; 
+        $empresa = $data->empresa; 
         $agendaId=0;
         $query="SELECT agenda_id, agenda_empresa, agenda_salonId, salon_nombre, agenda_Descripcion, agenda_comiteId, comite_nombre, ".
                 "agenda_fechaDesde, agenda_fechaHasta, agenda_comiteAnteriorId, agenda_usuario, agenda_enFirme , agenda_conCitacion ".
                 " FROM mm_agendamiento ".
                 " INNER JOIN mm_comites ON agenda_comiteId = comite_id".
                 " INNER JOIN mm_salones ON agenda_salonId = salon_id ".
-                " WHERE agenda_comiteId = " . $comite_id . " AND agenda_enFirme= 'S' AND agenda_conCitacion = 'S' AND agenda_acta = 0";
+                " WHERE agenda_empresa = '". $empresa . "' AND agenda_comiteId = " . $comite_id . " AND agenda_enFirme= 'S' AND agenda_conCitacion = 'S' AND agenda_acta = 0";
         $result = mysqli_query($con, $query); 
         $info='';
          if(mysqli_num_rows($result) != 0)

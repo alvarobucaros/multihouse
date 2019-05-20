@@ -7,8 +7,6 @@ if( isset($_GET['pas']) ) {
 
 $rec=explode('||',$pas);
 
-//print_r($rec);
-
 if ($rec[6]=='C'){
     $anterior= '../actas';
     $carpeta = 'E'.zerofill(trim($rec[0]),5).'/'.trim($rec[3]).'/comite'.trim($rec[1]).'/acta'.trim($rec[2]);
@@ -20,7 +18,6 @@ else if($rec[6]=='A'){
 else{
      $carpeta='../reports/images';
 }
-// print_r($_FILES);
 $pas=$carpeta.'/';   //emp+'||'+com+'||'+acta+'||'+anno+'||'+desc;
 if(isset($_FILES["file"]["type"]))
 {

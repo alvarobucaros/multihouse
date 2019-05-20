@@ -40,20 +40,19 @@
 
                 <div class="form-group" id="dropBox">
                     <label class="milabel col-md-2" for="anexos_anexo">{{form_anexos_anexo}}</label>
-                    
                     <div class="col-md-7">
                         <input type="file" name="file" id="file" required  accept="application/pdf"  ng-click="botonOk()">                       
                     </div> 
                     <div class="col-md-7" id = "btnCarga" ng-show="btnCarga">
                         <input type="submit" value='Carga Documento' class="submit" ng-click="recarga()">
                     </div>
-                    <div class="col-md-7" id = "btnReCarga" style='display:block;' >
+                    <div class="col-md-7" id = "btnReCarga" ng-show="btnActualiza" >
                         <button class="btn btn-primary btn-xs" 
                         ng-click="actualizaLista()">{{form_btnRecarga}}<span class="glyphicon" aria-hidden="true"></span></button>               
                     </div>
-                <div id="divRuedita" ng-show="ruedita">
-                    <img src="img/progress.gif" alt=""/>                   
-                </div>
+                    <div id="divRuedita" ng-show="ruedita">
+                        <img src="img/progress.gif" alt=""/>                   
+                    </div>
 
                 </div>
                 <div class="clearfix"></div>
@@ -65,7 +64,8 @@
                             <tr>
                                 <th>ANEXO</th>
                                 <th>DESCRIPCION</th>
-                                <th></th>
+                                <th>BORRAR</th>
+<!--                      >!--          <th>VER</th>-->
                             </tr>
 
                             <tr ng-repeat="detail in details| filter:search_query">
@@ -77,6 +77,11 @@
                                     <span class="glyphicon glyphicon-trash"></span>
                             </button>
                             </td>
+                      <!--       <td>
+                            <button class="btn btn-danger btn-xs" ng-click="verPdf(detail)(detail)">
+                                    <span class="glyphicon glyphicon-print"></span>
+                            </button>
+                            </td>  -->
                             </tr>
                         </table>
                         <div  id="divOcultos" ng-show="datosOcultos"> 
@@ -91,8 +96,9 @@
         </form>
     </div>
 </div>
-
+<!--
 <script src="controller/min/mm_cargas.ctrl.min.js" type="text/javascript"></script>     
 <script src="controller/min/mm_agendaanexos.ctrl.min.js" type="text/javascript"></script>  
+-->
 <script src="controller/ctrl/mm_agendaanexos.ctrl.js" type="text/javascript"></script>
 <script src="controller/ctrl/mm_cargas.ctrl.js" type="text/javascript"></script>

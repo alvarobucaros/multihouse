@@ -32,12 +32,54 @@ switch ($op)
     case 'lo':
         loadLogo($data);
         break;
+ 
+    case 'pr':
+        printPdf($data);
+        break;
     
     case 'av':
         loadAvatar($data);
         break;
 }
   
+    function printPdf($data){
+        $objClase = new DBconexion(); 
+        $con = $objClase->conectar(); 
+        $agenda = $data->agenda;
+        $query="SELECT anexos_anexo,anexos_ruta FROM mm_agendaanexos WHERE anexos_agendaid = ".$agenda;
+   
+        $result = mysqli_query($con, $query); 
+        if(mysqli_num_rows($result) != 0)  
+        { 
+            while($row = mysqli_fetch_assoc($result)) { 
+                $pdf=$row['anexos_ruta'];
+                $anexo=$row['anexos_anexo'];
+                if (file_exists($pdf)) {
+//                    echo "El fichero $anexo existe";
+//                    header('Content-type: application/pdf');
+//                    header('Content-Disposition: attachment; filename="'.$pdf.'"');
+//                    readfile($pdf);
+                    $tam = filesize($pdf);
+//                    header("Content-type: application/pdf");
+//                    header("Content-Length: $tam"); 
+//                    header("Content-Disposition: inline; filename=".$pdf);
+                    //$file='./ficheros/proyecto.pdf';
+                    readfile($pdf);
+                } else {
+                    echo "El fichero $anexo no existe";
+                
+                    
+
+                
+//                header('Content-type: application/pdf');
+//                header('Content-Disposition: attachment, filename:"'. $pdf.'"');
+//                readfile($pdf);
+           } 
+        } 
+//echo  'Ok';
+    }
+    }   
+    
     function  leeRegistros($data) 
     { 
         $empresa = $data->empresa;
@@ -54,6 +96,7 @@ switch ($op)
                     "  ORDER BY anexos_anexo ";   
             $result = mysqli_query($con, $query); 
             $arr = array(); 
+
             if(mysqli_num_rows($result) != 0)  
                 { 
                     while($row = mysqli_fetch_assoc($result)) { 
@@ -69,12 +112,19 @@ switch ($op)
         $objClase = new DBconexion(); 
         $con = $objClase->conectar(); 
         $anexos_id = 0;
-        $query = "SELECT anexos_ruta FROM atominge_mmeetingu.mm_agendaanexos WHERE anexos_id=$data->anexos_id"; 
+        $query = "SELECT anexos_ruta FROM mm_agendaanexos WHERE anexos_id=$data->anexos_id"; 
         $result = mysqli_query($con, $query);
         $base_directory='';
+       
         while ($row = mysqli_fetch_assoc($result)){
             $base_directory=$row['anexos_ruta'];
-        }   
+        }
+        if(file_exists($base_directory)){
+            unlink($base_directory);
+        }else{
+            echo 'No existe'. $base_directory;
+        }
+
         $query = "DELETE FROM mm_agendaanexos WHERE anexos_id=$data->anexos_id"; 
         mysqli_query($con, $query); 
         echo 'Ok'; 

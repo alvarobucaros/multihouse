@@ -73,16 +73,24 @@
                             title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
                     </td>
                     <td>
-                    <button class="btn btn-danger btn-xs" ng-click="printInfo(detail)" id="boton"
+                    <button class="btn btn-danger btn-xs" ng-click="toggleModal(detail)" id="boton"
                             title="{{form_btnPrint}}"><span class="glyphicon glyphicon-print"></span></button>
                     </td>
                     </tr>
+                    <div col-md-6></div>
+                    <div class="bg-gray modal-dialog col-md-3" ng-show="modalShown" >
+                        <h5 >{{titVentana}}</h5>
+                        <button class="btn-primary" ng-click="printInfo('C')">{{printConAnexos}}</button>
+                        <button class="btn-primary" ng-click="printInfo('S')">{{printSinAnexos}}</button>   
+                    </div>
                 </table>
             </div>
+
+            
         </div>
 </div>
 
-<script src="controller/min/mm_actas.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrl/mm_actas.ctrl.js" type="text/javascript"></script>
 
 <!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Jan 09, 2018 10:54:14   <<<<<<< -->
 

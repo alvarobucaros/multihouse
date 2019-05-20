@@ -44,18 +44,18 @@
             </div> 
 
             <div class="form-group" >
-                <label class="control-label milabel col-md-4" for="asistente_causa">{{form_asistente_celular}}</label>
+                <label class="control-label milabel col-md-4" for="asistente_celular">{{form_asistente_celular}}</label>
                 <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="asistente_celular" name="asistente_celular"
-                         ng-model="registroTercero.asistente_celular"   value="{{registroTercero.asistente_celular}}" 
+                    ng-model="registroTercero.asistente_celular" required  value="{{registroTercero.asistente_celular}}" 
                 </div>
                 </div>
             </div>
             <div class="form-group" >
-                <label class="control-label milabel col-md-4" for="asistente_causa">{{form_asistente_email}}</label>
+                <label class="control-label milabel col-md-4" for="asistente_email">{{form_asistente_email}}</label>
                 <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="asistente_email" name="asistente_email"
-                         ng-model="registroTercero.asistente_email"   value="{{registroTercero.asistente_email}}" 
+                     ng-model="registroTercero.asistente_email" required  value="{{registroTercero.asistente_email}}" 
                 </div>
                 </div>
             </div>                
@@ -162,7 +162,7 @@
                 ng-change="agenda_fechaDesde()" value="{{registro1.agenda_fechaDesde}}"    
                 ng-class="{ error: formato2.agenda_fechaDesde.$error.required && !formato2.$pristine, warning: formato2.agenda_fechaDesde.$error.agenda_fechaDesde }"/>
             </div>
-            <label class=" milabel col-md-2" for="agenda_horaDesde">{{form_agenda_hora}}</label>
+            <label class=" milabel col-md-2" for="agenda_horaDesde">{{form_agenda_horaD}}</label>
             <div class="col-md-3">
             <select id='agenda_horaDesde' name='agenda_horaDesde' ng-model='registro1.agenda_horaDesde'  
                 ng-change="agenda_horaDesde()">
@@ -178,7 +178,7 @@
                 ng-model="registro1.agenda_fechaHasta" required Placeholder="{{form_Phagenda_fechaHasta}}" 
                 data-date-format="yyyy-mm-dd" value="{{registro1.agenda_fechaHasta}}"   />
            </div>
-           <label class=" milabel col-md-2" for="agenda_horaHasta">{{form_agenda_hora}}</label>
+           <label class=" milabel col-md-2" for="agenda_horaHasta">{{form_agenda_horaH}}</label>
             <div class="col-md-3">
             <select id='agenda_horaHasta' name='agenda_horaHasta' ng-model='registro1.agenda_horaHasta'  
                 ng-change="agenda_horaHasta()">
@@ -506,7 +506,7 @@
     </form>
 </div>
  </div>
- <script src="controller/min/mm_agendamiento.ctrl.min.js" type="text/javascript"></script>
+ <script src="controller/ctrl/mm_agendamiento.ctrl.js" type="text/javascript"></script>
 <script>
 $('ul.tabs').each(function(){
   // For each set of tabs, we want to keep track of
