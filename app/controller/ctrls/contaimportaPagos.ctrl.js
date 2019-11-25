@@ -68,7 +68,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
                      for(i=1;i<data.length;i++){
                         condicion = empresa+'||'+name+'||'+data[i]+'||P';    
                         $.post("inc/opcGrales.php", {accion:'importaDatos', condicion:condicion}, function(data){ 
-                          alert(data);
+                          //alert(data);
                     }) 
                      }
                       alert('Importó -' + i + '- pagos. correcto !!! + data');

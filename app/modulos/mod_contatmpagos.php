@@ -34,12 +34,14 @@ switch ($op)
  
     function  leeRegistros($data) 
     { 
-       global $objClase;
-      $con = $objClase->conectar(); 
-       { 
-            $query = "SELECT  pagoid, pagoempresa, pagocedula, pagoinmueble,  inmuebleCodigo, pagofecha, pagovalor, pagoestado, ".
-            " pagopropietarioid, pagoinmuebleid " .
-            " FROM contatmpagos  INNER JOIN containmuebles ON inmuebleId = pagoinmueble ".
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa; 
+        { 
+            $query = "SELECT  pagoid, pagoempresa, pagocedula, pagoinmueble,  inmuebleCodigo, pagofecha, pagovalor, ".
+            " pagoestado, pagopropietarioid, pagoinmuebleid " .
+            " FROM contatmpagos  INNER JOIN containmuebles ON inmuebleId = pagoinmueble WHERE inmueblePrincipal = 'SI' ".
+           // " WHERE pagoempresa = " . empresa .//" AND inmueblePrincipal = 'SI' " .
             " ORDER BY pagocedula ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
@@ -79,8 +81,11 @@ switch ($op)
    
         if($pagoid  == 0) 
         { 
-           $query = "INSERT INTO contatmpagos(pagoempresa, pagocedula, pagoinmueble, pagofecha, pagovalor, pagoestado, pagopropietarioid, pagoinmuebleid)";
-           $query .= "  VALUES ('" . $pagoempresa."', '".$pagocedula."', '".$pagoinmueble."', '".$pagofecha."', '".$pagovalor."', '".$pagoestado."', '".$pagopropietarioid."', '".$pagoinmuebleid."')";  
+           $query = "INSERT INTO contatmpagos(pagoempresa, pagocedula, pagoinmueble, pagofecha, pagovalor,".
+                   " pagoestado, pagopropietarioid, pagoinmuebleid)";
+           $query .= "  VALUES ('" . $pagoempresa."', '".$pagocedula."', '".$pagoinmueble."', '".
+                   $pagofecha."', '".$pagovalor."', '".$pagoestado."', '".$pagopropietarioid."', '".
+                   $pagoinmuebleid."')";  
             mysqli_query($con, $query);
             echo 'Ok';
         } 
@@ -178,9 +183,9 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar();	
         $empresa = $data->empresa;  
-         $query = "SELECT inmuebleId, inmuebleCodigo FROM containmuebles " . 
-         " WHERE inmueblePrincipal = 'SI' AND inmuebleEmpresaId = " .$empresa ." ORDER BY inmuebleCodigo";
-    echo $query;
+        $query = "SELECT inmuebleId, inmuebleCodigo FROM containmuebles " . 
+        " WHERE inmueblePrincipal = 'SI' AND inmuebleEmpresaId = " .$empresa ." ORDER BY inmuebleCodigo";
+ //   echo $query. '  '  .$empresa;
          $result = mysqli_query($con, $query); 
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)

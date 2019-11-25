@@ -64,11 +64,11 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     }
 
     function getCombos(empresa){
-          $http.post('modulos/mod_contatmpagos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
-alert(data);
-         $scope.operators0 = data;
-         });
-} 
+        empresa = $('#e').val();
+        $http.post('modulos/mod_contatmpagos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
+        $scope.operators0 = data;
+        });
+    } 
  
     $scope.configPages = function() {
         $scope.pages.length = 0;
@@ -139,7 +139,16 @@ $('#idForm').slideToggle();
     };
 
     $scope.aplica = function(){
-        alert('aplicar pagos');
+        empresa = $('\#e').val(); 
+        if (confirm('Aplica todos estos pagos a su respectiva cuenta de cobro : ')) {  
+            $http.post('modulos/mod_contatmpagos.php?op=ab',{'op':'ab', 'empresa':empresa}).success(function(data){
+                
+            if (data === 'Ok') {
+                getInfo(empresa);
+                alert ('Pagos aplicados ');
+            }
+            });
+         }
     };
     
     $scope.deleteInfo =function(info)

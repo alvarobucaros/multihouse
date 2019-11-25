@@ -179,8 +179,16 @@ function importaDatos($empresa, $file, $data){
         $inmueble = $array[1];
         $fecha = substr($array[2],6,4).'-'.substr($array[2],3,2).'-'.substr($array[2],0,2);  // dd/mm/aaaa  2019-10-05
         $pago = $array[3];
+        $detalle = $array[4];
         $inmuebleId=0;
-      
+        $propietarioId = 0;
+        $query = "SELECT propietarioId FROM contapropietarios WHERE propietarioEmpresaId = ".
+            $empresa . " AND propietarioCedula = '" . $cedula . "'";
+        $result =  mysqli_query($con, $query);
+        while($reg = mysqli_fetch_assoc($result)) 
+            {
+                 $propietarioId =  $reg['propietarioId']; 
+            } 
         $query= "SELECT  IFNULL(count(*), 0) as inmuebleId FROM containmuebles WHERE inmuebleCodigo = '".
              trim($inmueble) ."' ";        
         $result =  mysqli_query($con, $query);
@@ -198,9 +206,9 @@ function importaDatos($empresa, $file, $data){
         }
           
         $query="INSERT INTO contatmpagos (pagoempresa ,pagocedula  ,pagoinmueble ,pagofecha ," .
-                " pagovalor ,pagoestado ,pagopropietarioid ,pagoinmuebleid   ) VALUES ('".
-                 $empresa . "', '" .$cedula . "', '" .$inmuebleId ."', '" .$fecha ."', '" .
-                $pago ."','P',0,0) ";
+                " pagovalor ,pagoestado ,pagopropietarioid ,pagoinmuebleid , pagodetalle  ) VALUES ('".
+                $empresa . "', '" .$cedula . "', '" .$inmuebleId ."', '" .$fecha ."', '" .
+                $pago ."','P',". $propietarioId. ",".$inmuebleId.",'" .$detalle."')";
          $resultado =  mysqli_query($con, $query);
     }
     

@@ -426,7 +426,23 @@ switch ($op)
         echo $json_info = json_encode($arr);
     }
     
-    
+    function pagaSerieFactura($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $resultado="";
+        $n=0;
+        $empresa = $data->empresa;
+        $sql ="SELECT pagocedula, pagoinmueble, pagofecha, pagovalor, pagopropietarioid, pagodetalle ".
+                " FROM contatmpagos  WHERE pagoempresa= " . $empresa. " AND pagoestado='P'";
+         $resultado = mysqli_query($con, $sql); 
+         while($row = mysqli_fetch_assoc($resultado)) {
+            $data=$empresa."||".$row['pagopropietarioid']."||".$row['pagoinmueble']."||C||".
+            $row['pagovalor']."||".$row['pagodetalle']."||".$row['pagofecha'];
+            pagaFactura($data);
+            $n+=1;
+         }
+         echo 'Ok'.$n;
+    }
     
         function pagaFactura($data){ 
 //$empresa+"||"+prop+"||"+inmu+"||"+forma+"||"+valor+"||"+referencia+"||"+fecha;   
@@ -529,12 +545,16 @@ switch ($op)
             $sql1 =  "  AND facturaTipo = 'F' AND facturaEmpresaid = " . $rec[0];
             $sql2 = " ORDER BY facturaperiodo, facturaNumero, facturaprioridad ";
             $sql = $sql0 . $sql1 . $sql2;
-       
+            $fechaPago= $rec[6];
             $resultado = mysqli_query($con, $sql);     
             while($row = mysqli_fetch_assoc($resultado)) {
                 if ($saldo > 0){
-                    $valor = (float)$saldo - (float)$row['facturasaldo'];
-                    $pago = $row['facturasaldo'];
+                    $descuento = 0;
+                    if($fechaPago <= $row['facturafechacontrol']){
+                        $descuento = hayDescuentos($fechaPago, $row['facturaid']) ;
+                    }
+                    $valor = (float)$saldo - ((float)$row['facturasaldo'] - $descuento);
+                    $pago = $row['facturasaldo'] - $descuento;
                     $facturaTipo = $row['facturaTipo']; 
                     $inmueble = $row['facturaInmuebleid'];
                     $id = $row['facturaid']; 
@@ -586,7 +606,10 @@ switch ($op)
         $result = mysqli_query($con, $sql);   
         return $result;    
     }
-  
+    function hayDescuentos($fechaPago, $id){
+        
+    }
+    
     function serviciosEspeciales($Codempresa, $fchfactini, $inmueble, $factura){ 
         global $objClase;
         $con = $objClase->conectar(); 

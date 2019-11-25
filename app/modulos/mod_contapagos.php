@@ -89,10 +89,10 @@ switch ($op)
                    $pagostipo."', '".$pagosvalor."', '".$pagosreferencia."', '".$pagosNrReciCaja."', '".
                    $pagosinmueble."', '".$pagosTipoPago."', '".$pagosPeriodoPago."','A')";  
             mysqli_query($con, $query);
-            $query = "select last_insert_id() as id;"
+            $query = "select last_insert_id() as id;";
             $result =mysqli_query($con, $query);
             while($row = mysqli_fetch_assoc($result)) { 
-                $id = $row['id']:
+                $id = $row['id'];
             }
             $query = "INSERT INTO contafactura(facturaEmpresaid, facturaNumero, facturaInmuebleid, facturaservicioid, ".
             " facturaperiodo, facturasecuencia, facturavalor, facturadetalle, facturafechafac, facturafechavence, ".
@@ -200,7 +200,8 @@ switch ($op)
         $empresa = $data->empresa; 
         $query = "SELECT inmuebleId,  inmuebleDescripcion  FROM containmuebles " .
              " WHERE inmuebleEmpresaId = " . $empresa . " AND inmueblePrincipal = 'SI' ".
-             " ORDER BY  inmuebleDescripcion ";       
+             " ORDER BY  inmuebleDescripcion ";   
+    echo $query;
         $result = mysqli_query($con, $query); 
         $arr = array(); 
         if(mysqli_num_rows($result) != 0)
