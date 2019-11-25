@@ -8,11 +8,11 @@ else{
 }
  
  header('Content-Type: text/html; charset=utf-8');
- if(isset($_SESSION['mm'])) {
-    $datos = explode('||',$_SESSION['mm']);
+ if(isset($_SESSION['mh'])) {
+    $datos = explode('||',$_SESSION['mh']);
  } else {
     echo ('error en autenticacion');
-    $start="Location:login.php?err=e&s=NoHay-Session_mm";
+    $start="Location:login.php?err=e&s=NoHay-Session_mh";
     header($start);  
 } 
 
@@ -25,9 +25,10 @@ $cr=$datos[7];  // conjunto residencial
 $ctrl=$datos[9];  // conjunto residencial
 $avatar = 'photo/'.$datos[6]; // avatar
 $logo = 'reports/images/'.$datos[8]; // logo empresa
-$idioma="lenguage".$datos[10].".php";
-include_once 'inc/'.$idioma;
+$idioma="lenguage".trim($datos[10]).".php";
 
+include_once 'inc/'.$idioma;
+$ztmh01=$ztmm01;
 if (!isset($_GET['op'])){
     $op='ini';
  }
@@ -55,7 +56,7 @@ if (!isset($_GET['op'])){
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>multiMeeting</title>
+  <title>multi House</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
   <link href="css/AdminLTE.css" rel="stylesheet" type="text/css"/>
@@ -68,17 +69,17 @@ if (!isset($_GET['op'])){
     <link href="css/animate.min.css" rel="stylesheet" type="text/css"/>
     <link href="css/angular.css" rel="stylesheet" type="text/css"/>
 </head>
-<body class="hold-transition skin-blue sidebar-mini"   ng-app="app" >
+<body class="hold-transition skin-black sidebar-mini"   ng-app="app" >
 <!-- Site wrapper -->
 <div class="wrapper">
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="#" class="logo">
+    <a href="#" class="logo logito">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>M</b>enú</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Multi</b>Meeting</span>
+      <span class="logo-lg"><b>Multi</b>House</span>
       <img  src=<?php echo $logo ?> alt="Logo"/>
     </a>
     <!-- Header Navbar: style can be found in header.less  --> 
@@ -115,58 +116,75 @@ if (!isset($_GET['op'])){
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
-        <li class="header"><?php echo $datos[5] ?></li>
-        <?php if ($pf=='A' OR $pf=='C'  OR $pf=='S'){
-       echo ' <li class="treeview">
-          <a href="mm.php?op=comit">
-            <i class="fa fa-users"></i> <span>Comités</span> 
-          </a>
-        </li>
-        <li class="treeview">
-          <a href="mm.php?op=salon">
-            <i class="fa fa-building"></i> <span>Salones</span> 
-          </a>
-        </li> ' ;    
-        }
-        ?>
+        <li class="logito header list-inline"><?php echo $datos[5] ?></li>
+    
         <?php if ($pf=='A'  OR $pf=='S'){            
         echo '     
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-commenting"></i>
-            <span>Agenda</span>
+            <i class="fa fa-archive"></i>
+            <span>Tablas Administración</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu"> 
-              <li><a href="mm.php?op=agReu"><i class="fa fa-map-o"></i>Agenda Reunión</a></li>                      
-              <li><a href="mm.php?op=agAsi"><i class="fa fa-user-plus"></i>Asistentes recurrentes</a></li>
-              <li><a href="mm.php?op=agTma"><i class="fa fa-book"></i>Temas recurrentes</a></li>
+              <li><a href="mm.php?op=clin"><i class=""></i>Clasificación de inmuebles</a></li>                      
+              <li><a href="mm.php?op=inmu"><i class=""></i>Inmuebles</a></li>
+              <li><a href="mm.php?op=prop"><i class=""></i>Propietarios</a></li>
+              <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>
+              <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>
+              <li><a href="mm.php?op=inmServ"><i class=""></i>Inmueble y Servicio Especial</a></li>
           </ul>
         </li>
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-laptop"></i>
-            <span>Desarrollo de la reunión</span>
+            <i class="fa fa-paste"></i>
+            <span>Procesos</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li><a href="mm.php?op=agSgmnto"><i class="fa fa-circle-o"></i>Agenda a seguir</a></li>
-            <li><a href="mm.php?op=loadActa"><i class="fa fa-upload"></i>Carga documentos</a></li>
-            <li><a href="mm.php?op=agActas"><i class="fa fa-pencil"></i>Acta de reunión</a></li>
-           
+            <li><a href="mm.php?op=creaFac"><i class=""></i>Genera Cuentas de Cobro</a></li>
+            <li><a href="mm.php?op=recCaja"><i class=""></i>Recibos de caja (abonos)</a></li>
+            <li><a href="mm.php?op=pagos"><i class=""></i>Aplica Pagos Pendientes</a></li>
+            <li><a href="mm.php?op=anuRC"><i class=""></i>Anula Recibo de Caja</a></li>
+            <li><a href="mm.php?op=otrIngr"><i class=""></i>Otros Ingresos</a></li>
+            <li><a href="mm.php?op=gast"><i class=""></i>Gastos (Egresos)</a></li>
+            <li><a href="mm.php?op=acuPago"><i class=""></i>Acuerdos de Pago</a></li>
+            <li><a href="mm.php?op=anticip"><i class=""></i>Anticipos (Abonos)</a></li>
+            <li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li>
+
+            if ($pf=="S"){
+                <li><a href="mm.php?op=impor"><i class="fa fa-circle-o"></i>Importa Tablas</a></li>
+                <li><a href="mm.php?op=impPag"><i class="fa fa-circle-o"></i><span>Importa Pagos</span></a></li>      
+                <li><a href="mm.php?op=impsal2"><i class="fa fa-circle-o"></i>Importa Saldos</a></li> 
+           }  
+          </ul>
+        </li>
+       
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-file"></i>
+            <span>Informes / Consultas</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="mm.php?op=rCtaCob"><i class=""></i>Reimprime Cuentas de Cobro</a></li>
+            <li><a href="mm.php?op=rRcaja"><i class=""></i>Reimprime Recibo de caja</a></li>
+            <li><a href="mm.php?op=rCtaCC"><i class=""></i>Consulta Cuenta de Cobro</a></li>
+            <li><a href="mm.php?op=rCtaRcaj"><i class=""></i>Consulta Recibo de Caja</a></li>
+            <li><a href="mm.php?op=rResDia"><i class=""></i>Resume diario de Caja</a></li>
+            <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta</a></li>
+            <li><a href="mm.php?op=rMora"><i class=""></i>Cartera en Mora</a></li>
+            <li><a href="mm.php?op=rCtas"><i class=""></i>Consultas genéricas</a></li>  
           </ul>
         </li>
         ';
              }
         ?>
        
-        <li class="treeview">
-          <a href="mm.php?op=cnslta">
-            <i class="fa fa-edit"></i> <span>Consultas</span> 
-          </a>
-        </li>
+       
         
- 
+       <?php if ($pf=='A'  OR $pf=='S'){            
+        echo '
         <li class="treeview">
           <a href="#">
             <i class="fa fa-institution"></i>
@@ -174,12 +192,24 @@ if (!isset($_GET['op'])){
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu">
-            <li><a href="mm.php?op=empr"><i class="fa fa-crosshairs"></i> <span>La empresa</span></a></li>
-            <li><a href="mm.php?op=users"><i class="fa fa-user"></i> <span>Usuarios</span></a></a></li>
-            <li><a href="mm.php?op=logo"><i class="fa fa-child"></i> <span> Logo Avatar</span></a></li>
-          </ul>
-        </li>  
-        
+         
+            <li><a href="mm.php?op=parGen"><i class=""></i> <span>Parámetros Generales</span></a></li>
+            <li><a href="mm.php?op=parFac"><i class=""></i> <span>Parámetros Facturación</span></a></li>
+            <li><a href="mm.php?op=users"><i class=""></i> <span>Usuarios</span></a></a></li>
+            <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>
+            <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>';
+       }
+        if ($pf=='S'){
+            
+           echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  ';     
+  
+        }
+           ?>
+         <?php if ($pf=='A'  OR $pf=='S'){ 
+       echo '   </ul>
+        </li>  ';
+         }
+        ?>
         <?php
         if($cr=='S'){
             echo '<li class="treeview">
@@ -231,7 +261,7 @@ if (!isset($_GET['op'])){
             <div class="content-popup" style="width: 450px; height: 300px; border: 2px; border-color: greenyellow">
                 
                 <div id="dialog"  class="wrapp">
-                    <h3 class="textos"><?php echo $ztmm01 ?></h3>
+                    <h3 class="textos"><?php echo $ztmh01 ?></h3>
                     <form>
                         <table class="tablex">
                             <tr>
@@ -261,102 +291,146 @@ if (!isset($_GET['op'])){
         <?php
 
         
-        if ($op ==  'agActas'){
-            include_once 'views/frm_mm_actas.php';
+        if ($op ==  'clin'){
+            include_once 'views/frm_contaclasificacion.php';
         }
         
-        if ($op ==  'agSgmnto'){
-            include_once 'views/frm_mm_AgendaSegumiento.php';
+        if ($op ==  'inmu'){
+            include_once 'views/frm_containmuebles.php';
         }
-         if ($op ==  'emprnew'){
-            include_once 'views/frm_mm_empresaNew.php';
-        }       
+         if ($op ==  'prop'){
+            include_once 'views/frm_contapropietarios.php';
+        }     
+       if ($op ==  'serv'){
+            include_once 'views/frm_contaservicios.php';
+        }  
         if ($op ==  'empr'){
-            include_once 'views/frm_mm_empresa.php';
+            include_once 'views/frm_contaempresas.php';
         }
-        if ($op ==  'ini'){
-            include_once 'views/frmInicio.php';
+        if ($op ==  'parGen'){
+            include_once 'views/frm_contaParamGral.php';
         }
-        if ($op ==  'comit'){
-            include_once 'views/frm_mm_comites.php';
+        if ($op ==  'parFac'){
+            include_once 'views/frm_contaParamFac.php';
+        }
+        if ($op ==  'proInm'){
+            include_once 'views/frm_containmueblepropietario.php';
+        }
+        if ($op ==  'inmServ'){
+            include_once 'views/frm_containmuebleservicios.php';
+        }        
+        if ($op ==  'users'){
+            include_once 'views/frm_mm_usuarios.php';
+        }
+         if ($op ==  'creaFac'){
+            include_once 'views/frmContaFacturacion.php';
+        }       
+         if ($op ==  'recCaja'){
+            include_once 'views/frmContaRecibosCaja.php';
+        }        
+        if ($op ==  'pagos'){
+            include_once 'views/frm_contatmpagos.php';
+        }
+               
+        if ($op ==  'impor'){
+            include_once 'views/frm_contaimportaXls.php';
+        }  
+        if ($op ==  'impPag'){
+            include_once 'views/frm_contaimportaPagos.php';
+        } 
+        
+        if ($op ==  'impsal2'){
+            include_once 'views/frm_contaimportaSaldos.php';
+        } 
+                
+        if ($op ==  'otrIngr'){
+            include_once 'views/frm_contaotrosingresos.php';
+        }
+        if ($op ==  'cbnte'){
+            include_once 'views/frm_contacomprobantes.php';
         }
         if ($op ==  'contc'){
             include_once 'views/frm_mm_Contacto.php';
         }
         if ($op ==  'Versi'){
-            include_once 'views/frm_mm_Version.php';
+            include_once 'views/frm_contaversion.php';
         }
 
-        if ($op ==  'agTem'){
-            include_once 'views/frm_mm_temasgrales.php';
-        }
-        		
-        if ($op ==  'opagTem'){
-            include_once 'views/frm_mm_temasgrales.php';
-        }	
-
-        if ($op == 'agSal'){
-           include_once 'views/frm_mm_reservaSalon.php'; // Asigna salones views/frm_reservaSalon.php  
+        if ($op ==  'anuRC'){
+            include_once 'views/frm_contaAnulaRcaja.php';
         }
         
-        if ($op ==  'agAsi'){
-            include_once 'views/frm_mm_asistentes.php';
-        }	
-
-        if ($op ==  'asiIn'){
-            include_once 'views/frmPendiente.php';
-        }
-        
-        if ($op ==  'agReu'){
-            include_once 'views/frm_mm_Agendamiento.php';
-        }			
-	
-        if ($op ==  'asiGr'){
-            include_once 'views/frm_mm_asistentes.php';            // Agigna Grupos de invitados
-        }
- 
-        if ($op ==  'agTma'){
-            include_once 'views/frm_mm_temasgrales.php';            // Agigna Grupos de invitados
-        }
-        
-        if ($op=='cnslta'){
-            include_once 'views/frm_mm_consultas.php';
-        }
-        if ($op ==  'perfi'){
-            include_once 'views/frm_datos.php';
-        }
-        if ($op ==  'salon'){
-            include_once 'views/frm_mm_salones.php';
-        }
-        if ($op ==  'loadActa'){
-            include_once 'views/frm_mm_agendaanexos.php';
+        if ($op ==  'conta'){
+            include_once 'views/frm_contaContabilizacion.php';
+        }        
+  
+        if ($op ==  'acuPago'){
+            include_once 'views/frm_contaAcuerdosPago.php';
         } 
+
+        if ($op ==  'conta'){
+            include_once 'views/frm_contaContabilizacion.php';
+        } 
+
+        if ($op ==  'anticip'){
+            include_once 'views/frm_contapagos.php';
+        }        
+  
+        if ($op ==  'rCtaCob'){
+            include_once 'views/frm_contaImpCtasCobro.php';
+        }
+        if ($op ==  'rRcaja'){
+            include_once 'views/frm_contaImpReciboCaja.php';
+        }
+        if ($op ==  'rCtaCC'){
+            include_once 'views/frm_contaCtaCtasCobro.php';
+        }
+        if ($op ==  'rCtaRcaj'){
+            include_once 'views/frm_contaCtaRcaja.php';
+        }
+        if ($op ==  'rResDia'){
+            include_once 'views/frm_contaResumenDiarioCaja.php';
+        }  
+ 
+        if ($op ==  'rStado'){
+            include_once 'views/frm_contaEstadoCuenta.php';
+        } 
+
+        if ($op ==  'rMora'){
+            include_once 'views/frm_contaCarteraMora.php';
+        }  
+
+        if ($op ==  'rCtas'){
+            include_once 'views/frm_contaConsultas.php';
+        }        
+        if ($op ==  'gast'){
+            include_once 'views/frm_contaGastos.php';
+        } 
+
+//  -------- abajo cambiar todo    gast 
+
         if ($op ==  'logo'){
-            include_once 'views/frm_mm_loadLogos.php';
+            include_once 'views/frm_contaloadLogos.php';
         }
-        if ($op ==  'users'){
-            include_once 'views/frm_mm_usuarios.php';
-        }
+
         if ($op ==  'Docum'){
-            include_once 'views/frm_mm_documentacion.php';
+            include_once 'views/frm_contadocumentacion.php';
         } 
         
         if ($op ==  'udr'){
             include_once 'views/frm_mm_inmuebles.php';
         }
         if ($op ==  'impo'){
-            include_once 'views/frm_mm_importaXls.php';
+            include_once 'views/frm_contaimportaXls.php';
         }
         if ($op ==  'lst'){
             include_once 'views/frm_mm_llamalista.php';
         }
          if ($op ==  ''){
-            include_once 'views/frm_mm_news.php';
+            include_once 'views/frm_contanews.php';
         }      
         ?>
-     
-
-    </section>
+      </section>
 
   </div>
 <div style='display: none'>
@@ -377,7 +451,7 @@ if (!isset($_GET['op'])){
 
   <!-- /.control-sidebar -->
   <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
+       imhediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
@@ -413,7 +487,7 @@ function usuario(){
             if (user_contraNueva !='' && user_contraNuevaRep !=''){
                 if(user_contraNueva!=user_contraNuevaRep)
                     {
-                        err="Nuevas contraseñas no son iguales. Para salir deje en blanco la contraseña actual";
+                        err="Nuevas contraseÃ±as no son iguales. Para salir deje en blanco la contraseÃ±a actual";
                     }
                     else
                     {
@@ -426,7 +500,7 @@ function usuario(){
                             }
                            else
                             { 
-                             alert('Contraseña cambiada exitosamente');
+                             alert('ContraseÃ±a cambiada exitosamente');
                              $('#popup').fadeOut('slow');
                              $('.popup-overlay').fadeOut('slow');
                             }

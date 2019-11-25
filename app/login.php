@@ -1,23 +1,23 @@
 <?php
 session_start();
 $version = phpversion();
- if(isset($_SESSION['mm'])) {
-    $datos = explode('||',$_SESSION['mm']);
+ if(isset($_SESSION['mh'])) {
+    $datos = explode('||',$_SESSION['mh']);
     $id=$datos[10];
     $idioma="lenguage".$id.".php";
  } else{
-     $idioma="lenguageESP.php";
+     $idioma="lenguageES.php";
  }
 
 include_once 'inc/'.$idioma;
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Multimeeting</title>
+  <title>Multi House</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -30,7 +30,7 @@ error_reporting(E_ALL);
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">      
-      <a href="#"><b>Multi</b>Meeting</a><br/>
+      <a href="#"><b>Multi</b>House</a><br/>
     </div>
       <div class="login-box-msg" id='ini'><span></span></div>  
     <!-- /.login-logo -->
@@ -85,8 +85,9 @@ error_reporting(E_ALL);
         if (msg==''){
          
             ant=$('#autentica').val();
-            parametro= $('#mail').val()+'||'+ $('#pwd').val()+'||'+ ant   
-            $.post("inc/opcGrales.php", {accion:'valiUser', condicion:parametro}, function(data){
+            parametro= $('#mail').val()+'||'+ $('#pwd').val()+'||'+ ant 
+            
+            $.post("inc/opcGrales.php", {accion:'valiUser', condicion:parametro}, function(data){  
                 if (data.substr(0,5)=='Error'){
                      alert(data);        
                 }

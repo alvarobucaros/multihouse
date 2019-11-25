@@ -93,7 +93,7 @@
         $obj = new mm_agendamiento();
 
         $resultado = $obj->consultaAgendas($dato);
-    //    $pdf->MultiCell(250,6,$resultado );
+//$pdf->MultiCell(250,6,$resultado );
           
         $agenda=0;
         $tipo='';

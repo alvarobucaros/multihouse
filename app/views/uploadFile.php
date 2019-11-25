@@ -31,13 +31,6 @@ $sqlInsert = "INSERT into mm_inmuebles (inmueble_empresa, inmueble_codigo, inmue
              $column[9] . "')";
 $result = mysqli_query($conn, $sqlInsert);
 
-//SELECT inmueble_id, inmueble_empresa, inmueble_codigo, inmueble_descripcion, inmueble_area, inmueble_coeficiente, 
-//inmueble_ubicacion, inmueble_propNombre, inmueble_propCedula, inmueble_propTelefonos, inmueble_propDireccion, inmueble_propCorreo,
-// inmueble_Activo, inmueble_comite, inmueble_prinipal FROM mm_inmuebles;
-//
-//Codigo;Descripcion;Area;Coeficiente;Ubicacionenelconjunto;Responsabledelacuenta;Cedula;
-//Telefonos;DireccionF¡sica;Correoelectr¢nico
-//A101;;45,2;0,034200969;TORRE A;ACU¥AÿTABOADAÿPEDRO ANDRES;41497;504648;;mi@com.co
 
 if (! empty($result)) {
 $type = "success";

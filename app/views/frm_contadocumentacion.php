@@ -167,4 +167,5 @@
          </ul>
     </div>       
     </div>
-<script src="controller/min/mm_documentacion.ctrl.min.js" type="text/javascript"></script>
+
+<script src="controller/ctrls/contadocumentacion.ctrl.js" type="text/javascript"></script>

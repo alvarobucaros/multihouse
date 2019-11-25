@@ -69,14 +69,14 @@ else
             } 
             if($rec[6]=='L')
             {
-                $query = "UPDATE mm_empresa SET empresa_logo = '". $_FILES["file"]["name"] .
-                         "' WHERE empresa_id = '".$rec[0] . "'";
+                $query = "UPDATE contaempresas SET empresaLogo = '". $_FILES["file"]["name"] .
+                         "' WHERE empresaId = '".$rec[0] . "'";
                 mysqli_query($con, $query);
             } 
         }
     }
 }
-
+  
 else
 {
 echo "<span id='invalid'>***Tamaño del documento mayor a 20MB***<span>";

@@ -107,21 +107,21 @@
         $rec = explode('||',$data) ;
         $fi = $rec[3] . " 00:00:00";
         $ff = $rec[4] . " 23:55:00";
-        $where = "agenda_empresa = " . $rec[6]. " AND agenda_fechaDesde > '". $fi . "'  AND agenda_fechaHasta < '". $ff . "'".
+        $where = " agenda_empresa = " . $rec[6]. " AND agenda_fechaDesde > '". $fi . "'  AND agenda_fechaHasta < '". $ff . "'".
                  " AND agenda_acta >= ". $rec[1] . " AND  agenda_acta <= ". $rec[2] ; 
-        $whereTema = "";
+        $whereTema = " WHERE agenda_empresa = " . $rec[6]. " ";
         $whereAnexos = "";
-        $whereInvitado="";
-        if($rec[5] != ''){ $whereTema = " WHERE  (tema_titulo LIKE '%". $rec[5] ."%' OR tema_detalle  LIKE '%". $rec[5] .
+        $whereInvitado =" WHERE agenda_empresa = " . $rec[6]. " ";
+        if($rec[5] != ''){ $whereTema = " AND  (tema_titulo LIKE '%". $rec[5] ."%' OR tema_detalle  LIKE '%". $rec[5] .
                                         "%' OR tema_desarrollo  LIKE '%". $rec[5] ."%' )";}
         if($rec[7] != ''){ $whereAnexos = " (anexos_anexo LIKE '%". $rec[7] ."%' OR anexos_descripcion LIKE '%". $rec[7] ."%' ) ";  }  
-        if($rec[8] != ''){ $whereInvitado = " WHERE (invitado_nombre LIKE '%". $rec[8] ."%' OR invitado_cargo LIKE '%". $rec[8] ."%' ) ";  }  
+        if($rec[8] != ''){ $whereInvitado = " AND (invitado_nombre LIKE '%". $rec[8] ."%' OR invitado_cargo LIKE '%". $rec[8] ."%' ) ";  }  
         if ($rec[0] >  0 ){ $where .= " AND agenda_comiteId = ". $rec[0];}   
         
         $query = " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme, " .
                 " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , comite_id, 'Tema' as tp," .
                 " CONCAT(tema_tipo, ': ', tema_titulo, ' ', tema_detalle) tema,  tema_desarrollo,  tema_responsable, " .
-                " CONCAT(tema_fechaAsigna, ' ', tema_fechaCumple) fechaDesde_Hasta, tema_agendaId  " .
+                " CONCAT(tema_fechaAsigna, ' ', tema_fechaCumple) fechaDesde_Hasta, tema_agendaId,  agenda_empresa empresa  " .
                 " FROM mm_agendamiento  " . 
                 " LEFT JOIN mm_agendatemas ON tema_agendaId = agenda_id  " .
                 " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
@@ -129,7 +129,7 @@
                 " UNION  " .
                 " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
                 " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal ,  comite_nombre ,invitado_comite, 'Invitado' as tp, invitado_nombre,  " .
-                " invitado_cargo, invitado_celuar, Concat(invitado_asistio,'|',invitado_causa), invitado_agendaId  " .
+                " invitado_cargo, invitado_celuar, Concat(invitado_asistio,'|',invitado_causa), invitado_agendaId,  agenda_empresa empresa  " .
                 " FROM mm_agendamiento  " .
                 " LEFT JOIN mm_agendainvitados ON invitado_agendaId = agenda_id  " . 
                 " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" .
@@ -138,7 +138,7 @@
                 $query .= " UNION  " .
                 " SELECT agenda_id, agenda_Descripcion, agenda_fechaDesde, agenda_fechaHasta, agenda_enFirme,   " .
                     " agenda_conCitacion, agenda_acta, agenda_estado ,agenda_causal , comite_nombre , anexos_comiteid, 'Anexo' as tp, anexos_anexo,  " .
-                    " anexos_descripcion, '' as a, '' as b , anexos_agendaid  " .
+                    " anexos_descripcion, '' as a, '' as b , anexos_agendaid ,  agenda_empresa empresa " .
                     " FROM mm_agendamiento  " .
                     " LEFT JOIN mm_agendaanexos ON anexos_agendaid = agenda_id  "  .
                     " LEFT JOIN mm_comites ON comite_id = agenda_comiteId" ;
@@ -149,8 +149,7 @@
             }
                  $query .=   "  ORDER BY comite_id desc, agenda_id, tp Desc ";       
                  $result = mysqli_query($con, $query);
-          //    return $query;   
-                return $result;    
+           return $result;    
 
     }
     

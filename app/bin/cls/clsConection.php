@@ -1,5 +1,9 @@
-<?php 
-session_start();
+<?php
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
+//session_start();
 
 class DBconexion{
 	var $conect;  
@@ -13,9 +17,8 @@ class DBconexion{
         
 	function DBconexion(){
           ini_set('track_errors', 1);
-            $fd = fopen('../bin/cls/mm.ctl', 'r');
-
-            $datos=fread($fd,filesize('../bin/cls/mm.ctl')); 
+            $fd = fopen('../bin/cls/mh.ctl', 'r');
+            $datos=fread($fd,filesize('../bin/cls/mh.ctl')); 
             $data =explode('~',$datos);
             fclose($fd);
             $this->Servidor = $this->funde($data[0]);
@@ -49,14 +52,14 @@ class DBconexion{
             $con = $obj->conectar();
             $result = '';
             if($con==true){
-                $strSql = "SELECT usuario_password FROM mm_usuarios where usuario_id = " . $dat[3];
+                $strSql = "SELECT usuarioClave FROM contausuarios where usuarioId = " . $dat[3];
             
                 $claveOk = md5($dat[0]);
                 $resultado =  mysqli_query($con, $strSql);
                 $usuario = mysqli_fetch_array($resultado, MYSQL_ASSOC);
-                if($usuario['usuario_password'] ==  $claveOk ){
-                    $strSql = "UPDATE mm_usuarios SET usuario_password = '" . md5($dat[1]) . 
-                            "' WHERE usuario_id = " . $dat[3];
+                if($usuario['usuarioClave'] ==  $claveOk ){
+                    $strSql = "UPDATE contausuarios SET usuarioClave = '" . md5($dat[1]) . 
+                            "' WHERE usuarioId = " . $dat[3];
                     $resultado =  mysqli_query($con, $strSql);
                 }
                 else
@@ -77,7 +80,7 @@ class DBconexion{
         
         public  function autenticaUsuario($dat){ 
             $result='OK';
-            $fd = fopen('../bin/cls/mm.ctl', 'r');
+            $fd = fopen('../bin/cls/mh.ctl', 'r');
             $datos = fread($fd,100);
             fclose($fd);
             $data =explode('~',$datos);
@@ -92,30 +95,33 @@ class DBconexion{
             $Clave = $this->funde($data[3]); 
             $Ctrl = $this->funde($data[4]); 
             $mictl = $Servidor .'||' . $BaseDatos .'||' . $Usuario  .'||' . $Clave.'||' . $dat[0]   .'||' . $dat[1];
-//           echo $mictl;
-//          return  localhost||mmeeting||root||123||admin@com.co||123Array
-            
+        
             $obj = new DBconexion();
             $con = $obj->conectar();
             $email= TRIM($dat[0]);
             $clave=$dat[1];
-          //  $cond=$dat[2];
+  
             if($con==true){
-                if (isset($_SESSION['mm'])) {
-                    unset($_SESSION['mm']);
+                if (isset($_SESSION['mh'])) {
+                    unset($_SESSION['mh']);
                 }
                 $where = '';
                 $where = " usuario_email = '". $email. "' OR usuario_celular = '".
-                        $email."' OR usuario_user = '".$email."' ";
-                $strSql = "SELECT usuario_id, usuario_nombre , usuario_email, usuario_password, " .
-                        " usuario_tipo_acceso,  usuario_fechaActualizado, " .
-                        " usuario_estado, usuario_perfil, usuario_avatar, usuario_user, " .
-                        " usuario_empresa, empresa_nombre, empresa_nit, empresa_id,  " .
-                        " empresa_web, empresa_direccion, empresa_telefonos, empresa_ciudad, " .
-                        " empresa_logo, empresa_autentica, empresa_lenguaje, empresa_cresidencial,  " .
-                        " empresa_ctrl,usuario_celular FROM mm_usuarios " .
-                        " INNER JOIN mm_empresa ON empresa_id = usuario_empresa WHERE " . $where;
-               $result = ''; 
+                        $email."' OR usuario_nrodoc = '".$email."' ";
+
+                $strSql = "SELECT usuario_id, usuario_nombre , usuario_email, usuario_password, 
+                            usuario_tipo_acceso, usuario_fechaActualizado, 
+                            usuario_estado, usuario_perfil, usuario_avatar, usuario_nrodoc,
+                            usuario_empresa, empresaNombre AS empresa_nombre, empresaNit AS empresa_nit, empresaid AS empresa_id,  
+                            empresaWeb AS empresa_web, empresaDireccion AS empresa_direccion, empresaTelefonos AS 
+                            empresa_telefonos, empresaCiudad AS empresa_ciudad,
+                            empresaLogo AS empresa_logo, empresaAutentica  AS empresa_autentica, empresaIdioma AS empresa_lenguaje, 'N' As empresa_cresidencial,  
+                             '' AS empresa_ctrl, usuario_celular 
+                            FROM mm_usuarios 
+                            INNER JOIN contaempresas ON empresaid = usuario_empresa 
+                            WHERE " . $where; 
+ 
+                $result = ''; 
                 $resultado =  mysqli_query($con, $strSql);
                 $totRec =   $resultado->num_rows;  ///$número_filas = mysql_num_rows($resultado);  
                 if ($totRec > 0) {
@@ -137,28 +143,23 @@ class DBconexion{
                                 if($usuario['empresa_autentica']=='M' && $usuario['usuario_email']==$email ){
                                    $ok=true;
                                 }
-                                if($usuario['empresa_autentica']=='U' && $usuario['usuario_user']==$email ){
+                                if($usuario['empresa_autentica']=='U' && $usuario['usuario_nrodoc']==$email ){
                                    $ok=true;
                                 }
                                 if($usuario['empresa_autentica']=='C' && $usuario['usuario_celular']==$email ){
                                    $ok=true;
                                 }  
                                 if ($ok){
-                                    $aa=$usuario['empresa_ctrl'];                              
-                                    $a1=substr($aa, 12, 1);
-                                    $a2=substr($aa, 24, 1);
-                                    $a3=substr($aa, 28, 2);
-                                    $ctrl=0;
-                                    if((int)$a1+(int)$a2 == (int)$a3){$ctrl=1;}
-                                    $mm = $usuario['usuario_nombre'].'||'.$usuario['usuario_tipo_acceso'].'||'.$usuario['usuario_perfil'];
-                                    $mm .= '||'.$usuario['usuario_id'].'||'.$usuario['usuario_empresa'];
-                                    $mm .= '||'.$usuario['empresa_nombre'].'||'.$usuario['usuario_avatar']; 
-                                    $mm .= '||'.$usuario['empresa_cresidencial'].'||'.$usuario['empresa_logo'].'||'.$Ctrl; 
-                                    $mm .= '||'.$usuario['empresa_lenguaje'];
-                                    setcookie("mm",$mm);
-                                    $_SESSION = array();
-                                    $_SESSION['mm']=$mm;
-                                    $result .=$mm;
+                                    $ctrl=1;
+                                    $mh = $usuario['usuario_nombre'].'||'.$usuario['usuario_tipo_acceso'].'||'.$usuario['usuario_perfil'];
+                                    $mh .= '||'.$usuario['usuario_id'].'||'.$usuario['usuario_empresa'];
+                                    $mh .= '||'.$usuario['empresa_nombre'].'||'.$usuario['usuario_avatar']; 
+                                    $mh .= '||'.$usuario['empresa_cresidencial'].'||'.$usuario['empresa_logo'].'||'.$ctrl; 
+                                    $mh .= '||'.$usuario['empresa_lenguaje'];
+                                    setcookie("mh",$mh);
+                                  //  $_SESSION = array();
+                                    $_SESSION['mh']=$mh;
+                                    $result .=$mh;                
                                 }
                                 else{
                                     $result .= "Error: Registro incorrecto . " . $autenticaCon;
@@ -177,7 +178,8 @@ class DBconexion{
                 }
             }else{
                     $result.="Error: Base de datos no conecta";
-                }      
+                }   
+                
            return $result;
         }
           
@@ -191,25 +193,34 @@ class DBconexion{
             return $ret;
         }
       
-        function cargaEmpresa($empresa){
+        public function cargaEmpresa($empresa){
             $obj = new DBconexion();
             $con = $obj->conectar();
             if($con==true)
             {
                 $retorno = '';
-                $sql='SELECT empresa_id, empresa_nombre, empresa_nit, empresa_web, empresa_direccion, empresa_telefonos, '.
-                     'empresa_ciudad, empresa_logo, empresa_autentica, empresa_lenguaje FROM mm_empresa  WHERE  empresa_id = '. $empresa ;
+                $sql="SELECT empresaId, empresaNombre, empresaNit, empresaDigito, empresaWeb, " .
+                     " empresaDireccion ,empresaCiudad ,empresaTelefonos ,empresaLogo ," .
+                     " empresaMensaje1, empresaMensaje2, empresaEmail, empresafacturaNota, " .
+                     " empresaRecargoPorc, empresaRecargoPesos, empresaRecargoDias, empresaDescPorc,".
+                     " empresaDescPesos, empresaFactorRedondeo " .
+                     " FROM contaempresas  WHERE  empresaId = ". $empresa ;
                 $result =  mysqli_query($con, $sql);
-                while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
+                while($reg = mysqli_fetch_assoc($result)) {
                 {
-                    $retorno = $reg['empresa_id'].'||'.$reg['empresa_nombre'].'||'.$reg['empresa_nit'].'||'.$reg['empresa_web'].'||'.$reg['empresa_direccion'].'||'.
-                            $reg['empresa_telefonos'].'||'.$reg['empresa_ciudad'].'||'.$reg['empresa_logo'].'||'.$reg['empresa_autentica'].'||'.
-                            $reg['empresa_lenguaje'];
-  
-                }
+                    $retorno = $reg['empresaId'].'||'.$reg['empresaNombre'].'||'.trim($reg['empresaNit']).'-'.
+                    trim($reg['empresaDigito']).'||'.$reg['empresaWeb'].'||'.$reg['empresaDireccion'].'||'.
+                    $reg['empresaTelefonos'].'||'.$reg['empresaCiudad'].'||'.$reg['empresaLogo'].
+                    '||'.$reg['empresaMensaje1'].'||'. $reg['empresaMensaje2'].'||'. $reg['empresaEmail'] .
+                    '||'.$reg['empresafacturaNota'].'||'.$reg['empresaDescPesos'].
+                    '||'.$reg['empresaRecargoPesos'].'||'.$reg['empresaRecargoDias'] .
+                    '||'.$reg['empresaDescPorc'].'||'.$reg['empresaDescPesos'].
+                    '||'.$reg['empresaFactorRedondeo'];
+                  }
+                  echo $retorno;
             return $retorno;   
-                  
-            }
+                }
+           }
         }    
     
 	function cuentaRegistros($tabla,$condicions)
@@ -311,143 +322,24 @@ class DBconexion{
         }
         
         function actualizaEmpresa($registro){
-            $obj = new DBconexion();
-            $con = $obj->conectar();
-            if($con==true)
-            {
-  //             print_r($registro);
-                $sql='UPDATE cimaparametros SET  '.
-                    ' param_nombre = "'. $registro ['param_nombre'] .'", param_nit = "' .$registro ['param_nit'] .
-                    '", param_web = "'. $registro ['param_web'] .'", param_direccion = "' .$registro ['param_direccion'] .
-                    '", param_telefonos = "'. $registro ['param_telefonos'] .'", param_ciudad = "' .$registro ['param_ciudad'] .
-                    '", param_logo ="'.  $registro ['param_logo'] .'", param_regsGrilla = "' .$registro ['param_regsGrilla'] .
-                    '", param_autenticacion ="'.  $registro ['param_autenticacion'] .'", param_representante = "' .$registro ['param_representante'] .
-                    '", param_direccioncorreo  ="'.  $registro ['param_direccioncorreo'] .
-                    '", param_mensajecorreo  ="'.  $registro ['param_mensajecorreo'] .
-                 '", param_cedrepres  ="'.  $registro ['param_cedrepres'] .'"  WHERE param_id = ' .  $registro ['param_id'] ;             
-                $result =  mysqli_query($con, $sql);
-                $resultado= 'Registro actualizado' ;    
-                echo $resultado;
-            } 
+
         }
  
 	function cargaMenu($usuario){
-            $obj = new DBconexion();
-            $con = $obj->conectar();
-            if($con==true)
-            {
-                 $sql = "SELECT menu_descripcion, menu_menu, menu_orden, menu_nivel, menu_modulo, 
-                menu_opcion, menu_parametros, menu_detalles 
-                FROM cimamenu
-                INNER JOIN cimausuariomenu ON usuarioMenu_menu = menu_id
-                INNER JOIN cimausuarios ON usuarioMenu_perfil = usuario_perfil_id
-                WHERE usuario_id = ".$usuario . " ORDER BY menu_menu, menu_orden, menu_nivel"  ;
-		$result =  mysqli_query($con, $sql);
-//             echo $sql;
-            }
-            return $result;
+
         }        
         
         function menuPorPerfil($perfil,$gral){
-            $resultado = '<select name="origen[]" id="origen" multiple="multiple" size="15">';
-            if($perfil > 0) { $resultado = '<select name="destino[]" id="destino" multiple="multiple" size="15">';}
 
-            $obj = new DBconexion();
-            $con = $obj->conectar();
-            if($con==true)
-            { 
-                if ($perfil==0){
-                   $sql = "SELECT menu_id, upper(menu_detalles) AS menu_detalles FROM cimamenu where menu_orden <> 0 and menu_id NOT IN 
-                (SELECT usuarioMenu_menu  FROM cimausuariomenu WHERE  usuarioMenu_perfil = " . $gral. ")
-                ORDER BY menu_detalles";   
-                }else{
-                   $sql = "SELECT menu_id, upper(menu_detalles) AS menu_detalles FROM cimamenu where menu_orden <> 0 and menu_id IN 
-                (SELECT usuarioMenu_menu  FROM cimausuariomenu WHERE  usuarioMenu_perfil = " . $perfil. ")
-                ORDER BY menu_detalles";   
-                }
-    //            echo $resultado;
-                $result =  mysqli_query($con, $sql);
-                    while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
-                    {
-                        $resultado = $resultado . "<option value=". $reg["menu_id"] .">" . $reg["menu_detalles"] . "</option>";
-                    }
-                    $resultado = $resultado . "</select>";
-                     echo $resultado;
-                   //  return $resultado;
-            }
         }
 
         function actualizaMenu($data,$perfil){
-            $where = '';
-            $i=0;
-            foreach ($data as $valor) {
-                if ($i>0){$where =  $where . ", ";}
-                $where =  $where . "'" . $valor. "'";
-            }
-            $obj = new DBconexion();
-            $con = $obj->conectar();
-            if($con==true)
-            { 
-                echo $where.'  ';
-//                print_r($data);
-            }
-            
+
         }
         
         function actualizaAccesosMenu($perfil, $opciones){
-            $obj = new DBconexion();
-            $con = $obj->conectar();
-            if($con==true)
-            {
-               $sql = 'SET SQL_SAFE_UPDATES = 0;';
-               $result =  mysqli_query($con, $sql);
-               $sql = 'DELETE FROM cimausuariomenu WHERE usuarioMenu_perfil = ' . $perfil ;                     
-               $result =  mysqli_query($con, $sql);
-                if (mysqli_errno($con) != 0){
-                    $resultado='Error: No actualiza el perfil';
-                }else{
-                    $opMenu = explode(',',$opciones);
-                    $n = count($opMenu);
-                    for($i=0; $i<$n; $i++) {
-                        $sql = 'INSERT INTO cimausuariomenu(usuarioMenu_menu,usuarioMenu_perfil,usuarioMenu_actualiza)  VALUES (' . $opMenu[$i]. ',' .  $perfil .',"A")';
-                        $result =  mysqli_query($con, $sql);
-                        // consultar si existe el registro padre del menu
-                         $sql = 'SELECT * FROM cimausuariomenu where usuarioMenu_menu = ( select menu_id from cimamenu where menu_menu = '.
-                                '(select menu_menu from cimamenu where  menu_id = ' . $opMenu[$i]. ') and menu_orden = 0) and usuarioMenu_perfil = ' .  $perfil;
-                        $result =  mysqli_query($con, $sql);
-                        $totRec =  $result->num_rows; 
-                        if ($totRec==0){ // crea el registro padre del menu
-                           $sql ='select menu_id from cimamenu where menu_orden = 0 and menu_menu = (select menu_menu from cimamenu where  menu_id = ' .  $opMenu[$i] .')';
-                           
-                           $result =  mysqli_query($con, $sql);
-                                               while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
-                    {
-                        $menu = $reg['menu_id'];
-                    }
-                           $sql = 'INSERT INTO cimausuariomenu(usuarioMenu_menu,usuarioMenu_perfil,usuarioMenu_actualiza) VALUES (' .$menu .','.  $perfil .',"A")';
-                              
-                           $menu =  mysqli_query($con, $sql);
-                        }
-                    }
-                     $resultado='Perfil Actualizado';
-                }
-            }
-            echo $resultado;
+ 
         }   
-        
-        function nameUsuario($usuario)
- {
-            $obj = new DBconexion();
-            $con = $obj->conectar();
-            if($con==true)
-            {
-                 $sql = "SELECT  cliente_contacto  AS nombre, cliente_nombre, CASE usuario_tipo_acceso WHEN 'A' THEN 'Administra' ELSE 'Consulta' END usuario_tipo_acceso ".
-                         "FROM cimausuarios  INNER JOIN cimaclientes ON usuario_cliente_id = cliente_id WHERE usuario_id = ".$usuario  ;
-		$result =  mysqli_query($con, $sql);
-//             echo $sql;
-            }
-            return $result;
-        }
         
  
   
@@ -464,7 +356,7 @@ Function sumaDias_fecha($fecha, $dias){
         if ($ano % 4 == 0) {$nrDias[1]='29';}
         $dia = $dia + $dias;
         do {
-             if ($dia > $nrDias[$mes - 1]){
+            if ($dia > $nrDias[$mes - 1]){
             $mes = $mes  + 1;
             if ($mes > 12){
             $mes = 1;

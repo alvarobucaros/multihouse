@@ -1,6 +1,6 @@
 <?php
 include_once("../bin/cls/clsConection.php");
-$objClase = new DBconexion();
+$objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
 $con = $objClase->conectar();
 $data = json_decode(file_get_contents("php://input")); 
 $op = mysqli_real_escape_string($con, $data->op);
@@ -19,26 +19,26 @@ switch ($op)
     case 'u':
         unRegistro($data);
         break;
-    case '0':
-        lista0($data);
+    case 'm':
+        maxRegistroId($data);
         break;
+    case 'exp':
+        exportaXls($data);
+        break; 
 }
   
 
  
     function  leeRegistros($data) 
     { 
-      $objClase = new DBconexion(); 
+       global $objClase;
       $con = $objClase->conectar(); 
-      $empresa = $data->empresa;
        { 
-            $query = "SELECT  usuario_id, usuario_nombre, usuario_empresa, usuario_email, 
-         usuario_password, usuario_tipo_acceso, usuario_fechaCreado, 
-          usuario_fechaActualizado, usuario_estado,  perfil_nombre AS usuario_perfil,
-          usuario_avatar, usuario_user, usuario_celular
-          FROM mm_usuarios INNER JOIN mm_perfiles ON usuario_perfil = perfil_codigo
-          WHERE usuario_empresa = '" . $empresa . "' AND  usuario_empresa = perfil_empresa ORDER BY usuario_nombre";   
-   //  echo $query;
+            $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, ".
+                    " usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, ".
+                    " usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, ".
+                    " usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad" .
+                    " FROM mm_usuarios ORDER BY usuario_nombre ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -49,13 +49,12 @@ switch ($op)
                 } 
             echo $json_info = json_encode($arr); 
        } 
-    }
+    } 
  
     function borra($data)
     { 
-        $objClase = new DBconexion(); 
+       global $objClase;
         $con = $objClase->conectar(); 
-        $usuario_id = 0; 
         $query = "DELETE FROM mm_usuarios WHERE usuario_id=$data->usuario_id"; 
         mysqli_query($con, $query); 
         echo 'Ok'; 
@@ -63,63 +62,120 @@ switch ($op)
  
     function actualiza($data)
     {     
-        $objClase = new DBconexion(); 
+       global $objClase;
         $con = $objClase->conectar(); 
         $op =  $data->op;	 
         $usuario_id =  $data->usuario_id; 
-        $usuario_nombre =  $data->usuario_nombre; 
         $usuario_empresa =  $data->usuario_empresa; 
+        $usuario_nombre =  $data->usuario_nombre; 
         $usuario_email =  $data->usuario_email; 
-        $usuario_password =  md5($data->usuario_user); 
+        $usuario_celular =  $data->usuario_celular; 
+        $usuario_password =  $data->usuario_password; 
         $usuario_tipo_acceso =  $data->usuario_tipo_acceso; 
         $usuario_fechaCreado =  $data->usuario_fechaCreado; 
         $usuario_fechaActualizado =  $data->usuario_fechaActualizado; 
-        $usuario_estado =  $data->usuario_estado; 
         $usuario_perfil =  $data->usuario_perfil; 
         $usuario_avatar =  $data->usuario_avatar; 
-        $usuario_user =  $data->usuario_user; 
-        $usuario_celular =  $data->usuario_celular; 
+        $usuario_estado =  $data->usuario_estado; 
+        $usuario_tipodoc =  $data->usuario_tipodoc; 
+        $usuario_nrodoc =  $data->usuario_nrodoc; 
+        $usuario_direccion =  $data->usuario_direccion; 
+        $usuario_ciudad =  $data->usuario_ciudad; 
    
         if($usuario_id  == 0) 
         { 
-            $condicions="usuario_empresa = '".$usuario_empresa."' AND usuario_nombre='" . $usuario_nombre."'";
-            $nr = $objClase->cuentaRegistros('mm_usuarios', $condicions);
-            if($nr==0){
-                $query = "INSERT INTO mm_usuarios(usuario_nombre, usuario_empresa, usuario_email, usuario_password, ".
-                        " usuario_tipo_acceso, usuario_fechaCreado, usuario_fechaActualizado, usuario_estado, ".
-                        " usuario_perfil, usuario_avatar, usuario_user, usuario_celular)";
-                $query .= "  VALUES ('" . $usuario_nombre."', '".$usuario_empresa."', '".$usuario_email."', '".
-                        $usuario_password."', '".$usuario_tipo_acceso."', '".$usuario_fechaCreado."', '".
-                        $usuario_fechaActualizado."', '".$usuario_estado."', '".$usuario_perfil."', '".$usuario_avatar."', '".
-                        $usuario_user."', '".$usuario_celular."')";         
-                mysqli_query($con, $query);
-                echo 'Ok';
-            }else{
-                echo 'El usuario ' . $usuario_nombre . ' Ya existe en esta empresa';
-            }
-            
+           $query = "INSERT INTO mm_usuarios(usuario_empresa, usuario_nombre, usuario_email, usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad)";
+           $query .= "  VALUES ('" . $usuario_empresa."', '".$usuario_nombre."', '".$usuario_email."', '".$usuario_celular."', '".$usuario_password."', '".$usuario_tipo_acceso."', '".$usuario_fechaCreado."', '".$usuario_fechaActualizado."', '".$usuario_perfil."', '".$usuario_avatar."', '".$usuario_estado."', '".$usuario_tipodoc."', '".$usuario_nrodoc."', '".$usuario_direccion."', '".$usuario_ciudad."')";  
+            mysqli_query($con, $query);
+            echo 'Ok';
         } 
         else 
         { 
-            $query = "UPDATE mm_usuarios  SET usuario_nombre = '".$usuario_nombre."', usuario_empresa = '".
-                    $usuario_empresa."', usuario_email = '".$usuario_email."', usuario_password = '".
-                    $usuario_password."', usuario_tipo_acceso = '".$usuario_tipo_acceso."', usuario_fechaCreado = '".
-                    $usuario_fechaCreado."', usuario_fechaActualizado = '".$usuario_fechaActualizado."', usuario_estado = '".
-                    $usuario_estado."', usuario_perfil = '".$usuario_perfil."', usuario_avatar = '".
-                    $usuario_avatar."', usuario_user = '".$usuario_user."', usuario_celular = '".
-                    $usuario_celular."' WHERE usuario_id = ".$usuario_id;
+            $query = "UPDATE mm_usuarios  SET usuario_empresa = '".$usuario_empresa."', usuario_nombre = '".$usuario_nombre."', usuario_email = '".$usuario_email."', usuario_celular = '".$usuario_celular."', usuario_password = '".$usuario_password."', usuario_tipo_acceso = '".$usuario_tipo_acceso."', usuario_fechaCreado = '".$usuario_fechaCreado."', usuario_fechaActualizado = '".$usuario_fechaActualizado."', usuario_perfil = '".$usuario_perfil."', usuario_avatar = '".$usuario_avatar."', usuario_estado = '".$usuario_estado."', usuario_tipodoc = '".$usuario_tipodoc."', usuario_nrodoc = '".$usuario_nrodoc."', usuario_direccion = '".$usuario_direccion."', usuario_ciudad = '".$usuario_ciudad."' WHERE usuario_id = ".$usuario_id;
             mysqli_query($con, $query); 
             echo 'Ok';
         } 
  
     } 
  
+ function exportaXls($data){ 
+       global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa; 
+        $expo=''; 
+        $expo .= '<table border=1 class="table2Excel"> '; 
+        $expo .=  '<tr> '; 
+ //     $expo .=  '          <th>ID</th>';
+ //     $expo .=  '          <th>EMPRESA</th>';
+      $expo .=  '          <th>NOMBRE</th>';
+      $expo .=  '          <th>LOGIN</th>';
+      $expo .=  '          <th>CELULAR</th>';
+ //     $expo .=  '          <th>PASSWORD</th>';
+      $expo .=  '          <th>ACCESO</th>';
+      $expo .=  '          <th>FECHA CREADO</th>';
+      $expo .=  '          <th>FECHA ACTUALIZADO</th>';
+      $expo .=  '          <th>PERFIL</th>';
+      $expo .=  '          <th>AVATAR</th>';
+      $expo .=  '          <th>ESTADO</th>';
+      $expo .=  '          <th>TIPODOC</th>';
+      $expo .=  '          <th>NRODOC</th>';
+      $expo .=  '          <th>DIRECCION</th>';
+      $expo .=  '          <th>CIUDAD</th>';
+            $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, ".
+                    " usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, ".
+                    " usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, ".
+                    " usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad" .
+                    " FROM mm_usuarios ORDER BY usuario_nombre ";             
+            $result = mysqli_query($con, $query); 
+            if(mysqli_num_rows($result) != 0)  
+                { 
+                    while($row = mysqli_fetch_assoc($result)) { 
+                 $expo .=  '<tr> '; 
+//                $expo .=  	'<td>' .$row['usuario_id']. '</td> ';
+//                $expo .=  	'<td>' .$row['usuario_empresa']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_nombre']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_email']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_celular']. '</td> ';
+//                $expo .=  	'<td>' .$row['usuario_password']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_tipo_acceso']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_fechaCreado']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_fechaActualizado']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_perfil']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_avatar']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_estado']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_tipodoc']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_nrodoc']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_direccion']. '</td> ';
+                $expo .=  	'<td>' .$row['usuario_ciudad']. '</td> ';
+                 $expo .=  '</tr> '; 
+                    } 
+                } 
+        $expo .=  '</table> ';  
+        echo $expo; 
+    return $expo; 
+ } 
+    function maxRegistroId($data) 
+    { 
+       global $objClase;
+        $con = $objClase->conectar();	 
+        $id=0;
+        $query = "SELECT  MAX(usuario_id) as id 
+                    FROM mm_usuarios"; 
+        $result = mysqli_query($con, $query); 
+            while($row = mysqli_fetch_assoc($result)) { 
+                $id = $row['id'];
+                $id +=1;
+           } 
+        echo $id; 
+        return $id; 
+        } 
+ 
     function unRegistro($data) 
     { 
-        $objClase = new DBconexion(); 
+       global $objClase;
         $con = $objClase->conectar();	 
         $usuario_id = $data->usuario_id;      
-        $query = "SELECT  usuario_id, usuario_nombre, usuario_empresa, usuario_email, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, usuario_fechaActualizado, usuario_estado, usuario_perfil, usuario_avatar, usuario_user, usuario_celular  " . 
+        $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad  " . 
                     " FROM mm_usuarios  WHERE usuario_id = " . $usuario_id  . 
                     " ORDER BY usuario_nombre "; 
         $result = mysqli_query($con, $query); 
@@ -135,23 +191,5 @@ switch ($op)
     } 
  
 	 
-    function lista0($data) 
-    { 
-        $objClase = new DBconexion(); 
-        $con = $objClase->conectar();
-        $empresa = $data->empresa;
-        $query = "SELECT perfil_codigo, perfil_nombre FROM mm_perfiles WHERE perfil_empresa = '" .$empresa . "' ORDER BY   perfil_nombre";
-     
-         $result = mysqli_query($con, $query); 
-         $arr = array(); 
-         if(mysqli_num_rows($result) != 0)
-         { 
-             while($row = mysqli_fetch_assoc($result)) {
-                 $arr[] = $row;
-              }
-         } 
-      echo $json_info = json_encode($arr); 
-    } 
  
- 
-// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Oct 24, 2017 11:30:34   <<<<<<< 
+// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Sep 08, 2019 5:14:42   <<<<<<< 

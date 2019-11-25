@@ -73,5 +73,4 @@
         </div>
     </div>
 
-
-<script src="controller/min/mm_news.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrls/contanews.ctrl.js" type="text/javascript"></script>

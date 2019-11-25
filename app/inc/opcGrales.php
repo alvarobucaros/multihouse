@@ -35,14 +35,39 @@ if(isset($_POST["accion"])){
     {
         $data = explode('||', $condicion);
         $empresa = $data[0];
-        $file = $data[1];
+        $file  = $data[1];
         $datos = $data[2];
-        include_once ("../modulos/mod_mm_CargaData.php");
+        $tipo  = $data[3];
+        include_once ("../modulos/mod_contacargaData.php");
         $obj = new opcCargaData();
-        $result = $obj->importaDatos($empresa, $file, $datos);
+        if ($tipo === 'T'){$result = $obj->importaDatos($empresa, $file, $datos);}
+        if ($tipo === 'P'){$result = $obj->importaPagos($empresa, $file, $datos);}
+        if ($tipo === 'S'){$result = $obj->importaSaldos($empresa, $file, $datos);}
         echo $result;  
     }     
     
+    if ( $accion=='importaPagos'){
+        
+    }
+    
+    if (  $accion== 'borraSaldos'){
+        $data = explode('||', $condicion);
+        $empresa = $condicion;
+        include_once ("../modulos/mod_contacargaData.php");
+        $obj = new opcCargaData();
+        $result = $obj->borraSaldos($empresa);
+        echo $result;         
+    }
+    
+    if ($accion=='borraTablas')
+    {
+        $data = explode('||', $condicion);
+        $empresa = $condicion;
+        include_once ("../modulos/mod_contacargaData.php");
+        $obj = new opcCargaData();
+        $result = $obj->borraTablas($empresa);
+        echo $result;  
+    }  
 }else{
     echo 'No hay una accion a ejecutar';
 }

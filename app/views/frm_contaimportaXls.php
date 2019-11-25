@@ -70,7 +70,7 @@
                 <img src="img/progress.gif" alt=""/>
             </div>
             <div id='datempresa' style='display: none'>  
-
+                <?php echo "<input type='text' id='tipoImport' value='T' </input>" ?>  
                 <?php echo "<input type='text' id='archivo' value='' </input>" ?>  
                 <?php echo "<input type='text' id='tamano' value='' </input>" ?>  
                 <?php echo "<input type='text' id='empresa' value='' </input>" ?>
@@ -81,5 +81,4 @@
 </div>
 
 <script src="bin/js/jquery.csv.min.js" type="text/javascript"></script>
-
-<script src="controller/min/mm_importaXls.ctrl.min.js" type="text/javascript"></script>
+<script src="controller/ctrls/contaimportaXls.ctrl.js" type="text/javascript"></script>

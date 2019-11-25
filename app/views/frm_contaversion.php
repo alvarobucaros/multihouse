@@ -18,7 +18,7 @@
                            ng-model="empresa_nombre"  value="{{empresa_nombre}}" readonly="yes"/>
                     </div>
                 </div>   
-<!--SELECT , empresa_nit, , ,    FROM mm_empresa-->
+
                 <div class="form-group">
                     <label class="control-label col-md-4" for="empresa_clave">{{form_empresa_clave}}</label>
                     <div class="col-md-4">
@@ -91,8 +91,8 @@
             </div>
         </div>
     </div>
+<script src="controller/ctrls/contaversion.ctrl.js" type="text/javascript"></script>
 
 
 
-<script src="controller/min/mm_version.ctrl.min.js" type="text/javascript"></script>
 
