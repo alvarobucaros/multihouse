@@ -1,6 +1,6 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Comprobantes Contables (tipo Movimiento)';
+    $scope.form_title = 'Lista de containgregastos';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
@@ -10,25 +10,30 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
  
-    $scope.form_compActivo50 = 'Ingresos';
-    $scope.form_compActivo51 = 'Egresos';
-    $scope.form_compActivo52 = 'Comprobante';
+    $scope.form_ingastotipo40 = 0;
+    $scope.form_ingastotipo41 = 1;
+    $scope.form_ingastocontabiliza80 = 0;
+    $scope.form_ingastocontabiliza81 = 1;
 
-    $scope.form_compId = 'ID';
-    $scope.form_compEmpresaId = 'EMPRESA';
-    $scope.form_compCodigo = 'CODIGO';
-    $scope.form_compNombre = 'NOMBRE';
-    $scope.form_compConsecutivo = 'SECUENCIA';
-    $scope.form_compActivo = 'TIPO';
-    $scope.form_compDetalle = 'DETALLE';
+    $scope.form_ingastoid = 'ID';
+    $scope.form_ingastoempresa = 'EMPRESA';
+    $scope.form_ingastoFecha = 'FECHA';
+    $scope.form_ingastoperiodo = 'PERIODO';
+    $scope.form_ingastotipo = 'TIPO';
+    $scope.form_ingastocomprobante = 'COMPROBANTE';
+    $scope.form_ingastodetalle = 'DETALLE';
+    $scope.form_ingastovalor = 'VALOR';
+    $scope.form_ingastocontabiliza = 'CONTABILIZA';
 
-    $scope.form_PhcompId = 'Digite id';
-    $scope.form_PhcompEmpresaId = 'Digite empresa';
-    $scope.form_PhcompCodigo = 'Digite codigo';
-    $scope.form_PhcompNombre = 'Digite nombre';
-    $scope.form_PhcompConsecutivo = 'Digite secuencia';
-    $scope.form_PhcompActivo = 'Digite activo';
-    $scope.form_PhcompDetalle = 'Digite detalle';
+    $scope.form_Phingastoid = 'Digite id';
+    $scope.form_Phingastoempresa = 'Digite empresa';
+    $scope.form_PhingastoFecha = 'Digite fecha';
+    $scope.form_Phingastoperiodo = 'Digite periodo';
+    $scope.form_Phingastotipo = 'Digite tipo';
+    $scope.form_Phingastocomprobante = 'Digite comprobante';
+    $scope.form_Phingastodetalle = 'Digite detalle';
+    $scope.form_Phingastovalor = 'Digite valor';
+    $scope.form_Phingastocontabiliza = 'Digite contabiliza';
    
      $scope.currentPage = 0;
      $scope.pageSize = 10;
@@ -37,26 +42,32 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
      $scope.empresa = $('#e').val();
     var defaultForm= {
    
-        compId:0,
-        compEmpresaId:$scope.empresa,
-        compCodigo:'',
-        compNombre:'',
-        compConsecutivo:0,
-        compActivo:'',
-        compDetalle:''
+        ingastoid:0,
+        ingastoempresa:0,
+        ingastoFecha:'',
+        ingastoperiodo:'',
+        ingastotipo:0,
+        ingastocomprobante:0,
+        ingastodetalle:'',
+        ingastovalor:'',
+        ingastocontabiliza:''
    };
     
+    getCombos();
     
     getInfo($scope.empresa);
     
     function getInfo(empresa){
-        $http.post('modulos/mod_contacomprobantes.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
+        $http.post('modulos/mod_containgregastos.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
         $scope.details = data;
         $scope.configPages();   
         });       
     }
 
     function getCombos(){
+          $http.post('modulos/mod_containgregastos.php?op=0',{'op':'0'}).success(function(data){
+         $scope.operators0 = data;
+         });
 } 
  
     $scope.configPages = function() {
@@ -93,7 +104,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
 // Function to add toggle behaviour to form
 $scope.formToggle =function(){
 $('#idForm').slideToggle();
-$scope.compId=0;
+$scope.ingastoid=0;
 $('#idForm').css('display', 'none');
 
 };
@@ -119,7 +130,7 @@ $scope.exporta = function(){
     valor = confirm('Exporta la tabla de inmuebles y propietarios a Excel, continua?');
    if (valor == true) {
         empresa = $('#e').val();
-        $http.post('modulos/mod_contacomprobantes.php?op=exp',{'op':'exp','empresa':empresa}).success(function(data){
+        $http.post('modulos/mod_containgregastos.php?op=exp',{'op':'exp','empresa':empresa}).success(function(data){
        $('#miExcel').html(data); 
         alert('exporta a Excel. Cargue y renombre el documento... ');
         window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
@@ -129,8 +140,8 @@ $scope.exporta = function(){
     $scope.deleteInfo =function(info)
     { 
         empresa = $('\#e').val(); 
-        if (confirm('Desea borrar el registro con nombre : '+info.compNombre+' ?')) {  
-            $http.post('modulos/mod_contacomprobantes.php?op=b',{'op':'b', 'compId':info.compId}).success(function(data){
+        if (confirm('Desea borrar el registro con nombre : '+info.ingastoFecha+' ?')) {  
+            $http.post('modulos/mod_containgregastos.php?op=b',{'op':'b', 'ingastoid':info.ingastoid}).success(function(data){
             if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Borrado ');
@@ -143,15 +154,17 @@ $scope.exporta = function(){
     {
         er='';
         empresa = $('\#e').val(); 
-        if($('#compId').val()===''){er+='falta id\n';}
-        if($('#compEmpresaId').val()===''){er+='falta empresa\n';}
-        if($('#compCodigo').val()===''){er+='falta codigo\n';}
-        if($('#compNombre').val()===''){er+='falta nombre\n';}
-        if($('#compConsecutivo').val()===''){er+='falta secuencia\n';}
-        if($('#compActivo').val()===''){er+='falta activo\n';}
-        if($('#compDetalle').val()===''){er+='falta detalle\n';}
+        if($('#ingastoid').val()===''){er+='falta id\n';}
+        if($('#ingastoempresa').val()===''){er+='falta empresa\n';}
+        if($('#ingastoFecha').val()===''){er+='falta fecha\n';}
+        if($('#ingastoperiodo').val()===''){er+='falta periodo\n';}
+        if($('#ingastotipo').val()===''){er+='falta tipo\n';}
+        if($('#ingastocomprobante').val()===''){er+='falta comprobante\n';}
+        if($('#ingastodetalle').val()===''){er+='falta detalle\n';}
+        if($('#ingastovalor').val()===''){er+='falta valor\n';}
+        if($('#ingastocontabiliza').val()===''){er+='falta contabiliza\n';}
         if (er==''){
-        $http.post('modulos/mod_contacomprobantes.php?op=a',{'op':'a', 'compId':info.compId, 'compEmpresaId':info.compEmpresaId, 'compCodigo':info.compCodigo, 'compNombre':info.compNombre, 'compConsecutivo':info.compConsecutivo, 'compActivo':info.compActivo, 'compDetalle':info.compDetalle}).success(function(data){
+        $http.post('modulos/mod_containgregastos.php?op=a',{'op':'a', 'ingastoid':info.ingastoid, 'ingastoempresa':info.ingastoempresa, 'ingastoFecha':info.ingastoFecha, 'ingastoperiodo':info.ingastoperiodo, 'ingastotipo':info.ingastotipo, 'ingastocomprobante':info.ingastocomprobante, 'ingastodetalle':info.ingastodetalle, 'ingastovalor':info.ingastovalor, 'ingastocontabiliza':info.ingastocontabiliza}).success(function(data){
         if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');
@@ -177,4 +190,4 @@ $scope.exporta = function(){
          };
      });  
 	 
-// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Sep 09, 2019 10:33:12   <<<<<<< 
+// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Wednesday,Nov 27, 2019 1:57:50   <<<<<<< 

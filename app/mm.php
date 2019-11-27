@@ -146,17 +146,12 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=recCaja"><i class=""></i>Recibos de caja (abonos)</a></li>
             <li><a href="mm.php?op=pagos"><i class=""></i>Aplica Pagos Pendientes</a></li>
             <li><a href="mm.php?op=anuRC"><i class=""></i>Anula Recibo de Caja</a></li>
-            <li><a href="mm.php?op=otrIngr"><i class=""></i>Otros Ingresos</a></li>
-            <li><a href="mm.php?op=gast"><i class=""></i>Gastos (Egresos)</a></li>
+            <li><a href="mm.php?op=otrIngr"><i class=""></i>Otros Ingresos y gastos</a></li>
             <li><a href="mm.php?op=acuPago"><i class=""></i>Acuerdos de Pago</a></li>
             <li><a href="mm.php?op=anticip"><i class=""></i>Anticipos (Abonos)</a></li>
-            <li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li>
-
-            if ($pf=="S"){
-                <li><a href="mm.php?op=impor"><i class="fa fa-circle-o"></i>Importa Tablas</a></li>
-                <li><a href="mm.php?op=impPag"><i class="fa fa-circle-o"></i><span>Importa Pagos</span></a></li>      
-                <li><a href="mm.php?op=impsal2"><i class="fa fa-circle-o"></i>Importa Saldos</a></li> 
-           }  
+            <li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li>            
+            <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>
+  
           </ul>
         </li>
        
@@ -196,14 +191,17 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=parGen"><i class=""></i> <span>Parámetros Generales</span></a></li>
             <li><a href="mm.php?op=parFac"><i class=""></i> <span>Parámetros Facturación</span></a></li>
             <li><a href="mm.php?op=users"><i class=""></i> <span>Usuarios</span></a></a></li>
-            <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>
-            <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>';
-       }
-        if ($pf=='S'){
-            
-           echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  ';     
-  
+            <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>';
+        if ($pf=='S'){            
+           echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  '; 
         }
+         echo '   if ($pf=="S"){
+                <li><a href="mm.php?op=impor"><i class="fa fa-circle-o"></i>Importa Tablas</a></li>
+                <li><a href="mm.php?op=impPag"><i class="fa fa-circle-o"></i><span>Importa Pagos</span></a></li>      
+                <li><a href="mm.php?op=impsal2"><i class="fa fa-circle-o"></i>Importa Saldos</a></li> 
+           }';
+       }
+
            ?>
          <?php if ($pf=='A'  OR $pf=='S'){ 
        echo '   </ul>
@@ -344,7 +342,7 @@ if (!isset($_GET['op'])){
         } 
                 
         if ($op ==  'otrIngr'){
-            include_once 'views/frm_contaotrosingresos.php';
+            include_once 'views/frm_containgregastos.php';
         }
         if ($op ==  'cbnte'){
             include_once 'views/frm_contacomprobantes.php';

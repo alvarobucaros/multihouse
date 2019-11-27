@@ -66,8 +66,11 @@
                       <input type="radio" name ="compActivo" ng-model="registro.compActivo" value="I" >{{form_compActivo50}}
                    </label>
                    <label>
-                      <input type="radio" name ="compActivo" ng-model="registro.compActivo" value="A" >{{form_compActivo51}}
+                      <input type="radio" name ="compActivo" ng-model="registro.compActivo" value="E" >{{form_compActivo51}}
                    </label>
+                   <label>
+                      <input type="radio" name ="compActivo" ng-model="registro.compActivo" value="C" >{{form_compActivo52}}
+                   </label>                   
                     </div>
                 </div> 
 
@@ -92,7 +95,7 @@
                     </div>
                 </div>       
                 <div style='display: none'>
-                <input type="text"	 ng-model="registro.compId" id ='compId'  name ='compId' value="{{registro.compId}}"/>
+                <input type="text" ng-model="registro.compId" id ='compId'  name ='compId' value="{{registro.compId}}"/>
 
    
                 </div>
