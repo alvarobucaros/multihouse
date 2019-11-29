@@ -273,3 +273,16 @@ close {
 .semaforogreen{
     background-color:green;
 }
+
+.container1 { 
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.container1 > div {
+  font-size: 3vw;
+  padding: .5em;
+  color: white;
+  width: 60%;
+}

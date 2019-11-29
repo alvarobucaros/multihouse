@@ -34,16 +34,28 @@ switch ($op)
  
     function  leeRegistros($data) 
     { 
-       global $objClase;
-      $con = $objClase->conectar(); 
-       { 
-            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante, ingastodetalle, ingastovalor, ingastocontabiliza" 
-                    . " FROM containgregastos ORDER BY ingastoFecha ";             
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $perini = $data->fi;
+        $perfin = $data->ff;
+        $empresa = $data->empresa;
+        $saldo = 0;
+        $codi= " ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa ;
+        if ($perini != ''){ $codi .= " AND ingastoperiodo >= ".$perini;}
+        if ($perfin != ''){ $codi .= " AND ingastoperiodo <= ".$perfin;}
+        { 
+            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante," . 
+                    " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+                    " FROM containgregastos WHERE " .$codi .
+                    " ORDER BY ingastoFecha ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
                 { 
                     while($row = mysqli_fetch_assoc($result)) { 
+                        if($row['ingastotipo']=='I' || $row['ingastotipo']=='A'){$saldo = $saldo + $row['ingastovalor']; }
+                        else {$saldo = $saldo - $row['ingastovalor']; }
+                        $row['saldo'] = $saldo;
                         $arr[] = $row; 
                     } 
                 } 
@@ -74,18 +86,28 @@ switch ($op)
         $ingastodetalle =  $data->ingastodetalle; 
         $ingastovalor =  $data->ingastovalor; 
         $ingastocontabiliza =  $data->ingastocontabiliza; 
-   
+        $ingastoDocumento  =  $data->ingastoDocumento; 
         if($ingastoid  == 0) 
         { 
-           $query = "INSERT INTO containgregastos(ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante, ingastodetalle, ingastovalor, ingastocontabiliza)";
-           $query .= "  VALUES ('" . $ingastoempresa."', '".$ingastoFecha."', '".$ingastoperiodo."', '".$ingastotipo."', '".$ingastocomprobante."', '".$ingastodetalle."', '".$ingastovalor."', '".$ingastocontabiliza."')";  
+           $query = "INSERT INTO containgregastos(ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
+                   " ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza)" .
+                   " VALUES ('" . $ingastoempresa."', '".$ingastoFecha."', '".$ingastoperiodo."', '".
+                   $ingastotipo."', '".$ingastocomprobante."', '".$ingastodetalle."', '". $ingastoDocumento."', '".
+                   $ingastovalor."', '".$ingastocontabiliza."')";  
             mysqli_query($con, $query);
+
             echo 'Ok';
         } 
         else 
         { 
-            $query = "UPDATE containgregastos  SET ingastoempresa = '".$ingastoempresa."', ingastoFecha = '".$ingastoFecha."', ingastoperiodo = '".$ingastoperiodo."', ingastotipo = '".$ingastotipo."', ingastocomprobante = '".$ingastocomprobante."', ingastodetalle = '".$ingastodetalle."', ingastovalor = '".$ingastovalor."', ingastocontabiliza = '".$ingastocontabiliza."' WHERE ingastoid = ".$ingastoid;
+            $query = "UPDATE containgregastos  SET ingastoempresa = '".$ingastoempresa."', ingastoFecha = '".
+                    $ingastoFecha."', ingastoperiodo = '".$ingastoperiodo."', ingastotipo = '".
+                    $ingastotipo."', ingastocomprobante = '".$ingastocomprobante."', ingastodetalle = '".
+                    $ingastodetalle. "', ingastoDocumento = '".$ingastoDocumento. "', ingastovalor = '".
+                    $ingastovalor."', ingastocontabiliza = '".
+                    $ingastocontabiliza."' WHERE ingastoid = ".$ingastoid;
             mysqli_query($con, $query); 
+           
             echo 'Ok';
         } 
  
@@ -95,31 +117,39 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar(); 
         $empresa = $data->empresa; 
+        $periIni= $data->fi;
+        $periFin= $data->ff;
         $expo=''; 
         $expo .= '<table border=1 class="table2Excel"> '; 
         $expo .=  '<tr> '; 
-      $expo .=  '          <th>ID</th>';
-      $expo .=  '          <th>EMPRESA</th>';
-      $expo .=  '          <th>FECHA</th>';
-      $expo .=  '          <th>PERIODO</th>';
-      $expo .=  '          <th>TIPO</th>';
-      $expo .=  '          <th>COMPROBANTE</th>';
-      $expo .=  '          <th>DETALLE</th>';
-      $expo .=  '          <th>VALOR</th>';
-      $expo .=  '          <th>CONTABILIZA</th>';
-            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante, ingastodetalle, ingastovalor, ingastocontabiliza" 
-                    . " FROM containgregastos ORDER BY ingastoFecha ";             
+        $expo .=  '          <th>ID</th>';
+        $expo .=  '          <th>EMPRESA</th>';
+        $expo .=  '          <th>FECHA</th>';
+        $expo .=  '          <th>PERIODO</th>';
+        $expo .=  '          <th>TIPO</th>';
+        $expo .=  '          <th>COMPROBANTE</th>';
+        $expo .=  '          <th>DETALLE</th>';
+        $expo .=  '          <th>DOCUMENTO</th>';
+        $expo .=  '          <th>VALOR</th>';
+        $expo .=  '          <th>CONTABILIZA</th>';
+            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, " .
+                    " CASE ingastotipo WHEN 'I' THEN 'Ingreso' ELSE 'Gasto' END ingastotipo, ingastocomprobante," . 
+                    " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+                    " FROM containgregastos WHERE ingastotipo IN ('I','G') AND ingastoempresa =  " .$empresa .
+                    " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
+                    " ORDER BY ingastoFecha ";              
             $result = mysqli_query($con, $query); 
             if(mysqli_num_rows($result) != 0)  
                 { 
                     while($row = mysqli_fetch_assoc($result)) { 
-                 $expo .=  '<tr> '; 
+                $expo .=  '<tr> '; 
                 $expo .=  	'<td>' .$row['ingastoid']. '</td> ';
                 $expo .=  	'<td>' .$row['ingastoempresa']. '</td> ';
                 $expo .=  	'<td>' .$row['ingastoFecha']. '</td> ';
                 $expo .=  	'<td>' .$row['ingastoperiodo']. '</td> ';
                 $expo .=  	'<td>' .$row['ingastotipo']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastocomprobante']. '</td> ';
+                $expo .=  	'<td>' .$row['ingastocomprobante']. '</td> ';  
+                $expo .=  	'<td>' .$row['ingastoDocumento']. '</td> ';  
                 $expo .=  	'<td>' .$row['ingastodetalle']. '</td> ';
                 $expo .=  	'<td>' .$row['ingastovalor']. '</td> ';
                 $expo .=  	'<td>' .$row['ingastocontabiliza']. '</td> ';
@@ -151,7 +181,8 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar();	 
         $ingastoid = $data->ingastoid;      
-        $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante, ingastodetalle, ingastovalor, ingastocontabiliza  " . 
+        $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante, ".
+                " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza  " . 
                     " FROM containgregastos  WHERE ingastoid = " . $ingastoid  . 
                     " ORDER BY ingastoFecha "; 
         $result = mysqli_query($con, $query); 
@@ -167,11 +198,13 @@ switch ($op)
     } 
  
 	 
-    function lista0() 
+    function lista0($data) 
     { 
        global $objClase;
+       $empresa = $data->empresa; 
         $con = $objClase->conectar();	 
-         $query = "SELECT compId,  compNombre FROM contacomprobantes ORDER BY  compNombre";
+         $query = "SELECT compId,  compNombre FROM contacomprobantes ".
+         " WHERE compEmpresaId = " . $empresa . " AND compActivo IN ('I','E') ORDER BY  compNombre";
          $result = mysqli_query($con, $query); 
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)

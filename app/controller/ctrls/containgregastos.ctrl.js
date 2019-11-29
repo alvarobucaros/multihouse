@@ -1,30 +1,33 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Lista de containgregastos';
+    $scope.form_title = 'Ingresos y Gastos';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
     $scope.form_btnAnula = 'Cerrar';
     $scope.form_btnExcel = 'Exporta Excel';
     $scope.form_btnActualiza = 'Actualizar';
+    $scope.form_btnCierre = 'Cierre del periodo';
+    $scope.form_btnInforme = 'Informe cuentas';
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
  
-    $scope.form_ingastotipo40 = 0;
-    $scope.form_ingastotipo41 = 1;
-    $scope.form_ingastocontabiliza80 = 0;
-    $scope.form_ingastocontabiliza81 = 1;
+    $scope.form_ingastotipo40 = 'Ingreso';
+    $scope.form_ingastotipo41 = 'Gasto';
+    $scope.form_ingastotipo42 = 'Apertura';
+    $scope.form_ingastocontabiliza80 = 'Si';
+    $scope.form_ingastocontabiliza81 = 'NO';
 
     $scope.form_ingastoid = 'ID';
     $scope.form_ingastoempresa = 'EMPRESA';
     $scope.form_ingastoFecha = 'FECHA';
     $scope.form_ingastoperiodo = 'PERIODO';
     $scope.form_ingastotipo = 'TIPO';
-    $scope.form_ingastocomprobante = 'COMPROBANTE';
+    $scope.form_ingastocomprobante = 'MOVIMIENTO';
     $scope.form_ingastodetalle = 'DETALLE';
     $scope.form_ingastovalor = 'VALOR';
-    $scope.form_ingastocontabiliza = 'CONTABILIZA';
-
+    $scope.form_ingastocontabiliza = 'CONTABILIZADO';
+    $scope.form_ingastoDocumento = 'DOCUMENTO',
     $scope.form_Phingastoid = 'Digite id';
     $scope.form_Phingastoempresa = 'Digite empresa';
     $scope.form_PhingastoFecha = 'Digite fecha';
@@ -35,38 +38,53 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_Phingastovalor = 'Digite valor';
     $scope.form_Phingastocontabiliza = 'Digite contabiliza';
    
-     $scope.currentPage = 0;
-     $scope.pageSize = 10;
-     $scope.pages = [];
-     $scope.registro = [];
-     $scope.empresa = $('#e').val();
-    var defaultForm= {
-   
+    $scope.titulin= '';
+    $scope.queOk='';
+    $scope.modal = true;
+    $scope.form_peridesde='Periodo desde';
+    $scope.form_perihasta='Periodo hasta ';
+    $scope.valUltiperfac = '';
+    $scope.valPreriFact = '';
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+    $scope.pages = [];
+    $scope.registro = [];
+    $scope.empresa = $('#e').val();
+    
+    var defaultForm= {   
         ingastoid:0,
-        ingastoempresa:0,
+        ingastoempresa:$scope.empresa,
         ingastoFecha:'',
         ingastoperiodo:'',
-        ingastotipo:0,
+        ingastotipo:'',
         ingastocomprobante:0,
         ingastodetalle:'',
+        ingastoDocumento:'',
         ingastovalor:'',
-        ingastocontabiliza:''
+        ingastocontabiliza:'N'
    };
     
-    getCombos();
+    getCombos($scope.empresa);
     
     getInfo($scope.empresa);
     
     function getInfo(empresa){
-        $http.post('modulos/mod_containgregastos.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
+        fi='';
+        ff='';
+        $http.post('modulos/mod_containgregastos.php?op=r',{'op':'r', 'empresa':empresa,'fi':fi,'ff':ff}).success(function(data){
         $scope.details = data;
         $scope.configPages();   
-        });       
+        });  
+        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
+        rec=data.split('||');
+        $scope.valUltiperfac = rec[12];
+        $scope.valPreriFact = rec[1];    
+        });      
     }
 
-    function getCombos(){
-          $http.post('modulos/mod_containgregastos.php?op=0',{'op':'0'}).success(function(data){
-         $scope.operators0 = data;
+    function getCombos(empresa){
+          $http.post('modulos/mod_containgregastos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
+            $scope.operators0 = data;
          });
 } 
  
@@ -100,6 +118,11 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.currentPage = index - 1;
     };
 
+    $scope.cambiaperi = function(){;
+        f=$scope.registro.ingastoFecha.substring(0, 4)+$scope.registro.ingastoFecha.substring(5, 7);
+        $scope.registro.ingastoperiodo = f;
+        $scope.registro.ingastocontabiliza = "N";
+    }
  
 // Function to add toggle behaviour to form
 $scope.formToggle =function(){
@@ -126,18 +149,62 @@ $('#idForm').slideToggle();
 
     };
 
-$scope.exporta = function(){
-    valor = confirm('Exporta la tabla de inmuebles y propietarios a Excel, continua?');
-   if (valor == true) {
+    $scope.informe = function(detail){
+        $scope.form_peridesde='Periodo desde';
+        $scope.form_perihasta='Periodo hasta ';
+        $scope.titulin= 'Informe de cuentas';
+        $scope.peridesde = $scope.valPreriFact;
+        $scope.perihasta = $scope.valPreriFact;
+        $scope.queOk='I';
+        $scope.modal = false;
+    };
+
+    $scope.cierre = function(detail){
+
+        valor = confirm('Esto calcula el saldo del periodo y crea el saldo inicial del nuevo periodo');
+        if (valor == true) { 
+            $scope.form_peridesde='Periodo actual';
+            $scope.form_perihasta='Nuevo Periodo ';
+            $scope.titulin= 'Cierre de cuentas del periodo';
+            $scope.modal = false;
+            $scope.queOk='C';
+        }
+    };
+
+    $scope.ok = function(){
+        fi=$scope.peridesde;
+        ff=$scope.perihasta;
+        $scope.modal = true;
         empresa = $('#e').val();
-        $http.post('modulos/mod_containgregastos.php?op=exp',{'op':'exp','empresa':empresa}).success(function(data){
-       $('#miExcel').html(data); 
-        alert('exporta a Excel. Cargue y renombre el documento... ');
-        window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
-    }); 
-   }  
-}
-    $scope.deleteInfo =function(info)
+        if( $scope.queOk==='X'){             
+            $http.post('modulos/mod_containgregastos.php?op=exp',{'op':'exp','empresa':empresa,'fi':fi,'ff':ff}).success(function(data){
+            $('#miExcel').html(data); 
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
+        });            
+        }
+        if( $scope.queOk==='I'){   
+            location.href="reports/rptIngGastos.php?pi="+fi+"&em="+empresa+"&pf="+ff;
+        }
+    }
+
+    $scope.regresa = function(){
+        $scope.modal = true;
+    }
+
+
+    $scope.exporta = function(){
+        valor = confirm('Exporta la tabla de ingresos y gastos a Excel Cargue y renombre el documento..., continua?');
+        if (valor == true) {
+            $scope.form_peridesde='Periodo desde';
+            $scope.form_perihasta='Periodo hasta ';
+            $scope.titulin= 'Exporta a Excel';
+            $scope.peridesde = $scope.valPreriFact;
+            $scope.perihasta = $scope.valPreriFact;
+            $scope.queOk='X';
+            $scope.modal = false;
+       }  
+    }
+        $scope.deleteInfo =function(info)
     { 
         empresa = $('\#e').val(); 
         if (confirm('Desea borrar el registro con nombre : '+info.ingastoFecha+' ?')) {  
@@ -161,10 +228,15 @@ $scope.exporta = function(){
         if($('#ingastotipo').val()===''){er+='falta tipo\n';}
         if($('#ingastocomprobante').val()===''){er+='falta comprobante\n';}
         if($('#ingastodetalle').val()===''){er+='falta detalle\n';}
+        if($('#ingastoDocumento').val()===''){er+='falta Documento\n';}
         if($('#ingastovalor').val()===''){er+='falta valor\n';}
         if($('#ingastocontabiliza').val()===''){er+='falta contabiliza\n';}
         if (er==''){
-        $http.post('modulos/mod_containgregastos.php?op=a',{'op':'a', 'ingastoid':info.ingastoid, 'ingastoempresa':info.ingastoempresa, 'ingastoFecha':info.ingastoFecha, 'ingastoperiodo':info.ingastoperiodo, 'ingastotipo':info.ingastotipo, 'ingastocomprobante':info.ingastocomprobante, 'ingastodetalle':info.ingastodetalle, 'ingastovalor':info.ingastovalor, 'ingastocontabiliza':info.ingastocontabiliza}).success(function(data){
+        $http.post('modulos/mod_containgregastos.php?op=a',{'op':'a', 'ingastoid':info.ingastoid, 'ingastoempresa':info.ingastoempresa, 
+            'ingastoFecha':info.ingastoFecha, 'ingastoperiodo':info.ingastoperiodo, 'ingastotipo':info.ingastotipo, 
+            'ingastocomprobante':info.ingastocomprobante, 'ingastodetalle':info.ingastodetalle, 'ingastoDocumento':info.ingastoDocumento,
+            'ingastovalor':info.ingastovalor, 'ingastocontabiliza':info.ingastocontabiliza}).success(function(data){
+           
         if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');

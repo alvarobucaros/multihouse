@@ -206,6 +206,20 @@ class reportesCls{
         return  $result; 
     }
     
+    function reporteIngresosGastos($empresa, $periIni, $periFin){
+        include_once("clsConection.php");
+        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $con = $objClase->conectar();	
+        $sql =  "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, " .
+                    " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE '' END ingastotipo, " .
+                    " ingastocomprobante, " . 
+                    " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+                    " FROM containgregastos WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa .
+                    " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
+                    " ORDER BY ingastoFecha ";              
+        $result = mysqli_query($con, $sql);
+        return  $result;  
+    }
     function dias_transcurridos($fecha_i,$fecha_f){
         $di = (int)substr($fecha_i, 0, 4) * 360 + (int)substr($fecha_i, 5, 2) * 30 + (int)substr($fecha_i, 8, 2); //    2018/01/31
         $df = (int)substr($fecha_f, 0, 4) * 360 + (int)substr($fecha_f, 5, 2) * 30 + (int)substr($fecha_f, 8, 2); 
