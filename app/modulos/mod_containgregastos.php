@@ -22,6 +22,9 @@ switch ($op)
     case 'm':
         maxRegistroId($data);
         break;
+    case 'ci':
+        cierre($data);
+        break;    
     case 'exp':
         exportaXls($data);
         break; 
@@ -112,9 +115,9 @@ switch ($op)
         } 
  
     } 
- 
- function exportaXls($data){ 
-       global $objClase;
+    
+    function exportaXls($data){ 
+        global $objClase;
         $con = $objClase->conectar(); 
         $empresa = $data->empresa; 
         $periIni= $data->fi;
@@ -122,47 +125,83 @@ switch ($op)
         $expo=''; 
         $expo .= '<table border=1 class="table2Excel"> '; 
         $expo .=  '<tr> '; 
-        $expo .=  '          <th>ID</th>';
-        $expo .=  '          <th>EMPRESA</th>';
+      //  $expo .=  '          <th>ID</th>';
+      //  $expo .=  '          <th>EMPRESA</th>';
         $expo .=  '          <th>FECHA</th>';
         $expo .=  '          <th>PERIODO</th>';
         $expo .=  '          <th>TIPO</th>';
         $expo .=  '          <th>COMPROBANTE</th>';
-        $expo .=  '          <th>DETALLE</th>';
         $expo .=  '          <th>DOCUMENTO</th>';
+        $expo .=  '          <th>DETALLE</th>';
         $expo .=  '          <th>VALOR</th>';
+        $expo .=  '          <th>SALDO</th>';
         $expo .=  '          <th>CONTABILIZA</th>';
-            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, " .
-                    " CASE ingastotipo WHEN 'I' THEN 'Ingreso' ELSE 'Gasto' END ingastotipo, ingastocomprobante," . 
-                    " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
-                    " FROM containgregastos WHERE ingastotipo IN ('I','G') AND ingastoempresa =  " .$empresa .
+            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
+                    " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE 'Inicial' END tipo," . 
+                    "  ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+                    " FROM containgregastos WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa .
                     " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
                     " ORDER BY ingastoFecha ";              
             $result = mysqli_query($con, $query); 
+            $saldo=0.00;
             if(mysqli_num_rows($result) != 0)  
                 { 
-                    while($row = mysqli_fetch_assoc($result)) { 
-                $expo .=  '<tr> '; 
-                $expo .=  	'<td>' .$row['ingastoid']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastoempresa']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastoFecha']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastoperiodo']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastotipo']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastocomprobante']. '</td> ';  
-                $expo .=  	'<td>' .$row['ingastoDocumento']. '</td> ';  
-                $expo .=  	'<td>' .$row['ingastodetalle']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastovalor']. '</td> ';
-                $expo .=  	'<td>' .$row['ingastocontabiliza']. '</td> ';
-                 $expo .=  '</tr> '; 
+                    while($row = mysqli_fetch_assoc($result)) {
+                        $valor = $row['ingastovalor'];
+                        if($row['ingastotipo']==='G'){$valor = $valor * (-1); }
+                        $saldo = $saldo + $valor;        
+                        $expo .=  '<tr> '; 
+                  //      $expo .=  'td>' .$row['ingastoid']. '</td> ';
+                  //      $expo .=  '<td>' .$row['ingastoempresa']. '</td> ';
+                        $expo .=  '<td>' .$row['ingastoFecha']. '</td> ';
+                        $expo .=  '<td>' .$row['ingastoperiodo']. '</td> ';
+                        $expo .=  '<td>' .$row['tipo']. '</td> ';
+                        $expo .=  '<td>' .$row['ingastocomprobante']. '</td> ';  
+                        $expo .=  '<td>' .$row['ingastoDocumento']. '</td> ';  
+                        $expo .=  '<td>' .$row['ingastodetalle']. '</td> ';
+                        $expo .=  '<td>' .number_format($valor, 2, '.', ','). '</td> ';
+                        $expo .=  '<td>' .number_format($saldo, 2, '.', ','). '</td> ';
+                        $expo .=  '<td>' .$row['ingastocontabiliza']. '</td> ';
+                        $expo .=  '</tr> '; 
                     } 
                 } 
         $expo .=  '</table> ';  
         echo $expo; 
-    return $expo; 
- } 
+        return $expo; 
+     } 
+     
+     
+     function cierre($data){ 
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $perini = $data->fi;
+        $perfin = $data->ff;
+        $empresa = $data->empresa;
+        $comprobante='xx';
+        $saldo = 0;
+        $fecha = substr($perfin,0,4).'-'.substr($perfin,4,2).'-01';
+        $detalle = 'Saldo parcial periodo '.$perfin;
+        $query = "SELECT SUM(ingastovalor) AS suma FROM containgregastos WHERE ingastoperiodo = '".$perini."' AND ingastotipo IN ('A','I')";
+        $result = mysqli_query($con, $query);   
+        while($row = mysqli_fetch_assoc($result)) { 
+             $saldo = $row['suma'];
+        }
+        $query = "SELECT SUM(ingastovalor) AS suma FROM containgregastos WHERE ingastoperiodo = '".$perini."' AND ingastotipo IN ('G')";
+        $result = mysqli_query($con, $query);   
+        while($row = mysqli_fetch_assoc($result)) { 
+             $saldo -= $row['suma'];
+        }
+        $query = "INSERT INTO containgregastos(ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
+                " ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza)" .
+                " VALUES ('" . $empresa."', '".$fecha."', '".$perfin."', 'A','".
+                $comprobante."', '".$detalle."', '0', '".$saldo."', 'N')";  
+         mysqli_query($con, $query);
+         echo 'Ok';
+     }
+     
     function maxRegistroId($data) 
     { 
-       global $objClase;
+         global $objClase;
         $con = $objClase->conectar();	 
         $id=0;
         $query = "SELECT  MAX(ingastoid) as id 

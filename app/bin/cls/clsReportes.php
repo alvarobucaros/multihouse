@@ -210,14 +210,14 @@ class reportesCls{
         include_once("clsConection.php");
         $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
         $con = $objClase->conectar();	
-        $sql =  "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, " .
-                    " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE '' END ingastotipo, " .
-                    " ingastocomprobante, " . 
-                    " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
-                    " FROM containgregastos WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa .
-                    " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
-                    " ORDER BY ingastoFecha ";              
-        $result = mysqli_query($con, $sql);
+        $sql =  "SELECT ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
+                " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE 'Inicial' END tipo," . 
+                " ingastocomprobante, " . 
+                " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+                " FROM containgregastos WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa .
+                " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
+                " ORDER BY ingastoFecha ";              
+    $result = mysqli_query($con, $sql);
         return  $result;  
     }
     function dias_transcurridos($fecha_i,$fecha_f){

@@ -77,6 +77,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         });  
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
         rec=data.split('||');
+       
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];    
         });      
@@ -86,8 +87,19 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
           $http.post('modulos/mod_containgregastos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
             $scope.operators0 = data;
          });
-} 
+    } 
  
+    function avanzaPeriodo(per){
+        a=per.substring(0,4);
+        m=per.substring(4,6);
+        m=parseInt(m)+1;
+        if (m>12){a+=1; m=1;}
+        np=a;
+        if(m<10){np=np+'0';}
+        np=np+m;
+        return np;
+    }
+    
     $scope.configPages = function() {
         $scope.pages.length = 0;
         var ini = $scope.currentPage - 4;
@@ -166,7 +178,9 @@ $('#idForm').slideToggle();
             $scope.form_peridesde='Periodo actual';
             $scope.form_perihasta='Nuevo Periodo ';
             $scope.titulin= 'Cierre de cuentas del periodo';
-            $scope.modal = false;
+            $scope.peridesde = $scope.valPreriFact;
+            $scope.perihasta = avanzaPeriodo($scope.peridesde)
+            $scope.modal = false;  
             $scope.queOk='C';
         }
     };
@@ -176,6 +190,11 @@ $('#idForm').slideToggle();
         ff=$scope.perihasta;
         $scope.modal = true;
         empresa = $('#e').val();
+        if( $scope.queOk==='C'){             
+            $http.post('modulos/mod_containgregastos.php?op=ci',{'op':'ci','empresa':empresa,'fi':fi,'ff':ff}).success(function(data){
+                alert(data);
+        });            
+        }
         if( $scope.queOk==='X'){             
             $http.post('modulos/mod_containgregastos.php?op=exp',{'op':'exp','empresa':empresa,'fi':fi,'ff':ff}).success(function(data){
             $('#miExcel').html(data); 

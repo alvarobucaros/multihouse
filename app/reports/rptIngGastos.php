@@ -103,7 +103,7 @@ require_once ('fpdf.php');
         $hoy= date("d-m-Y h:i a");
         $this->SetY(-15);
         $this->SetFont('Arial','I',7);
-        $this->Cell(0,10,'REPORTE: CUENTA DE COBRO.  IMPRESA EL: '.$hoy,0,0,'L');
+        $this->Cell(0,10,'REPORTE: INGRESOS Y GASTOS.  IMPRESA EL: '.$hoy,0,0,'L');
         }
     }
    
@@ -125,10 +125,10 @@ require_once ('fpdf.php');
         while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
         {
             $fecha =  $rec['ingastoFecha'];
-            $ref =  $rec['ingastotipo'].' '.$rec['ingastodetalle'].' '.$rec['ingastoDocumento']; 
+            $ref =  $rec['tipo'].' '.$rec['ingastodetalle'].' '.$rec['ingastoDocumento']; 
             $valor =  $rec['ingastovalor'];               
-            if($row['ingastotipo']==='Gasto'){$saldo = $saldo - $valor; }
-            else {$saldo = $saldo + $valor; }
+            if($rec['ingastotipo']==='G'){$valor = $valor * (-1); }
+            $saldo = $saldo + $valor; 
             $pdf->SetXY($izq+9,$y);
             $pdf->Cell(60,4, $fecha,0, 0 , 'L' );
             $pdf->SetXY($izq+22,$y);
@@ -137,9 +137,10 @@ require_once ('fpdf.php');
             $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,R);
             $pdf->SetXY($izq+120,$y);
             $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,R);
-
-            $y +=4;        
+            $y +=4;           
         }  
+        $pdf->SetXY($izq+120,$y);
+        $pdf->Cell(20,4,'----------------',0,0,R);
     }
     else {
         $pdf->SetXY($izq+9,$y);
