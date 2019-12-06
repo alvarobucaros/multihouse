@@ -28,6 +28,12 @@ switch ($op)
     case 'cnslta2':
         consulta2($data);
         break; 
+    case 'acuer2':
+        traeacuer2($data);
+        break;     
+        case 'apliAc':
+        aplicaAcuerdo($data);
+        break; 
     case 'pagaFac':
         pagaFactura($data);
         break;     
@@ -844,7 +850,66 @@ switch ($op)
         echo $saldo;
       }
       
-      function recuperaUnInmueble($data){
+    function traeacuer2($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa =  $data->empresa;
+        $inmueble = $data->inmueble;
+        $propietario = $data->propietario;
+        $condicion = "";
+        $mora = 0;
+        $corriente =  0;
+        $anticipos =  0;
+        if($inmueble>0){$condicion = " AND facturaInmuebleid = " .$inmueble; }
+        if($propietario>0){$condicion = " AND facturaPropietario = " . $propietario ;}
+        $sql = "SELECT SUM(facturasaldo) As mora FROM contafactura where facturaEmpresaid= ". $empresa .
+                " AND facturaTipo = 'M' AND facturasaldo > 0 " . $condicion;
+        $result = mysqli_query($con, $sql); 
+        if(mysqli_num_rows($result) != 0)  
+        {
+            while($row = mysqli_fetch_assoc($result)) { 
+                $mora =  $row['mora'];
+            }     
+        }
+         
+        $sql = "SELECT SUM(facturasaldo) As corriente FROM contafactura where facturaEmpresaid=". $empresa .
+                " AND facturaTipo = 'F' AND facturasaldo > 0 " . $condicion;
+        $result = mysqli_query($con, $sql); 
+        if(mysqli_num_rows($result) != 0)  
+        {
+            while($row = mysqli_fetch_assoc($result)) { 
+                $corriente =  $row['corriente'];
+            }
+        }
+        $sql = "SELECT SUM(facturasaldo) As anticipos FROM contafactura where facturaEmpresaid=". $empresa .
+                " AND facturaTipo = 'T' AND facturasaldo > 0 " . $condicion; 
+        $result = mysqli_query($con, $sql); 
+        if(mysqli_num_rows($result) != 0)  
+        {
+            while($row = mysqli_fetch_assoc($result)) { 
+                $anticipos =  $row['anticipos'];
+            }
+        }
+        echo $mora.'||'.$corriente.'||'.$anticipos;
+   
+    }
+    
+    function  aplicaAcuerdo($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa =  $data->empresa;
+        $inmueble = $data->inmueble;
+        $propietario = $data->propietario;
+        $condicion = "";
+        $mora = 0;
+        $corriente =  0;
+        $anticipos =  0;
+        if($inmueble>0){$condicion = " AND facturaInmuebleid = " .$inmueble; }
+        if($propietario>0){$condicion = " AND facturaPropietario = " . $propietario ;}
+        echo 'Ok';
+    }
+    
+    function recuperaUnInmueble($data){
         global $objClase;
         $con = $objClase->conectar(); 
         $empresa =  $data->empresa;

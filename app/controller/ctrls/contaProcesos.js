@@ -9,7 +9,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_consultasCtaCobro='Consulta de cuentas de cobro';
     $scope.form_impromeCtasCobro = 'Reimprime cuentas de cobro';
     $scope.form_consultasGral = 'Consultas Generales';
-
+    $scope.form_acuerdosPago = 'Acuerdos de Pago';
+    $scope.form_acuerdoCuotas='Número de cuotas';
     $scope.form_imprimeCtasCobro = 'Imprime Cuentas de Cobro';
     $scope.form_imprimeRecibo = 'Reimprime Recibo de caja';
     $scope.form_consultasCtaCobro = 'Consulta Cuenta de Cobro';
@@ -17,13 +18,15 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_resumenDiario = 'Resume diario de Caja';
     $scope.form_estadoCuenta = 'Estado de cuenta';
     $scope.form_carteraEnMora = 'Cartera en Mora';
-    
+    $scope.form_detalle='Detalle anticipo';
+    $scope.form_acuerdoValor='Valor acuerdo';
     $scope.form_fechaAbono = "Fecha Abono";
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
     $scope.form_btnImprimir = 'Imprime ultimo período';
     $scope.form_btnImpreRc = 'Imprime Recibo';
+    $scope.form_btnImpreAc = 'Imprime Acuerdo';
     $scope.form_btnAnula = 'Cerrar';
     $scope.form_btnContinua = 'Continuar';
     $scope.form_btnfactura = 'Facturar periodo';
@@ -49,6 +52,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.titreferencia = 'Referencia';
     $scope.form_todassi='Ultimo periodo: ';
     $scope.form_todasno='Una sola: ';
+    $scope.form_enMora = 'Saldo en mora';
+    $scope.form_corriente = 'Saldo corriente';
+    $scope.form_vlrTotal = 'Total deuda';
     $scope.valUltiperfac='';
     $scope.valPreriFact = '';
     $scope.valFchCorte = '';
@@ -56,6 +62,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.factura = false;
     $scope.progreso = false;
     $scope.imprime = false;
+    $scope.imprimeAc = false;
     $scope.currentPage = 0;
     $scope.pageSize = 10;
     $scope.pages = [];
@@ -70,6 +77,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.recargoDias = 0;
     $scope.factorRedondeo = 0;
     $scope.vlrPago = 0;
+    $scope.enMora = 0;
+    $scope.corriente = 0;
+    $scope.vlrTotal = $scope.enMora + $scope.corriente;
     var f = new Date();  
     $scope.registro.fechaAbono=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()+ ' 00:00:0000';
     $scope.fechaAbono=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear();
@@ -81,6 +91,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
    
     if(procesa === 'A'){
         getCombos($scope.empresa);
+        getInfoAnticipo($scope.empresa);
         $scope.reimprime='S';
     }   
     if(procesa === 'R'){
@@ -89,6 +100,12 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         getCombos($scope.empresa);
     }
     
+     function getInfoAnticipo(empresa){
+        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
+        rec=data.split('||');
+        $scope.periodo = rec[1];
+         }); 
+     }
      function getInfoFac(empresa){
        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
 
@@ -223,6 +240,30 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
          });
     };
      
+    $scope.buscaacuer2 = function(detail){
+        empresa=$scope.empresa;
+        inmueble = detail.Inmueble;
+        propietario = detail.propietario;
+        if (inmueble === undefined){inmueble=0;}
+        if (propietario === undefined) {propietario=0;}
+        $http.post('modulos/mod_contaprocesos.php?op=acuer2',{'op':'acuer2','empresa':empresa,'inmueble':inmueble,
+        'propietario':propietario}).success(function(data){
+        rec=data.split('||');
+        mo=0;
+        co=0;
+        an=0;
+        if(rec[0]!==''){mo=rec[0];}
+        $scope.enMora = formatMoney(mo, 2, '.', ','); 
+        if(rec[1]!==''){co=rec[1];}
+        if(rec[2]!==''){an=rec[2];}
+        co = co - an;
+        t = parseInt(mo)+parseInt(co);
+       
+        $scope.corriente = formatMoney(co, 2, '.', ',');
+        $scope.vlrTotal = formatMoney(t, 2, '.', ',');
+         });
+    };
+     
     $scope.aplicar = function(){
         empresa=$scope.empresa;
         prop=$scope.registro.propietario;
@@ -261,7 +302,32 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     }else{
         alert(err);
     }
+    };
     
+     $scope.aplicaAcuerdo = function(){
+        empresa=$scope.empresa;
+        inmueble = $scope.registro.Inmueble;
+        propietario = $scope.registro.propietario;
+        if (inmueble === undefined){inmueble=0;}
+        if (propietario === undefined) {propietario=0;}
+        er='';
+        if(inmueble===0 && propietario===0){er +='Debe indicar un inmueble o un propietario \n'}
+        if($scope.acuerdoValor === undefined){er +='Falta el valor \n';}
+        if($scope.acuerdoCuotas === undefined){er +='Falta número de cuotas \n';}
+        if($scope.detalle === undefined){er +='Falta detalles del acuerdo \n';}
+        if (er===''){
+            $http.post('modulos/mod_contaprocesos.php?op=apliAc',{'op':'apliAc','empresa':empresa,'inmueble':inmueble,
+            'propietario':propietario}).success(function(data){
+            if (data === 'Ok'){  $scope.imprimeAc = true;}
+            });
+        }else{
+            alert(er)
+        }
+    };
+     
+    
+    $scope.imprimeAcuerdo = function(){
+        alert('imprime acuerdo');
     };
     
     $scope.formaPago = function(){
@@ -413,6 +479,22 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });              
     }
 
+    function formatMoney(number, decPlaces, decSep, thouSep) {
+    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+    decSep = typeof decSep === "undefined" ? "." : decSep;
+    thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+    var sign = number < 0 ? "-" : "";
+    var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+    var j = (j = i.length) > 3 ? j % 3 : 0;
+
+    return sign +
+            (j ? i.substr(0, j) + thouSep : "") +
+            i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+            (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+    }
+
+
+
     empresa = $scope.empresa;
     $scope.items = [];
     $scope.titulin= '';
@@ -455,6 +537,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     });
   };
 }
+
 
 ]);
  

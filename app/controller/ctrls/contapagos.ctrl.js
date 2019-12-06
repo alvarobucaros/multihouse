@@ -70,7 +70,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
 
     function getCombos(empresa){
         $http.post('modulos/mod_contapagos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
-            alert(data);
         $scope.operators0 = data;
         });
         getInfoRcaja(empresa)
