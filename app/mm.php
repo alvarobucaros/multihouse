@@ -363,7 +363,7 @@ if (!isset($_GET['op'])){
         }        
   
         if ($op ==  'acuPago'){
-            include_once 'views/frm_contaAcuerdosPago.php';
+            include_once 'views/frm_contaacuerdos.php';
         } 
 
         if ($op ==  'conta'){

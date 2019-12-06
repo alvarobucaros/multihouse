@@ -31,9 +31,9 @@ switch ($op)
     case 'acuer2':
         traeacuer2($data);
         break;     
-        case 'apliAc':
-        aplicaAcuerdo($data);
-        break; 
+//    case 'apliAc':
+//        aplicaAcuerdo($data);
+//        break; 
     case 'pagaFac':
         pagaFactura($data);
         break;     
@@ -894,20 +894,21 @@ switch ($op)
    
     }
     
-    function  aplicaAcuerdo($data){
-        global $objClase;
-        $con = $objClase->conectar(); 
-        $empresa =  $data->empresa;
-        $inmueble = $data->inmueble;
-        $propietario = $data->propietario;
-        $condicion = "";
-        $mora = 0;
-        $corriente =  0;
-        $anticipos =  0;
-        if($inmueble>0){$condicion = " AND facturaInmuebleid = " .$inmueble; }
-        if($propietario>0){$condicion = " AND facturaPropietario = " . $propietario ;}
-        echo 'Ok';
-    }
+//    function  aplicaAcuerdo($data){
+//        global $objClase;
+//        $con = $objClase->conectar(); 
+//        $empresa =  $data->empresa;
+//        $inmueble = $data->inmueble;
+//        $propietario = $data->propietario;
+//        $condicion = "";
+//        $mora = 0;
+//        $corriente =  0;
+//        $anticipos =  0;
+//        if($inmueble>0){$condicion = " AND facturaInmuebleid = " .$inmueble; }
+//        if($propietario>0){$condicion = " AND facturaPropietario = " . $propietario ;}
+//        $sql = "SELECT acuerdoid, acuerdoempresa, acuerdoinmueble, acuerdofecha, acuerdovalor, acuerdoplazo, acuerdodetalle, acuerdopropietario FROM contaacuerdos;";
+//        echo 'Ok';
+//    }
     
     function recuperaUnInmueble($data){
         global $objClase;
