@@ -39,6 +39,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.periFact = 'Perído a Facturar:';
     $scope.fchCorte = 'Fecha de corte:';
     $scope.inmueble = 'Inmueble : ';
+    $scope.nroRecibos = 'recibo Nro.';
     $scope.rCaja = 'Recibo de caja'; 
     $scope.propietario = 'Propietario : ';
     $scope.comprobante = 'Cmbante facturación:';
@@ -230,16 +231,26 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     };
     
     $scope.buscaFacturas = function(detail){
+        empresa=$scope.empresa;
         inmueble = detail.Inmueble;
         propietario = detail.propietario;
         if (inmueble === undefined){inmueble=0;}
         if (propietario === undefined) {propietario=0;}
         $http.post('modulos/mod_contaprocesos.php?op=facSal2',{'op':'facSal2','empresa':empresa,'inmueble':inmueble,
         'propietario':propietario}).success(function(data){
+            alert(data);
         $scope.Mensaje = data;
          });
     };
      
+    $scope.buscanroRecibos = function(){
+        empresa=$scope.empresa; 
+        inmueble = detail.Inmueble;
+        $http.post('modulos/mod_contaprocesos.php?op=busRc',{'op':'busRc','empresa':empresa,'inmueble':inmueble}).success(function(data){
+            $scope.operators1 = data;
+            }); 
+    }
+
     $scope.buscaacuer2 = function(detail){
         empresa=$scope.empresa;
         inmueble = detail.Inmueble;

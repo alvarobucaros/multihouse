@@ -103,7 +103,7 @@ class reportesCls{
                " facturavalor, facturadetalle, facturafechafac, facturafechavence, facturafechacontrol, ".
                " facturasaldo, facturaprioridad, facturadescuento, facturaMora, facturaNroReciboPago,  ".
                " ServicioTipo, ServicioMora, ServicioMoraPorcentaje, servicioMoraValor,ServicioPPporcentaje, ".
-               " ServicioPPvalor, ServicioDetalle, inmuebleDescripcion, propietarioNombre  ".
+               " ServicioPPvalor, ServicioDetalle, inmuebleDescripcion, propietarioNombre, propietarioId    ".
                " FROM contafactura INNER JOIN contaservicios ON ServicioId = facturaservicioid  ".
                " INNER JOIN containmuebles ON facturaInmuebleid = inmuebleId  ".
                " INNER JOIN containmueblepropietario ON inmuebleId = contaInmuPropietarioInmuebleId ". 
@@ -118,6 +118,55 @@ class reportesCls{
         return  $result;	   
      }
 
+     function carteraEdades($empresa, $op, $hoy){
+        include_once("clsConection.php");
+        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $con = $objClase->conectar();
+        $sql = "DELETE FROM contatmpcartera WHERE pagoempresa = " . $empresa ." AND pagoid > 0";
+        $result = mysqli_query($con, $sql); //2019-12-11
+        $anio = substr($hoy,0,4);
+        $mes = substr($hoy,5,2);
+        $peri=$anio;
+        if ($mes < 10){$peri.'0';}
+        $peri .= $mes;
+        $result = $this->preparaImpresionFacturaRep($peri, $empresa,0);
+        $retorno='';
+        while( $row = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        { 
+            $pagoCrnte=0;
+            $pago0130=0;
+            $pago3160=0;
+            $pago6190=0;
+            $pago91120=0;
+            $pago121mas=0;
+            $dias = $this->dias_transcurridos($hoy, $row['facturafechavence']);
+            if($dias>120 ){$pago121mas=$row['facturasaldo'];}
+            else if ($dias>90 ){$pago91120=$row['facturasaldo'];}
+            else if ($dias>60 ){$pago6190=$row['facturasaldo'];}
+            else if ($dias>30 ){$pago3160=$row['facturasaldo'];}
+            else if ($dias>0 ){$pago0130=$row['facturasaldo'];}
+            else{$pagoCrnte =$row['facturasaldo']; }
+             
+            $sql="INSERT INTO contatmpcartera (pagoempresa, pagofchfac ,pagofchvnc, pagovalor, pagodias, ".
+               " pagoinmuebleid, pagopropietarioid, pagoCrnte,pago0130,pago3160,pago6190,pago91120,pago121mas, ".
+               " pagodetalle ,pagonompropietario ,pagoinmuebledesc)  VALUES ('".
+               $empresa."','".$row['facturafechafac']."','".$row['facturafechavence'].
+               "','".$row['facturasaldo']."','".$dias."','".$row['facturaInmuebleid'].
+               "','".$row['propietarioId']."',".
+               $pagoCrnte.",". $pago0130.",". $pago3160.",". $pago6190.",".  $pago91120.",". $pago121mas.
+               ",'".$row['ServicioDetalle']."','".$row['inmuebleDescripcion'].
+               "','".$row['propietarioNombre']."')";
+            $resulter = mysqli_query($con, $sql); 
+
+        }
+        $sql = "SELECT pagoempresa, pagofchfac ,pagofchvnc, pagovalor, pagodias, ".
+            " pagoinmuebleid, pagopropietarioid, pagoCrnte,pago0130,pago3160,pago6190,pago91120,pago121mas, ".
+            " pagodetalle ,pagonompropietario ,pagoinmuebledesc  FROM contatmpcartera ".
+            " WHERE pagoempresa = " . $empresa ."  ORDER BY pagonompropietario ";
+       $retorno = mysqli_query($con, $sql); 
+       return $retorno;
+     }
+     
     function preparaImpresionUnaFactura($periodo, $empresa, $inmueble){
       include_once("clsConection.php");
       $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
@@ -147,14 +196,17 @@ class reportesCls{
             " facturafechavence, facturafechacontrol, facturasaldo, facturaprioridad, facturadescuento,  ".
             " facturaMora,facturaNroReciboPago, facturaTipo, facturaPropietario, facturaDiasMora,  ".
             " facturaMoraInmuebId FROM contafactura  ".
-            " WHERE facturasaldo > 0   AND facturaTipo IN ('F','T','C','D') AND facturaEmpresaid = " . $empresa ;
+            " WHERE facturasaldo > 0   AND facturaEmpresaid = " . $empresa ;
         if($op == 'N'){
-            $sql.= " AND facturaInmuebleid = " . $inmueble;
+            $sql.= "  AND facturaTipo IN ('F','T','C','D') AND facturaInmuebleid = " . $inmueble;
+        }
+        if($op == 'A'){
+            $sql.= "  AND facturaInmuebleid = " . $inmueble;
         }
         $sql.= " ORDER BY facturaInmuebleid, facturaperiodo, facturaTipo, facturasecuencia;";
         $result = mysqli_query($con, $sql);
-       // echo $result;
-        return  $result;	  
+        // echo $result;
+        return $result;	  
     }
      
     function traeNomApto($apto, $empresa){
@@ -220,6 +272,21 @@ class reportesCls{
     $result = mysqli_query($con, $sql);
         return  $result;  
     }
+    
+    function cabezaAcuerdoPago($id, $empresa){
+        include_once("clsConection.php");
+        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $con = $objClase->conectar();	
+        $sql =  "SELECT acuerdoinmueble, acuerdofecha, acuerdovalor, acuerdoplazo, acuerdodetalle, ".
+                " acuerdopropietario, acuerdomora, acuerdocorriente, acuerdodescmora  ".
+                " FROM contaacuerdos WHERE acuerdoid = ". $id . " AND acuerdoempresa = " .$empresa;
+        $result = mysqli_query($con, $sql);  
+        return  $result; 
+    }
+    
+
+    
+    
     function dias_transcurridos($fecha_i,$fecha_f){
         $di = (int)substr($fecha_i, 0, 4) * 360 + (int)substr($fecha_i, 5, 2) * 30 + (int)substr($fecha_i, 8, 2); //    2018/01/31
         $df = (int)substr($fecha_f, 0, 4) * 360 + (int)substr($fecha_f, 5, 2) * 30 + (int)substr($fecha_f, 8, 2); 

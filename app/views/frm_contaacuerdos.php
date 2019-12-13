@@ -19,9 +19,11 @@
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
-                  ng-submit="insertInfo(registro);" hidden="">  
+                  ng-submit="insertInfo(registro);" hidden="">
 
-                <div class="form-group" style='display: none'>       
+   
+
+                <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="acuerdoempresa">{{form_acuerdoempresa}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="acuerdoempresa" name="acuerdoempresa"
@@ -33,13 +35,13 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="acuerdoinmueble">{{form_acuerdoinmueble}}</label>
                     <div class="col-md-6">
-                    <select id='acuerdoinmueble' name='acuerdoinmueble' ng-model='registro.acuerdoinmueble'
+                    <select id='acuerdoinmueble' name='acuerdoinmueble' ng-model='registro.acuerdoinmueble' 
                              ng-change="buscaacuer2(registro)">
-                     <option ng-repeat='operator0 in operators0' value = " {{operator0.inmuebleId}}">{{operator0.inmuebleCodigo}}</option>
+                     <option ng-repeat='operator0 in operators0' 
+                             value = " {{operator0.inmuebleId}}">{{operator0.inmuebleCodigo}}</option>
                     </select>
                     </div>
                 </div> 
-
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="acuerdopropietario">{{form_acuerdopropietario}}</label>
                     <div class="col-md-6">
@@ -48,31 +50,23 @@
                      <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
                     </select>
                     </div>
-                </div> 
-                
-                                <div>
-                    <div class="form-group">
-                        <label class="milabel col-md-4" for="enMora">{{form_enMora}}</label>
-                        <label class="milabel col-md-4" for="corriente">{{form_corriente}}</label>
-                        <label class="milabel col-md-4" for="vlrTotal">{{form_vlrTotal}}</label>
-                        <div class="col-md-4">
-                         <input type="text" class="form-control mitexto" id="enMora" name="enMora"
-                                ng-model="enMora" readonly="yes"  value="{{enMora}}" />
-                         </div>
+                </div>                 
 
-                        <div class="col-md-4">
-                         <input type="text" class="form-control mitexto" id="corriente" name="corriente"
-                                ng-model="corriente" readonly="yes"  value="{{corriente}}" />
-                         </div>
-  
-                        <div class="col-md-4">
-                         <input type="text" class="form-control mitexto" id="vlrTotal" name="vlrTotal"
-                                ng-model="vlrTotal" readonly="yes" value="{{vlrTotal}}" />
-                         </div>
-                     </div>               
-                </div>
-                
-                
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="acuerdomora">{{form_acuerdomora}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="acuerdomora" name="acuerdomora"
+                           ng-model="registro.acuerdomora"  value="{{registro.acuerdomora}}" readonly="yes" />
+                    </div>
+                </div> 
+
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="acuerdocorriente">{{form_acuerdocorriente}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="acuerdocorriente" name="acuerdocorriente"
+                         ng-model="registro.acuerdocorriente"  value="{{registro.acuerdocorriente}}" readonly="yes" />
+                    </div>
+                </div> 
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="acuerdofecha">{{form_acuerdofecha}}</label>
                    <div class="col-md-6">
@@ -92,6 +86,14 @@
                 </div> 
 
                 <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="acuerdodescmora">{{form_acuerdodescmora}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="acuerdodescmora" name="acuerdodescmora"
+                         ng-model="registro.acuerdodescmora" required Placeholder="{{form_Phacuerdodescmora}}" 
+                         value="{{registro.acuerdodescmora}}" />
+                    </div>
+                </div> 
+                <div class="form-group">
                     <label class="control-label milabel col-md-4" for="acuerdoplazo">{{form_acuerdoplazo}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="acuerdoplazo" name="acuerdoplazo"
@@ -109,8 +111,6 @@
                     </textarea>
                     </div>
                 </div> 
-
-
 
                 <div class="form-group">
                     <div class="col-md-5">
@@ -138,31 +138,39 @@
             <div class="table-responsive">
                 <table class="table table-hover tablex">
                     <tr>
-                        <th>ID</th>
-                        <th>EMPRESA</th>
+                        <!--th>ID</th>
+                        <th>EMPRESA</th-->
                         <th>INMUEBLE</th>
                         <th>FECHA</th>
                         <th>VALOR</th>
                         <th>PLAZO</th>
                         <th>DETALLE</th>
                         <th>PROPIETARIO</th>
+                        <th>MORA</th>
+                        <th>CORRIENTE</th>
+                        <th>DESCMORA</th>
                     </tr>
                    
                     <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-                    <td>{{detail.acuerdoid}}</td>
-                    <td>{{detail.acuerdoempresa}}</td>
-                    <td>{{detail.acuerdoinmueble}}</td>
+                    <!--td>{{detail.acuerdoid}}</td>
+                    <td>{{detail.acuerdoempresa}}</td> 
+                    <td>{{detail.acuerdoinmueble}}</td-->
+                    <td>{{detail.inmuebleCodigo}}</td>
                     <td>{{detail.acuerdofecha}}</td>
                     <td>{{detail.acuerdovalor}}</td>
                     <td>{{detail.acuerdoplazo}}</td>
                     <td>{{detail.acuerdodetalle}}</td>
                     <td>{{detail.acuerdopropietario}}</td>
+                    <td>{{detail.acuerdomora}}</td>
+                    <td>{{detail.acuerdocorriente}}</td>
+                    <td>{{detail.acuerdodescmora}}</td>
                     <td>
-                    <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
+                    <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" 
+                            title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
                     </td>
                     <td>
-                    <button class="btn btn-danger btn-xs" ng-click="deleteInfo(detail)" 
-                            confirm="Está seguro ?, {{form_btnElimina}}?" title="{{form_btnElimina}}"><span class="glyphicon glyphicon-trash"></span></button>
+                    <button class="btn btn-danger btn-xs" ng-click="vistaPrevia(detail)" 
+                            title="{{form_btnImprime}}"><span class="glyphicon glyphicon-print"></span></button>
                     </td>
                     </tr>
                 </table>
@@ -176,5 +184,4 @@
 </div>
 
 <script src="controller/ctrls/contaacuerdos.ctrl.js" type="text/javascript"></script>
-	 
-<!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Friday,Dec 06, 2019 12:48:39   <<<<<<< -->
+<!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Dec 09, 2019 7:55:59   <<<<<<< -->

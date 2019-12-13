@@ -3,7 +3,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_title = 'Acuerdos de pago';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
-    $scope.form_btnElimina = 'Elimina';
+    $scope.form_btnImprime = 'Imprime';
     $scope.form_btnAnula = 'Cerrar';
     $scope.form_btnExcel = 'Exporta Excel';
     $scope.form_btnActualiza = 'Actualizar';
@@ -19,6 +19,9 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_acuerdoplazo = 'PLAZO';
     $scope.form_acuerdodetalle = 'DETALLE';
     $scope.form_acuerdopropietario = 'PROPIETARIO';
+    $scope.form_acuerdomora = 'SALDO MORA';
+    $scope.form_acuerdocorriente = 'SALDO CORRIENTE';
+    $scope.form_acuerdodescmora = 'DESCUENTO EN MORA';
 
     $scope.form_Phacuerdoid = 'Digite id';
     $scope.form_Phacuerdoempresa = 'Digite empresa';
@@ -28,16 +31,15 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_Phacuerdoplazo = 'Digite plazo';
     $scope.form_Phacuerdodetalle = 'Digite detalle';
     $scope.form_Phacuerdopropietario = 'Digite propietario';
-    $scope.form_enMora = 'Saldo en mora';
-    $scope.form_corriente = 'Saldo corriente';
-    $scope.form_vlrTotal = 'Total deuda';
+    $scope.form_Phacuerdomora = 'Digite mora';
+    $scope.form_Phacuerdocorriente = 'Digite corriente';
+    $scope.form_Phacuerdodescmora = 'Digite descmora';
    
      $scope.currentPage = 0;
      $scope.pageSize = 10;
      $scope.pages = [];
      $scope.registro = [];
      $scope.empresa = $('#e').val();
-     
     var defaultForm= {
    
         acuerdoid:0,
@@ -47,10 +49,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         acuerdovalor:'',
         acuerdoplazo:0,
         acuerdodetalle:'',
-        acuerdopropietario:0
+        acuerdopropietario:0,
+        acuerdomora:'',
+        acuerdocorriente:'',
+        acuerdodescmora:0,
    };
     
-    getCombos();
+    getCombos($scope.empresa);
     
     getInfo($scope.empresa);
     
@@ -61,54 +66,14 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         });       
     }
 
-    function getCombos(){
-          $http.post('modulos/mod_contaacuerdos.php?op=0',{'op':'0'}).success(function(data){
+    function getCombos(empresa){
+          $http.post('modulos/mod_contaacuerdos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
          $scope.operators0 = data;
          });
-          $http.post('modulos/mod_contaacuerdos.php?op=1',{'op':'1'}).success(function(data){
+          $http.post('modulos/mod_contaacuerdos.php?op=1',{'op':'1', 'empresa':empresa}).success(function(data){
          $scope.operators1 = data;
          });
-    } 
-    
-    function formatMoney(number, decPlaces, decSep, thouSep) {
-    decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-    decSep = typeof decSep === "undefined" ? "." : decSep;
-    thouSep = typeof thouSep === "undefined" ? "," : thouSep;
-    var sign = number < 0 ? "-" : "";
-    var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
-    var j = (j = i.length) > 3 ? j % 3 : 0;
-
-    return sign +
-            (j ? i.substr(0, j) + thouSep : "") +
-            i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
-            (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
-    }
-    
-    $scope.buscaacuer2 = function(detail){
-        empresa=$scope.empresa;
-        inmueble = $scope.registro.acuerdoinmueble;
-        propietario = $scope.registro.acuerdopropietario;
-        if (inmueble === undefined){inmueble=0;}
-        if (propietario === undefined) {propietario=0;}
-        $http.post('modulos/mod_contaprocesos.php?op=acuer2',{'op':'acuer2','empresa':empresa,'inmueble':inmueble,
-        'propietario':propietario}).success(function(data){
-        rec=data.split('||');
-        mo=0;
-        co=0;
-        an=0;
-        if(rec[0]!==''){mo=rec[0];}
-        $scope.enMora = formatMoney(mo, 2, '.', ','); 
-        if(rec[1]!==''){co=rec[1];}
-        if(rec[2]!==''){an=rec[2];}
-        co = co - an;
-        t = parseInt(mo)+parseInt(co);
-       
-        $scope.corriente = formatMoney(co, 2, '.', ',');
-        $scope.vlrTotal = formatMoney(t, 2, '.', ',');
-         });
-    };
-     
-    
+} 
  
     $scope.configPages = function() {
         $scope.pages.length = 0;
@@ -139,6 +104,54 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.setPage = function(index) {
         $scope.currentPage = index - 1;
     };
+
+     $scope.buscaacuer2 = function(detail){
+        empresa=$scope.empresa;
+        inmueble = detail.acuerdoinmueble;
+        propietario = detail.acuerdopropietario;
+        if (inmueble === undefined){inmueble=0;}
+        if (propietario === undefined) {propietario=0;}
+        $http.post('modulos/mod_contaprocesos.php?op=acuer2',{'op':'acuer2','empresa':empresa,'inmueble':inmueble,
+        'propietario':propietario}).success(function(data){
+        rec=data.split('||');
+        mo=0;
+        co=0;
+        an=0;
+        if(rec[0]!==''){mo=rec[0];}
+        $scope.registro.acuerdomora = formatMoney(mo, 2, '.', ','); 
+        if(rec[1]!==''){co=rec[1];}
+        if(rec[2]!==''){an=rec[2];}
+        co = co - an;
+        t = parseInt(mo)+parseInt(co);
+       
+        $scope.registro.acuerdocorriente = formatMoney(co, 2, '.', ',');
+        $scope.registro.acuerdovalor = formatMoney(t, 2, '.', ',');
+         });
+    };
+ 
+    $scope.vistaPrevia = function(detail){
+        empresa=$scope.empresa;
+        inmueble = detail.acuerdoinmueble;
+        propietario = detail.acuerdopropietario;
+        id=detail.acuerdoid;
+        if (inmueble === undefined){inmueble=0;}
+        if (propietario === undefined) {propietario=0;}
+        location.href="reports/rptAcuerdoPago.php?id="+id+"&em="+empresa+"&pr="+propietario+"&in="+inmueble;  
+    }
+ 
+    function formatMoney(number, decPlaces, decSep, thouSep) {
+        return;
+        decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+        decSep = typeof decSep === "undefined" ? "." : decSep;
+        thouSep = typeof thouSep === "undefined" ? "," : thouSep;
+        var sign = number < 0 ? "-" : "";
+        var i = String(parseInt(number = Math.abs(Number(number) || 0).toFixed(decPlaces)));
+        var j = (j = i.length) > 3 ? j % 3 : 0;
+    return sign +
+            (j ? i.substr(0, j) + thouSep : "") +
+            i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+            (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
+    }
 
  
 // Function to add toggle behaviour to form
@@ -200,16 +213,20 @@ $scope.exporta = function(){
         if($('#acuerdofecha').val()===''){er+='falta fecha\n';}
         if($('#acuerdovalor').val()===''){er+='falta valor\n';}
         if($('#acuerdoplazo').val()===''){er+='falta plazo\n';}
-        if($('#acuerdoplazo').val()<=0){er+='El plazo debe ser mayor a 0\n';}
+        if($('#acuerdoplazo').val()===0){er+='el plazo  debe ser mayor a cero\n';}
         if($('#acuerdodetalle').val()===''){er+='falta detalle\n';}
         if($('#acuerdopropietario').val()===''){er+='falta propietario\n';}
-        if (er==''){
-        $http.post('modulos/mod_contaacuerdos.php?op=a',{'op':'a', 'acuerdoid':info.acuerdoid, 'acuerdoempresa':info.acuerdoempresa, 'acuerdoinmueble':info.acuerdoinmueble, 'acuerdofecha':info.acuerdofecha, 'acuerdovalor':info.acuerdovalor, 'acuerdoplazo':info.acuerdoplazo, 'acuerdodetalle':info.acuerdodetalle, 'acuerdopropietario':info.acuerdopropietario}).success(function(data){
-        if (data === 'Ok') {
+        if($('#acuerdomora').val()===''){er+='falta mora\n';}
+        if($('#acuerdocorriente').val()===''){er+='falta corriente\n';}
+        if($('#acuerdodescmora').val()===0){er+='Un acuerdo de pago debe tener saldos en mora\n';}
+        if (er===''){
+        $http.post('modulos/mod_contaacuerdos.php?op=a',{'op':'a', 'acuerdoid':info.acuerdoid, 'acuerdoempresa':info.acuerdoempresa, 'acuerdoinmueble':info.acuerdoinmueble, 'acuerdofecha':info.acuerdofecha, 'acuerdovalor':info.acuerdovalor, 'acuerdoplazo':info.acuerdoplazo, 'acuerdodetalle':info.acuerdodetalle, 'acuerdopropietario':info.acuerdopropietario, 'acuerdomora':info.acuerdomora, 'acuerdocorriente':info.acuerdocorriente, 'acuerdodescmora':info.acuerdodescmora}).success(function(data){
+         if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');
             $('#idForm').slideToggle();
         }
+        else{alert(data);}
         });
    }else{alert (er);}  
     };
@@ -230,4 +247,4 @@ $scope.exporta = function(){
          };
      });  
 	 
-// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Friday,Dec 06, 2019 12:48:39   <<<<<<< 
+// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Dec 09, 2019 7:55:59   <<<<<<< 

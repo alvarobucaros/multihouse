@@ -10,6 +10,36 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_resumenDiario = 'Resume diario de Caja';
     $scope.form_estadoCuenta = 'Estado de cuenta';
     $scope.form_carteraEnMora = 'Cartera en Mora';
+    $scope.form_btnExcel = 'Ver en Excel';
+    $scope.form_btnAplicar = 'Ir al reporte';
+    $scope.form_tipoReporte = 'Tipo de reporte';
+    $scope.form_tipoReporteD = 'Detallado';
+    $scope.form_tipoReporteR = 'Resumido';
+    $scope.form_fechaCorte = 'Fecha de corte';
+    $scope.empresa = $('#e').val();
+    
+    getInfo($scope.empresa);
+    
+    function getInfo(empresa){
+        var hoy = new Date();
+        var dd = hoy.getDate();
+        var mm = hoy.getMonth()+1;
+        var yyyy = hoy.getFullYear();
+        $scope.fechaCorte = yyyy + '-'+mm+'-'+dd;
+        $scope.tipoReporte='R';
+    }
+    
+    $scope.carteraEnMora = function(){
+        op=$scope.tipoReporte;
+        empresa = $scope.empresa;
+        fc=$scope.fechaCorte
+        location.href="reports/rptCarteraMora.php?em="+empresa+"&op="+op+"&fc="+fc;
+    };
+    
+    $scope.carteraEnExcel = function(){
+        op=$scope.tipoReporte;
+        alert(op);
+    };
 }
 
 ]);

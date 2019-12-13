@@ -31,9 +31,9 @@ switch ($op)
     case 'acuer2':
         traeacuer2($data);
         break;     
-//    case 'apliAc':
-//        aplicaAcuerdo($data);
-//        break; 
+    case 'busRc':
+        buscaRcaja($data);
+        break; 
     case 'pagaFac':
         pagaFactura($data);
         break;     
@@ -278,6 +278,25 @@ switch ($op)
             $inmuebleId=$row['inmuebleId'];            
         } 
         return $inmuebleId;
+    }
+
+    function buscaRcaja($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa =  $data->empresa;
+        $inmueble = $data->inmueble;
+        $sql = "SELECT DISTINCT SUBSTRING(pagosNrReciCaja, 5,10) AS id, pagosNrReciCaja AS numero " .
+                "FROM contapagos WHERE pagosempresa = ". $empresa .  " AND pagosinmueble= ". inmueble;
+        $result = mysqli_query($con, $sql); 
+        $arr = array(); 
+        if(mysqli_num_rows($result) != 0)  
+            { 
+                while($row = mysqli_fetch_assoc($result)) { 
+                    $arr[] = $row; 
+                } 
+            } 
+          
+        echo $json_info = json_encode($arr); 
     }
     
     function borraFacturacion($periodo, $empresa, $comprobante){
