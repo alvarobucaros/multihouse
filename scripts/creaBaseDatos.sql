@@ -529,30 +529,29 @@ CREATE TABLE contatmpagos (
 -- Table structure for table contausuarios
 --
 
-DROP TABLE IF EXISTS contausuarios;
+--DROP TABLE IF EXISTS contausuarios;
   
- 
-CREATE TABLE contausuarios (
-  usuarioId int(11) NOT NULL COMMENT 'ID',
-  usuarioEmpresaId int(11) NOT NULL COMMENT 'EMPRESA',
-  usuarioUsuario varchar(20) NOT NULL COMMENT 'USUARIO',
-  usuarioClave varchar(50) NOT NULL COMMENT 'CLAVE',
-  usuarioNombre varchar(40) NOT NULL COMMENT 'NOMBRE',
-  usuarioAplicacion char(1) NOT NULL COMMENT 'MODULO',
-  usuarioPerfil char(1) NOT NULL COMMENT 'PERFIL',
-  usuarioFechaCreacion date DEFAULT NULL COMMENT 'Fch CREACION',
-  usuarioFechaVigencia date DEFAULT NULL COMMENT 'Fch VIGENCIA',
-  usuarioActivo char(1) NOT NULL COMMENT 'ACTIVO',
-  usuarioCedula varchar(10) DEFAULT NULL COMMENT 'CEDULA',
-  usuarioDireccion varchar(45) DEFAULT NULL COMMENT 'DIRECCION',
-  usuarioCiudad varchar(45) DEFAULT NULL COMMENT 'CIUDAD',
-  usuarioEmail varchar(45) DEFAULT NULL COMMENT 'E-MAIL',
-  usuarioTelefonos varchar(20) DEFAULT NULL COMMENT 'TELEFONOS',
-  usuarioCelular varchar(10) DEFAULT NULL COMMENT 'CELULAR',
-  PRIMARY KEY (usuarioId)
-) ENGINE=MyISAM AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;
+-- CREATE TABLE contausuarios (
+--  usuarioId int(11) NOT NULL COMMENT 'ID',
+--  usuarioEmpresaId int(11) NOT NULL COMMENT 'EMPRESA',
+-- usuarioUsuario varchar(20) NOT NULL COMMENT 'USUARIO',
+--  usuarioClave varchar(50) NOT NULL COMMENT 'CLAVE',
+--  usuarioNombre varchar(40) NOT NULL COMMENT 'NOMBRE',
+--  usuarioAplicacion char(1) NOT NULL COMMENT 'MODULO',
+--  usuarioPerfil char(1) NOT NULL COMMENT 'PERFIL',
+--  usuarioFechaCreacion date DEFAULT NULL COMMENT 'Fch CREACION',
+--  usuarioFechaVigencia date DEFAULT NULL COMMENT 'Fch VIGENCIA',
+--  usuarioActivo char(1) NOT NULL COMMENT 'ACTIVO',
+--  usuarioCedula varchar(10) DEFAULT NULL COMMENT 'CEDULA',
+--  usuarioDireccion varchar(45) DEFAULT NULL COMMENT 'DIRECCION',
+--  usuarioCiudad varchar(45) DEFAULT NULL COMMENT 'CIUDAD',
+--  usuarioEmail varchar(45) DEFAULT NULL COMMENT 'E-MAIL',
+--  usuarioTelefonos varchar(20) DEFAULT NULL COMMENT 'TELEFONOS',
+--  usuarioCelular varchar(10) DEFAULT NULL COMMENT 'CELULAR',
+--  PRIMARY KEY (usuarioId)
+--) ENGINE=MyISAM AUTO_INCREMENT=144 DEFAULT CHARSET=utf8;--
 
-INSERT INTO contausuarios VALUES (1,1,'admin','202cb962ac59075b964b07152d234b70','Administrador ','C','A','2012-07-01','2017-12-31','A','123123','CRA 45','BOGOTA','mpk@mpk.com','','31055'),(4,2,'amo','202cb962ac59075b964b07152d234b70','Angela Maria Ortiz','C','A','2012-07-01','2017-12-31','A',NULL,NULL,'Bogotá','terra@mpk.com',NULL,NULL),(129,3,'mpksas','202cb962ac59075b964b07152d234b70','Empresa MPK SAS','C','A','2012-09-08','2017-12-31','A','80965554','','Bogotá','otra@mpk.com','','2344444'),(7,4,'terrakot','202cb962ac59075b964b07152d234b70','empresa TERRAKOT','C','A','2012-07-01','2017-12-31','A','','','Bogotá','oyc@mi.com','',''),(41,5,'okre','202cb962ac59075b964b07152d234b70','Empresa OKRE','C','A','2012-07-01','2017-12-31','A','','','Bogotá','adm2@mi.com','',''),(2,1,'admin','202cb962ac59075b964b07152d234b70','administrador ','C','A','2012-07-01','2017-12-31','A',NULL,NULL,'Bogotá','adm1@mi.com',NULL,NULL),(3,7,'oyc','72a52cf2f2c5082ff3530c15e97255e2','Pruebas conjunto','T','A','2017-09-08','2017-12-31','A','80965554','','Bogotà','oyc@mi.com','','2344444'),(140,6,'alvaro','202cb962ac59075b964b07152d234b70','Admiistrador conjuntos','P','A','2012-01-12','2017-12-31','A','3125444','','','','',''),(141,6,'aortiz','c5cbb9bb4822f8cf927e42d064ca9a1e','Alvaro Ortiz C.','T','A','2015-12-31','2020-12-31','A',NULL,NULL,NULL,'alvaro@com.co',NULL,'3174142133'),(142,7,'test','68eacb97d86f0c4621fa2b0e17cabd8c','Pruebas sistema MCR','T','A','2016-02-01','2019-12-31','A','123','PRUEBAS','PRUEBAS','','','123'),(143,4,'terrakot1','202cb962ac59075b964b07152d234b70','MAURICIO PARDO','C','C','2016-10-01','2017-12-31','A','','','Bogotá','mpardo@co.com','','123456');
+--INSERT INTO contausuarios VALUES (1,1,'admin','202cb962ac59075b964b07152d234b70','Administrador ','C','A','2012-07-01','2017-12-31','A','123123','CRA 45','BOGOTA','mpk@mpk.com','','31055'),(4,2,'amo','202cb962ac59075b964b07152d234b70','Angela Maria Ortiz','C','A','2012-07-01','2017-12-31','A',NULL,NULL,'Bogotá','terra@mpk.com',NULL,NULL),(129,3,'mpksas','202cb962ac59075b964b07152d234b70','Empresa MPK SAS','C','A','2012-09-08','2017-12-31','A','80965554','','Bogotá','otra@mpk.com','','2344444'),(7,4,'terrakot','202cb962ac59075b964b07152d234b70','empresa TERRAKOT','C','A','2012-07-01','2017-12-31','A','','','Bogotá','oyc@mi.com','',''),(41,5,'okre','202cb962ac59075b964b07152d234b70','Empresa OKRE','C','A','2012-07-01','2017-12-31','A','','','Bogotá','adm2@mi.com','',''),(2,1,'admin','202cb962ac59075b964b07152d234b70','administrador ','C','A','2012-07-01','2017-12-31','A',NULL,NULL,'Bogotá','adm1@mi.com',NULL,NULL),(3,7,'oyc','72a52cf2f2c5082ff3530c15e97255e2','Pruebas conjunto','T','A','2017-09-08','2017-12-31','A','80965554','','Bogotà','oyc@mi.com','','2344444'),(140,6,'alvaro','202cb962ac59075b964b07152d234b70','Admiistrador conjuntos','P','A','2012-01-12','2017-12-31','A','3125444','','','','',''),(141,6,'aortiz','c5cbb9bb4822f8cf927e42d064ca9a1e','Alvaro Ortiz C.','T','A','2015-12-31','2020-12-31','A',NULL,NULL,NULL,'alvaro@com.co',NULL,'3174142133'),(142,7,'test','68eacb97d86f0c4621fa2b0e17cabd8c','Pruebas sistema MCR','T','A','2016-02-01','2019-12-31','A','123','PRUEBAS','PRUEBAS','','','123'),(143,4,'terrakot1','202cb962ac59075b964b07152d234b70','MAURICIO PARDO','C','C','2016-10-01','2017-12-31','A','','','Bogotá','mpardo@co.com','','123456');
 
 --
 -- Table structure for table mm_empresa

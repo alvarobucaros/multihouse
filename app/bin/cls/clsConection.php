@@ -52,14 +52,14 @@ class DBconexion{
             $con = $obj->conectar();
             $result = '';
             if($con==true){
-                $strSql = "SELECT usuarioClave FROM contausuarios where usuarioId = " . $dat[3];
+                $strSql = "SELECT usuario_password FROM mm_usuarios where usuario_id = " . $dat[3];
             
                 $claveOk = md5($dat[0]);
                 $resultado =  mysqli_query($con, $strSql);
                 $usuario = mysqli_fetch_array($resultado, MYSQL_ASSOC);
-                if($usuario['usuarioClave'] ==  $claveOk ){
-                    $strSql = "UPDATE contausuarios SET usuarioClave = '" . md5($dat[1]) . 
-                            "' WHERE usuarioId = " . $dat[3];
+                if($usuario['usuario_password'] ==  $claveOk ){
+                    $strSql = "UPDATE mm_usuarios SET usuario_password = '" . md5($dat[1]) . 
+                            "' WHERE usuario_id = " . $dat[3];
                     $resultado =  mysqli_query($con, $strSql);
                 }
                 else

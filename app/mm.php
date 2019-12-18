@@ -118,7 +118,7 @@ if (!isset($_GET['op'])){
       <ul class="sidebar-menu">
         <li class="logito header list-inline"><?php echo $datos[5] ?></li>
     
-        <?php if ($pf=='A'  OR $pf=='S'){            
+        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C'){            
         echo '     
         <li class="treeview">
           <a href="#">
@@ -130,11 +130,20 @@ if (!isset($_GET['op'])){
               <li><a href="mm.php?op=clin"><i class=""></i>Clasificación de inmuebles</a></li>                      
               <li><a href="mm.php?op=inmu"><i class=""></i>Inmuebles</a></li>
               <li><a href="mm.php?op=prop"><i class=""></i>Propietarios</a></li>
-              <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>
-              <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>
+              <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>';
+        }?>
+        <?php if ($pf=='A' OR $pf=='S'){            
+        echo ' 
+              <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>';
+        }?> 
+        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C'){            
+        echo ' 
               <li><a href="mm.php?op=inmServ"><i class=""></i>Inmueble y Servicio Especial</a></li>
           </ul>
-        </li>
+        </li>';
+        }?> 
+        <?php if ($pf=='A' OR $pf=='S' ){            
+        echo ' 
         <li class="treeview">
           <a href="#">
             <i class="fa fa-paste"></i>
@@ -153,7 +162,10 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>
   
           </ul>
-        </li>
+        </li>';
+        }?> 
+        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C' ){            
+        echo ' 
        
         <li class="treeview">
           <a href="#">

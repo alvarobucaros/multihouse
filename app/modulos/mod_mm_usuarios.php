@@ -34,11 +34,11 @@ switch ($op)
        global $objClase;
       $con = $objClase->conectar(); 
        { 
-            $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, ".
-                    " usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, ".
-                    " usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, ".
-                    " usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad" .
-                    " FROM mm_usuarios ORDER BY usuario_nombre ";             
+            $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, usuario_celular, ".
+                    " usuario_password, CASE usuario_tipo_acceso WHEN 'S' THEN 'Super' WHEN 'A' THEN 'Admin' ELSE 'Consulta' END usuario_tipo_acceso, " .
+                    " usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar, " .
+                    " usuario_estado, CASE usuario_tipodoc WHEN 'C' THEN 'C.C.' WHEN 'E' THEN 'C.E.' ELSE  'OTRO' END usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad" 
+                    . " FROM mm_usuarios ORDER BY usuario_nombre ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -84,14 +84,28 @@ switch ($op)
    
         if($usuario_id  == 0) 
         { 
-           $query = "INSERT INTO mm_usuarios(usuario_empresa, usuario_nombre, usuario_email, usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad)";
-           $query .= "  VALUES ('" . $usuario_empresa."', '".$usuario_nombre."', '".$usuario_email."', '".$usuario_celular."', '".$usuario_password."', '".$usuario_tipo_acceso."', '".$usuario_fechaCreado."', '".$usuario_fechaActualizado."', '".$usuario_perfil."', '".$usuario_avatar."', '".$usuario_estado."', '".$usuario_tipodoc."', '".$usuario_nrodoc."', '".$usuario_direccion."', '".$usuario_ciudad."')";  
+           $query = "INSERT INTO mm_usuarios(usuario_empresa, usuario_nombre, usuario_email, usuario_celular, ".
+                   " usuario_password, usuario_tipo_acceso, usuario_fechaCreado, usuario_fechaActualizado, ".
+                   " usuario_perfil, usuario_avatar, usuario_estado, usuario_tipodoc, usuario_nrodoc, usuario_direccion, ".
+                   " usuario_ciudad)";
+           $query .= "  VALUES ('" . $usuario_empresa."', '".$usuario_nombre."', '".$usuario_email."', '".
+                   $usuario_celular."', '".md5($usuario_password)."', '".$usuario_tipo_acceso."', '".
+                   $usuario_fechaCreado."', '".$usuario_fechaActualizado."', '".$usuario_perfil."', '".
+                   $usuario_avatar."', '".$usuario_estado."', '".$usuario_tipodoc."', '".$usuario_nrodoc."', '".
+                   $usuario_direccion."', '".$usuario_ciudad."')";  
             mysqli_query($con, $query);
             echo 'Ok';
         } 
         else 
         { 
-            $query = "UPDATE mm_usuarios  SET usuario_empresa = '".$usuario_empresa."', usuario_nombre = '".$usuario_nombre."', usuario_email = '".$usuario_email."', usuario_celular = '".$usuario_celular."', usuario_password = '".$usuario_password."', usuario_tipo_acceso = '".$usuario_tipo_acceso."', usuario_fechaCreado = '".$usuario_fechaCreado."', usuario_fechaActualizado = '".$usuario_fechaActualizado."', usuario_perfil = '".$usuario_perfil."', usuario_avatar = '".$usuario_avatar."', usuario_estado = '".$usuario_estado."', usuario_tipodoc = '".$usuario_tipodoc."', usuario_nrodoc = '".$usuario_nrodoc."', usuario_direccion = '".$usuario_direccion."', usuario_ciudad = '".$usuario_ciudad."' WHERE usuario_id = ".$usuario_id;
+            $query = "UPDATE mm_usuarios  SET usuario_empresa = '".$usuario_empresa."', usuario_nombre = '".
+                    $usuario_nombre."', usuario_email = '".$usuario_email."', usuario_celular = '".$usuario_celular.
+                    "', usuario_tipo_acceso = '".$usuario_tipo_acceso."', usuario_fechaCreado = '".
+                    $usuario_fechaCreado."', usuario_fechaActualizado = '".
+                    $usuario_fechaActualizado."', usuario_perfil = '".$usuario_perfil."', usuario_avatar = '".
+                    $usuario_avatar."', usuario_estado = '".$usuario_estado."', usuario_tipodoc = '".
+                    $usuario_tipodoc."', usuario_nrodoc = '".$usuario_nrodoc."', usuario_direccion = '".
+                    $usuario_direccion."', usuario_ciudad = '".$usuario_ciudad."' WHERE usuario_id = ".$usuario_id;
             mysqli_query($con, $query); 
             echo 'Ok';
         } 
@@ -105,42 +119,35 @@ switch ($op)
         $expo=''; 
         $expo .= '<table border=1 class="table2Excel"> '; 
         $expo .=  '<tr> '; 
- //     $expo .=  '          <th>ID</th>';
- //     $expo .=  '          <th>EMPRESA</th>';
       $expo .=  '          <th>NOMBRE</th>';
       $expo .=  '          <th>LOGIN</th>';
       $expo .=  '          <th>CELULAR</th>';
- //     $expo .=  '          <th>PASSWORD</th>';
       $expo .=  '          <th>ACCESO</th>';
-      $expo .=  '          <th>FECHA CREADO</th>';
-      $expo .=  '          <th>FECHA ACTUALIZADO</th>';
-      $expo .=  '          <th>PERFIL</th>';
+      $expo .=  '          <th>FECHACREADO</th>';
+      $expo .=  '          <th>FECHAACTUALIZADO</th>';
       $expo .=  '          <th>AVATAR</th>';
       $expo .=  '          <th>ESTADO</th>';
       $expo .=  '          <th>TIPODOC</th>';
       $expo .=  '          <th>NRODOC</th>';
       $expo .=  '          <th>DIRECCION</th>';
       $expo .=  '          <th>CIUDAD</th>';
-            $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, ".
-                    " usuario_celular, usuario_password, usuario_tipo_acceso, usuario_fechaCreado, ".
-                    " usuario_fechaActualizado, usuario_perfil, usuario_avatar, usuario_estado, ".
-                    " usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad" .
-                    " FROM mm_usuarios ORDER BY usuario_nombre ";             
+            $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, usuario_celular, ".
+                    " usuario_password, CASE usuario_tipo_acceso WHEN 'S' THEN 'Super' WHEN 'A' THEN 'Admin' ELSE 'Consulta' END usuario_tipo_acceso, " .
+                    " usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar, " .
+                    " usuario_estado, CASE usuario_tipodoc WHEN 'C' THEN 'C.C.' WHEN 'E' THEN 'C.E.' ELSE  'OTRO' END usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad" 
+                    . " FROM mm_usuarios ORDER BY usuario_nombre ";                 
             $result = mysqli_query($con, $query); 
             if(mysqli_num_rows($result) != 0)  
                 { 
                     while($row = mysqli_fetch_assoc($result)) { 
                  $expo .=  '<tr> '; 
-//                $expo .=  	'<td>' .$row['usuario_id']. '</td> ';
-//                $expo .=  	'<td>' .$row['usuario_empresa']. '</td> ';
+
                 $expo .=  	'<td>' .$row['usuario_nombre']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_email']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_celular']. '</td> ';
-//                $expo .=  	'<td>' .$row['usuario_password']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_tipo_acceso']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_fechaCreado']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_fechaActualizado']. '</td> ';
-                $expo .=  	'<td>' .$row['usuario_perfil']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_avatar']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_estado']. '</td> ';
                 $expo .=  	'<td>' .$row['usuario_tipodoc']. '</td> ';
@@ -191,5 +198,4 @@ switch ($op)
     } 
  
 	 
- 
-// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Sunday,Sep 08, 2019 5:14:42   <<<<<<< 
+// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Dec 17, 2019 7:59:58   <<<<<<< 

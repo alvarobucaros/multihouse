@@ -1,13 +1,15 @@
 
     <div class="container "  ng-controller="mainController">
         <h3 class="text-left">{{form_title}}</h3>
-        <nav class="navbar navbar-default navbar-mm col-md-8 col-md-offset-1">
+<nav class="navbar navbar-default navbar-mm col-md-8 col-md-offset-1">
             <div class="navbar-header">
                 <div class="alert alert-default navbar-brand search-box">
-                    <button class="btn btn-primary btn-xs" ng-show="show_form" 
+                <?php  if ($pf != 'C' ) {
+                    echo ' <button class="btn btn-primary btn-xs" ng-show="show_form" 
                     ng-click="formToggle()">{{form_btnNuevo}}<span class="glyphicon" aria-hidden="true"></span></button>
-                    <button class='btn btn-primary btn-xs'
-                    ng-click='exporta()'>{{form_btnExcel}}</button>
+                    <button class="btn btn-primary btn-xs"
+                    ng-click="exporta()">{{form_btnExcel}}</button>';}
+                ?>
                 </div>
                 <div class="alert alert-default input-group search-box">
                     <span class="input-group-btn">
@@ -15,7 +17,7 @@
                     </span>
                 </div>
             </div>
-        </nav>
+         </nav>
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
@@ -87,13 +89,15 @@
                     <td>{{detail.clasificacionEmpresaId}}</td -->
                     <td>{{detail.clasificacionCodigo}}</td>
                     <td>{{detail.clasificacionDetalle}}</td>
-                    <td>
-                    <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
-                    </td>
-                    <td>
-                    <button class="btn btn-danger btn-xs" ng-click="deleteInfo(detail)" 
-                            confirm="Está seguro ?, {{form_btnElimina}}?" title="{{form_btnElimina}}"><span class="glyphicon glyphicon-trash"></span></button>
-                    </td>
+                  <?php  if ($pf != 'C' ) {
+                    echo '   <td>
+                       <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
+                       </td>
+                       <td>
+                       <button class="btn btn-danger btn-xs" ng-click="deleteInfo(detail)" 
+                               confirm="Está seguro ?, {{form_btnElimina}}?" title="{{form_btnElimina}}"><span class="glyphicon glyphicon-trash"></span></button>
+                       </td>';
+                     }?>
                     </tr>
                 </table>
                     <div class='btn-group'>
