@@ -74,7 +74,7 @@
                      </div>  
                 </div>       
                 <div style='display: none'>
-                <input type="text"	 ng-model="registro.id" id ='id'  name ='id' value="{{registro.id}}"/>
+                <input type="text" ng-model="registro.id" id ='id'  name ='id' value="{{registro.id}}"/>
 
    
                 </div>

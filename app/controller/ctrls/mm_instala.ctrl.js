@@ -94,9 +94,10 @@ $('#idForm').slideToggle();
             $http.post('app/modulos/mod_mm_instala.php?op=a2',{'op':'a2', 'id':info.id, 
                 'servidor':info.servidor, 'basedatos':info.basedatos, 'usuario':info.usuario, 
                 'password':info.password, 'estado':info.estado}).success(function(data){
-            $('#nota').html(data);
-            $scope.procesa = false;
+                alet(data);
+            $('#nota').html(data);            
         });
+        $scope.procesa = false;
    }else{alert (er);}  
     };
     

@@ -125,7 +125,7 @@ class DBconexion{
                 $resultado =  mysqli_query($con, $strSql);
                 $totRec =   $resultado->num_rows;  ///$número_filas = mysql_num_rows($resultado);  
                 if ($totRec > 0) {
-                    $usuario = mysqli_fetch_array($resultado, MYSQL_ASSOC);
+                    while($usuario = mysqli_fetch_assoc($resultado)) {
                     $claveOk = md5($clave);
                     if($usuario['usuario_estado']==='A'){
                         date_default_timezone_set('America/New_York');
@@ -171,7 +171,9 @@ class DBconexion{
                             $result .= "Error: Usuario con fecha de ingreso expirada";
                           }
                     }else{
-                         $result.="Error: Usuario inactivo";
+                         $result.="Error: El Usuario está inactivo " .
+                          ' t='.$totRec.' u='.$usuario['empresa_autentica'].' e= '.$usuario['usuario_estado'];
+                    }
                     }
                 }else{
                     $result.="Error: Usuario no registrado";
