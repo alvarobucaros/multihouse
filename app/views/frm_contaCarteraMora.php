@@ -37,7 +37,8 @@
                         ng-click="carteraEnMora()" id="inprimir">{{form_btnAplicar}}</button>
                     </div>  
                 </div>
-
+                <div id='miExcel' style='display: none'>
+                </div> 
                 
             </form>
 	</div>

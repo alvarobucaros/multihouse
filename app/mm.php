@@ -181,7 +181,7 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=rResDia"><i class=""></i>Resume diario de Caja</a></li>
             <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta</a></li>
             <li><a href="mm.php?op=rMora"><i class=""></i>Cartera en Mora</a></li>
-            <li><a href="mm.php?op=rCtas"><i class=""></i>Consultas genéricas</a></li>  
+            <!--li><a href="mm.php?op=rCtas"><i class=""></i>Consultas genéricas</a></li-->  
           </ul>
         </li>
         ';

@@ -1,6 +1,8 @@
 <?php
-session_start();
-
+    if(!isset($_SESSION)) 
+    { 
+        session_start(); 
+    } 
 class reportesCls{
 
     public function cargaEmpresa($empresa){
@@ -17,8 +19,6 @@ class reportesCls{
                  " empresaDescPesos, empresaFactorRedondeo, empresaPeriCierreFactura " .
                  " FROM contaempresas  WHERE  empresaId = ". $empresa ;
             $result =  mysqli_query($con, $sql);
-
- //             echo $result;
         return $result;   
             }
 
@@ -154,15 +154,15 @@ class reportesCls{
                "','".$row['facturasaldo']."','".$dias."','".$row['facturaInmuebleid'].
                "','".$row['propietarioId']."',".
                $pagoCrnte.",". $pago0130.",". $pago3160.",". $pago6190.",".  $pago91120.",". $pago121mas.
-               ",'".$row['ServicioDetalle']."','".$row['inmuebleDescripcion'].
-               "','".$row['propietarioNombre']."')";
+               ",'".$row['ServicioDetalle']."','".$row['propietarioNombre'].
+               "','".$row['inmuebleDescripcion']."')"; 
             $resulter = mysqli_query($con, $sql); 
 
         }
         $sql = "SELECT pagoempresa, pagofchfac ,pagofchvnc, pagovalor, pagodias, ".
             " pagoinmuebleid, pagopropietarioid, pagoCrnte,pago0130,pago3160,pago6190,pago91120,pago121mas, ".
             " pagodetalle ,pagonompropietario ,pagoinmuebledesc  FROM contatmpcartera ".
-            " WHERE pagoempresa = " . $empresa ."  ORDER BY pagonompropietario ";
+            " WHERE pagoempresa = " . $empresa ."  ORDER BY pagoinmuebleid ";
        $retorno = mysqli_query($con, $sql); 
        return $retorno;
      }
@@ -248,9 +248,11 @@ class reportesCls{
         include_once("clsConection.php");
         $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
         $con = $objClase->conectar();	
-        $sql = "SELECT pagosfacturaid, pagosfecha, pagostipo, pagosvalor, pagosreferencia , pagosPeriodoPago, pagosTipoPago ".
+        $sql = "SELECT pagosfacturaid, pagosfecha, pagostipo, pagosvalor, pagosreferencia , pagosPeriodoPago, ".
+                " pagosTipoPago ".
                 " FROM contapagos   ".
-                " WHERE pagosempresa = ".$empresa." AND pagosNrReciCaja = '".$rcaja."' AND pagosinmueble = " . $inmueble;
+                " WHERE pagosempresa = ".$empresa." AND pagosNrReciCaja = '".$rcaja.
+                "' AND pagosinmueble = " . $inmueble;
         if($uno == 1){
           $sql .=  " LIMIT 0, 1";
         }

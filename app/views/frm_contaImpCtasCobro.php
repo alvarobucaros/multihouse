@@ -16,6 +16,13 @@
                       <input type="radio" name ="reimprimeCtas" id="reimprimeNo" ng-model="registro.reimprimeCtas" value="N" >{{form_todasno}}
                    </label>
                     </div>
+                </div>   
+                <div class="form-group">
+                    <label class=" milabel col-md-4" for="ultimoPeriodo">{{form_periodo}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="ultimoPeriodo" name="ultimoPeriodo"
+                           ng-model="registro.ultimoPeriodo"  readonly="yes"/>
+                    </div>
                 </div>                 
 
                 <div class="form-group">
@@ -46,9 +53,9 @@
                     </div>
                 </div> 
                 <div class="form-group" style='display: none'>                   
-                    <input type="text"  id="control"
-                         ng-model="control" 
-                         value="A" />
+                    <input type="text"  id="control" ng-model="control"  value="A" />
+                    <input type="text"  id="reimprime" ng-model="reimprime" /> 
+                    <input type="text"  id="periodo" ng-model="periodo" /> 
                 </div> 
             </form>
 	</div>

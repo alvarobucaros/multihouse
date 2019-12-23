@@ -144,9 +144,11 @@ require_once ('fpdf.php');
     $inmueble =$_GET['in'];
     $fecha = $_GET['fc'];
     $y=50;
+    $ln=0;
+    $ny=$y;
     include_once("../bin/cls/clsReportes.php");
     $obj = new  reportesCls();
-    $result = $obj->traeReciboCaja($inmueble, $empresa, $recibo,0);
+    $result = $obj->traeReciboCaja($inmueble, $empresa, $recibo, 0);
     $saldo=0;
     while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
     {
@@ -162,6 +164,12 @@ require_once ('fpdf.php');
         $pdf->Cell(20,4,number_format($pago, 2, '.', ','),0,0,R);
         $saldo += $pago; 
         $y +=4;
+        $ln+=1;
+        if ($ln > 55){
+            $ln=0;
+            $pdf->AddPage();
+            $y=$ny;
+        }
     }
                      
     $pdf->Line($izq+6,$y, $izq+140, $y);

@@ -20,9 +20,10 @@ require_once ('fpdf.php');
         $empresa = $_GET['em'];
         $inmueble = $_GET['in'];
         $op = $_GET['op'];
-        $periodo='';
+        $periodo=$_GET['pe'];;
         $cta = 0;
         $der=0;
+        $this->periodo = $periodo;
  //op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmueble;
         $resultado = $obj->cargaEmpresa($empresa);
         while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
@@ -33,8 +34,7 @@ require_once ('fpdf.php');
             $tel = 'TELEFONO : '.$empre['empresaTelefonos']; 
             $mail = 'E-MAIL :' .$empre['empresaEmail'];  
             $this->logo = $empre['empresaLogo'];
-            $this->ciudad = $empre['empresaCiudad'];
-            $this->periodo = $empre['empresaPeriCierreFactura'];
+            $this->ciudad = $empre['empresaCiudad'];           
         }
 
         $result = $obj->traeAptoPropietario($inmueble, $empresa);
@@ -139,7 +139,8 @@ require_once ('fpdf.php');
     $periodo = $pdf->periodo;
     $empresa = $_GET['em'];
     $inmueble =$_GET['in'];
-  //  $fecha = $_GET['fc'];
+    $ln=0;
+    $ny=0;
     $op = $_GET['op'];
     $propietario= $_GET['prop'];
     include_once("../bin/cls/clsReportes.php");
@@ -158,16 +159,25 @@ require_once ('fpdf.php');
         $empresaFactorRedondeo = $empre['empresaFactorRedondeo']; 
     }
     $y=$pdf->GetY();
+    $ny=$y;
     $result = $obj->preparaReimpresionFactura($periodo, $empresa, $inmueble, $op, $propietario); 
-    
-    
+     
     while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
     {
         $valor = $reg['facturasaldo'];
         $line =  $reg['facturaperiodo'].'   '.$reg['facturafechafac'].'    '.$reg['facturafechavence'].'     '.
-        $reg['facturaNumero'].' '.$reg['facturadetalle'];       
+        $reg['facturaNumero'].' '.$reg['facturadetalle'];  
+     
+        $pdf->SetXY($der+0,$y);
+        $pdf->Cell(20,4,  $ln,0, 0 , 'L' );
+        $ln+=1;
+        if ($ln > 55){
+            $ln=0;
+            $pdf->AddPage();
+            $y=$ny;
+        }
         $y +=4;
-        $pdf->SetXY($der+8,$y);
+    
         $pdf->Cell(20,4,  $reg['facturaperiodo'],0, 0 , 'L' );
         $pdf->SetXY($der+20,$y);
         $pdf->Cell(20,4,  $reg['facturafechafac'],0, 0 , 'L' );

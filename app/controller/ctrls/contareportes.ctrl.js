@@ -26,7 +26,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         var mm = hoy.getMonth()+1;
         var yyyy = hoy.getFullYear();
         $scope.fechaCorte = yyyy + '-'+mm+'-'+dd;
-        $scope.tipoReporte='R';
+        $scope.tipoReporte='D';
     }
     
     $scope.carteraEnMora = function(){
@@ -38,9 +38,22 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     
     $scope.carteraEnExcel = function(){
         op=$scope.tipoReporte;
-        alert(op);
+        empresa = $scope.empresa;
+        fc=$scope.fechaCorte
+        valor = confirm('Exporta relación de cartera en mora a Excel, continua?');
+        if (valor == true) {
+             empresa = $('#e').val();
+             $http.post('modulos/mod_contaprocesos.php?op=expKrt',{'op':'expKrt','empresa':empresa,'corte':fc,'opcion':op}).success(function(data){
+             $('#miExcel').html(data); 
+             alert('exporta a Excel. Cargue y renombre el documento... ');
+             window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
+         }); 
+       }         
     };
+    
 }
+
+
 
 ]);
  

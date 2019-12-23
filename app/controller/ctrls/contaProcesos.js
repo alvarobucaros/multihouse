@@ -37,6 +37,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     
     $scope.ultiperfac = 'Ultimo perído facturado: ';
     $scope.periFact = 'Perído a Facturar:';
+    $scope.form_periodo ='Ultimo período';
     $scope.fchCorte = 'Fecha de corte:';
     $scope.inmueble = 'Inmueble : ';
     $scope.nroRecibos = 'recibo Nro.';
@@ -94,6 +95,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         getCombos($scope.empresa);
         getInfoAnticipo($scope.empresa);
         $scope.reimprime='S';
+        $scope.registro.reimprimeCtas='S';
     }   
     if(procesa === 'R'){
         $scope.Mensaje='';
@@ -105,6 +107,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
         rec=data.split('||');
         $scope.periodo = rec[1];
+        $scope.registro.ultimoPeriodo =  rec[1];
          }); 
      }
      function getInfoFac(empresa){
@@ -362,6 +365,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         prop=$scope.registro.propietario;
         inmu=$scope.registro.Inmueble;
         reimp=$scope.registro.reimprimeCtas;
+        peri=$scope.periodo;
         if (prop == undefined){prop=0;}
         if (inmu == undefined){inmu=0;}
         if (reimp == undefined){       
@@ -380,8 +384,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
          }
         }
         empresa=$scope.empresa;
-        alert('op='+reimp+'em='+empresa+'prop='+prop+'in='+inmu);
-        location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu; 
+        location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri; 
     };
     
     $scope.consultaCtaCobro = function(){

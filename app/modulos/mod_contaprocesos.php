@@ -28,6 +28,9 @@ switch ($op)
     case 'cnslta2':
         consulta2($data);
         break; 
+    case 'expKrt':
+        carteraEnMoraXLS($data);
+        break;     
     case 'acuer2':
         traeacuer2($data);
         break;     
@@ -372,6 +375,114 @@ switch ($op)
         return $resultado;
     }
       
+   function carteraEnMoraXLS($data){
+        $empresa = $data->empresa; 
+        $fchCorte = $data->corte; 
+        $op = $data->opcion; 
+        include_once("../bin/cls/clsReportes.php");
+       //'empresa':empresa,'corte':fc,'opcion':op
+        $obj = new  reportesCls();
+        $resultado = $obj->carteraEdades($empresa, $op, $fchCorte);
+        $pagoCrnte=0;
+        $pago0130=0;
+        $pago3160=0;
+        $pago6190=0;
+        $pago91120=0;
+        $pago121mas=0;
+        $totSubtotal=0;
+        $inmueble=0;
+
+        $expo=''; 
+        $expo .= '<table border=1 class="table2Excel"> '; 
+        $expo .=  '<tr> '; 
+        $expo .=  '          <th>INMUEBLE</th>';
+        $expo .=  '          <th>PROPIETARIO</th>';
+        if($op==='D'){
+            $expo .=  '          <th>DETALLE</th>';
+            $expo .=  '          <th>FCH FACTURA</th>';
+            $expo .=  '          <th>FCH VENCE</th>';
+            $expo .=  '          <th>DIAS</th>';
+        }
+        $expo .=  '          <th>CORRIENTE</th>';
+        $expo .=  '          <th>DE 1 A 30 DIAS</th>';
+        $expo .=  '          <th>DE 31 A 60 DIAS</th>';
+        $expo .=  '          <th>DE 61 A 90 DIAS</th>';
+        $expo .=  '          <th>DE 91 A 120 DIAS</th>';
+        $expo .=  '          <th>MAS DE 120 DIAS</th>';
+        $expo .=  '          <th>SUB TOTAL</th>';
+        $expo .=  '</tr> '; 
+        while( $row = mysqli_fetch_array($resultado, MYSQL_ASSOC) ) { 
+            $subtotal=(float)$row['pagoCrnte']+(float)$row['pago0130']+(float)$row['pago6190']+
+            (float)$row['pago3160']+(float)$row['pago91120']+(float)$row['pago121mas'];
+            if($op==='R'){
+                if ($inmueble != $row['pagoinmuebleid']){
+                    if($inmueble > 0){
+                        $expo .=  '<tr> '; 
+                        $expo .=  '<td>' .$inmuebledesc. '</td> ';
+                        $expo .=  '<td>' .$nompropietario. '</td> ';
+                        $expo .=  '<td>' .$pagoCrnte. '</td> ';
+                        $expo .=  '<td>' .$pago0130. '</td> ';
+                        $expo .=  '<td>' .$pago3160. '</td> ';
+                        $expo .=  '<td>' .$pago6190. '</td> ';
+                        $expo .=  '<td>' .$pago91120. '</td> ';
+                        $expo .=  '<td>' .$pago121mas. '</td> ';
+                        $expo .=  '<td>' .$totSubtotal. '</td> ';
+                        $expo .=  '</tr> ';
+                    }
+                    $inmueble = $row['pagoinmuebleid'];
+                    $inmuebledesc=$row['pagoinmuebledesc'];
+                    $nompropietario=utf8_decode($row['pagonompropietario']); 
+                    $pagoCrnte=0;
+                    $pago0130=0;
+                    $pago3160=0;
+                    $pago6190=0;
+                    $pago91120=0;
+                    $pago121mas=0;
+                    $totSubtotal=0;
+                }
+                    $pagoCrnte+=(float)$row['pagoCrnte'];
+                    $pago0130+=(float)$row['pago0130'];
+                    $pago3160+=(float)$row['pago3160'];
+                    $pago6190+=(float)$row['pago6190'];
+                    $pago91120+=(float)$row['pago91120'];
+                    $pago121mas+=(float)$row['pago121mas'];
+                    $totSubtotal+=(float)$subtotal;
+            }else{
+                $expo .=  '<tr> '; 
+                $expo .=  	'<td>' .$row['pagoinmuebledesc']. '</td> ';
+                $expo .=  	'<td>' .$row['pagonompropietario']. '</td> ';
+                $expo .=  	'<td>' .$row['pagodetalle']. '</td> ';
+                $expo .=  	'<td>' .$row['pagofchfac']. '</td> ';
+                $expo .=  	'<td>' .$row['pagofchvnc']. '</td> ';
+                $expo .=  	'<td>' .$row['pagodias']. '</td> ';
+                $expo .=  	'<td>' .$row['pagoCrnte']. '</td> ';
+                $expo .=  	'<td>' .$row['pago0130']. '</td> ';
+                $expo .=  	'<td>' .$row['pago3160']. '</td> ';
+                $expo .=  	'<td>' .$row['pago6190']. '</td> ';
+                $expo .=  	'<td>' .$row['pago91120']. '</td> ';
+                $expo .=  	'<td>' .$row['pago121mas']. '</td> ';
+                $expo .=  	'<td>' .$subtotal. '</td> ';
+                $expo .=  '</tr> ';
+            }
+           } 
+        if($op==="R"){
+             $expo .=  '<tr> '; 
+            $expo .=  '<td>' .$inmuebledesc. '</td> ';
+            $expo .=  '<td>' .$nompropietario. '</td> ';
+            $expo .=  '<td>' .$pagoCrnte. '</td> ';
+            $expo .=  '<td>' .$pago0130. '</td> ';
+            $expo .=  '<td>' .$pago3160. '</td> ';
+            $expo .=  '<td>' .$pago6190. '</td> ';
+            $expo .=  '<td>' .$pago91120. '</td> ';
+            $expo .=  '<td>' .$pago121mas. '</td> ';
+            $expo .=  '<td>' .$totSubtotal. '</td> ';
+            $expo .=  '</tr> ';
+        }
+        $expo .=  '</table> ';  
+        echo $expo; 
+    return $expo; 
+   }
+   
    function recupera_facturacion($condicion){ 
         global $objClase;
         $con = $objClase->conectar(); 
@@ -768,7 +879,7 @@ switch ($op)
         $inmueble =  $data->inmueble;
         $resultado="";
         $sql = "SELECT  facturaperiodo, facturadetalle, facturafechavence, facturasaldo " . 
-                " FROM atominge_ncr.contafactura " .
+                " FROM contafactura " .
                 " WHERE facturaEmpresaid = '". $empresa . "' AND facturaInmuebleid = '" .
                 $inmueble ."' AND facturasaldo > 0 ORDER BY facturaperiodo, facturadetalle";
                 $result = mysqli_query($con, $sql); 
@@ -809,7 +920,7 @@ switch ($op)
         $empresa =  $data->empresa;
         $inmueble = $data->inmu;
         $sql = "SELECT DISTINCT CONCAT(pagosNrReciCaja,' Del ',pagosfecha) AS recibo,  pagosNrReciCaja  ".
-                " FROM atominge_ncr.contapagos   ".
+                " FROM contapagos   ".
                 " WHERE pagosempresa = " . $empresa  . " AND  pagosinmueble =  " . $inmueble .
                 " ORDER BY   pagosNrReciCaja desc";
                 $result = mysqli_query($con, $sql); 
