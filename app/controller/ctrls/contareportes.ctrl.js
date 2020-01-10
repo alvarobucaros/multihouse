@@ -8,8 +8,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_consultasCtaCobro = 'Consulta Cuenta de Cobro';
     $scope.form_consultaRecibo = 'Consulta Recibo de Caja';
     $scope.form_resumenDiario = 'Resume diario de Caja';
-    $scope.form_estadoCuenta = 'Estado de cuenta';
-    $scope.form_carteraEnMora = 'Cartera en Mora';
+    $scope.form_estadoCuenta = 'Estado de cuenta ';
+    $scope.form_carteraEnMora = 'Cuentas por Cobrar';
     $scope.form_btnExcel = 'Ver en Excel';
     $scope.form_btnAplicar = 'Ir al reporte';
     $scope.form_tipoReporte = 'Tipo de reporte';

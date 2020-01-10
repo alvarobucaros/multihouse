@@ -32,6 +32,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_btnfactura = 'Facturar periodo';
     $scope.form_btnActualiza = 'Actualizar';  
     $scope.form_btnAplicar = 'Aplicar';  
+    $scope.form_btnBuscar = 'Buscar';  
     $scope.Mensaje='El periodo ya se facturó';
     $scope.form_imprimeTodos='Imprime todas o una sola:'
     
@@ -239,20 +240,20 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         propietario = detail.propietario;
         if (inmueble === undefined){inmueble=0;}
         if (propietario === undefined) {propietario=0;}
-        $http.post('modulos/mod_contaprocesos.php?op=facSal2',{'op':'facSal2','empresa':empresa,'inmueble':inmueble,
+        $http.post('modulos/mod_contaprocesos.php?op=leeRCaja',{'op':'leeRCaja','empresa':empresa,'inmueble':inmueble,
         'propietario':propietario}).success(function(data){
-            alert(data);
-        $scope.Mensaje = data;
+        alert(data);
+        $scope.operators1 = data;
          });
     };
      
     $scope.buscanroRecibos = function(){
         empresa=$scope.empresa; 
-        inmueble = detail.Inmueble;
+        inmueble = $scope.detail.Inmueble;
         $http.post('modulos/mod_contaprocesos.php?op=busRc',{'op':'busRc','empresa':empresa,'inmueble':inmueble}).success(function(data){
             $scope.operators1 = data;
             }); 
-    }
+    };
 
     $scope.buscaacuer2 = function(detail){
         empresa=$scope.empresa;
@@ -277,6 +278,29 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.vlrTotal = formatMoney(t, 2, '.', ',');
          });
     };
+    
+    $scope.buscaSaldoInmueble = function(){
+        empresa=$scope.empresa;
+        prop=$scope.registro.propietario;
+        inmu=$scope.registro.Inmueble;
+        if (prop === undefined){prop=0;}
+        if (inmu === undefined){inmu=0;}
+        if(prop===0 && inmu===0){
+            err+='Seleccione un inmueble o un propietario\n';
+        }
+        if(prop>0 && inmu>0){
+            err+='Solamente seleccione o un inmueble o un propietario no los dos\n';
+        }
+        if (err ===''){
+        datos=empresa+"||"+prop+"||"+inmu;
+        alert(datos);
+        $http.post('modulos/mod_contaprocesos.php?op=saldoFac',{'op':'saldoFac','datos':datos}).success(function(data){        
+        $scope.details = data;
+         });
+    }else{
+        alert(err);
+    }
+    }
      
     $scope.aplicar = function(){
         empresa=$scope.empresa;

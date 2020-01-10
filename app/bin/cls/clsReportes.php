@@ -7,7 +7,7 @@ class reportesCls{
 
     public function cargaEmpresa($empresa){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	
         $obj = new reportesCls();
 
@@ -27,7 +27,7 @@ class reportesCls{
         $empresaRecargoPesos, $empresaRecargoDias, $empresaDescPorc, 
         $empresaDescPesos, $empresaFactorRedondeo,$inmueble){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	
         $resultado='';
 
@@ -96,7 +96,7 @@ class reportesCls{
  
     function preparaImpresionFacturaRep($periodo, $empresa, $inmueble){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	 
         $sql = "SELECT  IF (inmueblePrincipal = 'SI', inmuebleCodigo , inmuebleDepende) inmuebleCodigo, " .
                " facturaid, facturaNumero, facturaInmuebleid, facturaservicioid, facturaperiodo, facturasecuencia, ".
@@ -120,7 +120,7 @@ class reportesCls{
 
      function carteraEdades($empresa, $op, $hoy){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();
         $sql = "DELETE FROM contatmpcartera WHERE pagoempresa = " . $empresa ." AND pagoid > 0";
         $result = mysqli_query($con, $sql); //2019-12-11
@@ -169,7 +169,7 @@ class reportesCls{
      
     function preparaImpresionUnaFactura($periodo, $empresa, $inmueble){
       include_once("clsConection.php");
-      $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+      $objClase = new DBconexion();
       $con = $objClase->conectar();	 
       $sql = " SELECT facturaNumero, facturaperiodo, facturafechafac, facturafechavence, inmuebleId, " .
               " facturadetalle, facturasaldo, facturaDiasMora, inmuebleCodigo, inmuebleDescripcion " .
@@ -188,7 +188,7 @@ class reportesCls{
 
     function preparaReimpresionFactura($periodo, $empresa, $inmueble, $op, $propietario){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();
        
         $sql="SELECT facturaid, facturaEmpresaid, facturaNumero, facturaInmuebleid, facturaservicioid, ".
@@ -211,7 +211,7 @@ class reportesCls{
      
     function traeNomApto($apto, $empresa){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();
         $nomInmueble='';
         $sql = "SELECT inmuebleDescripcion FROM containmuebles ".
@@ -226,7 +226,7 @@ class reportesCls{
         
     function traeAptoPropietario($inmueble, $empresa){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	 
         $sql = "SELECT propietarioNombre, propietarioCedula, propietarioTelefonos,  ".
                 " propietarioDireccion, propietarioCorreo  , contaInmuPropietarioInmuebleId,  ".
@@ -246,7 +246,7 @@ class reportesCls{
     
     function traeReciboCaja($inmueble, $empresa, $rcaja, $uno){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	
         $sql = "SELECT pagosfacturaid, pagosfecha, pagostipo, pagosvalor, pagosreferencia , pagosPeriodoPago, ".
                 " pagosTipoPago ".
@@ -262,7 +262,7 @@ class reportesCls{
     
     function reporteIngresosGastos($empresa, $periIni, $periFin){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	
         $sql =  "SELECT ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
                 " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE 'Inicial' END tipo," . 
@@ -277,7 +277,7 @@ class reportesCls{
     
     function cabezaAcuerdoPago($id, $empresa){
         include_once("clsConection.php");
-        $objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+        $objClase = new DBconexion();
         $con = $objClase->conectar();	
         $sql =  "SELECT acuerdoinmueble, acuerdofecha, acuerdovalor, acuerdoplazo, acuerdodetalle, ".
                 " acuerdopropietario, acuerdomora, acuerdocorriente, acuerdodescmora  ".
@@ -286,7 +286,23 @@ class reportesCls{
         return  $result; 
     }
     
-
+        
+    function llamaLista($empresa, $codigo) 
+    { 
+        include_once("clsConection.php");
+        $objClase = new DBconexion();
+        $con = $objClase->conectar();	 
+        $sql = "SELECT lista_id,lista_empresa,lista_codigo,lista_inmueble,lista_propietario," .
+                " lista_asiste1,lista_asiste2,lista_asiste3,lista_asiste4," .
+                " lista_asiste5,lista_asiste6,lista_area,lista_coeficiente," .
+                " lista_cedula,lista_obervacion,lista_descripcion " .
+                " FROM contallamalista WHERE lista_codigo = '" . $codigo .
+                "' AND lista_empresa = '" . $empresa . "' ORDER BY lista_inmueble";       
+        $result = mysqli_query($con, $sql);
+   
+        return $result;  
+    }
+    
     
     
     function dias_transcurridos($fecha_i,$fecha_f){

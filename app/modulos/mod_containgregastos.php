@@ -1,6 +1,6 @@
 <?php
 include_once("../bin/cls/clsConection.php");
-$objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+$objClase = new DBconexion();
 $con = $objClase->conectar();
 $data = json_decode(file_get_contents("php://input")); 
 $op = mysqli_real_escape_string($con, $data->op);

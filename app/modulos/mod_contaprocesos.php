@@ -1,6 +1,7 @@
 <?php
 include_once("../bin/cls/clsConection.php");
-$objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+//$objClase = new DBconexion();
+$objClase = new DBconexion();
 $con = $objClase->conectar();
 $data = json_decode(file_get_contents("php://input")); 
 $op = mysqli_real_escape_string($con, $data->op);
@@ -24,6 +25,9 @@ switch ($op)
         break;
     case 'facSal2':
         traeSaldo($data);
+        break;
+    case 'saldoFac':
+        saldoFacturacion($data);
         break;
     case 'cnslta2':
         consulta2($data);
@@ -121,6 +125,43 @@ switch ($op)
 
     }
     
+    function saldoFacturacion($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $datos =$data->datos;
+        $rec=  explode('||',$datos);
+        $empresa =  $rec[0];
+        $inmueble = $rec[2];
+        $propietario = $rec[1];
+
+        $condicion = "  facturaEmpresaid = " .$empresa . " ";
+        if ($propietario >  0){
+            $condicion .= " AND facturaPropietario =  " . $propietario;
+        }
+        if ($inmueble >  0){
+            $condicion .= " AND facturaInmuebleid =  " . $inmueble;
+        }
+        $sql = "SELECT  facturaperiodo, facturadetalle, facturafechafac, facturafechavence ".
+               " ,facturasaldo ,facturaprioridad ,facturadescuento ,facturaMora ,facturaNroReciboPago ,facturaTipo ".
+               " ,facturaPropietario ,facturaDiasMora ,facturaMoraInmuebId ,facturaAcuerdo, 0 AS saldo ".
+               " FROM contafactura WHERE facturasaldo > 0 AND ". $condicion .
+               " ORDER BY facturaperiodo, facturaservicioid, facturaprioridad ";
+
+        $facturar = mysqli_query($con, $sql); 
+        $arr = array(); 
+        $saldo = 0;
+        if(mysqli_num_rows($facturar) != 0)  
+            { 
+                while($row = mysqli_fetch_assoc($facturar)) { 
+                    $saldo = (float)$saldo + (float)$row['facturasaldo'];
+                    $row['saldo']  =  $saldo;
+                    $arr[] = $row; 
+                } 
+            } 
+          
+        echo $json_info = json_encode($arr);
+    }
+    
     function periodoNombre($peri){
         $meses = Array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio','Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
         $mes = substr($peri,4,6);
@@ -196,6 +237,7 @@ switch ($op)
                 'facturaPropietario'=>0);
            
             $facturar = recupera_facturacion($condicion);
+
             while( $registro =  mysqli_fetch_assoc($facturar))           
             { 
                 $nr += 1;
@@ -249,9 +291,10 @@ switch ($op)
                 $factura['inmuebleDepende']=$inmuebleDepende;
                 $factura['inmuebleCodigo']=$inmuebleCodigo;
                 $factura['facturaPropietario']=$facturaPropietario;  
-                grabaFacturacion($factura);               
+                grabaFacturacion($factura);   
+                $resultar = serviciosEspeciales($Codempresa, $fchfactini, $inmuebleIdAux, $factura);
             }
-            $resultar = serviciosEspeciales($Codempresa, $fchfactini, $inmuebleIdAux, $factura);
+  //          $resultar = serviciosEspeciales($Codempresa, $fchfactini, $inmueblePrincipal, $factura);
             ActualizaNumeroFactura($Codempresa, $nroFactura, $periodoFac, $nuevoPeriodo );
             $msg="Ok. Actuaizó ".$nr." Facturas " ;
 
@@ -503,8 +546,8 @@ switch ($op)
             "((servicioAmbito = 'T' and servicioClasificacionId = 0 ) OR ".
             " (servicioAmbito = 'T' and inmuebleClasificacionId = servicioClasificacionId  )) AND " .
             $condicion ;        
-        $sql2 = " UNION ".
-            " SELECT ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle, ServicioPeriodo, ".
+        $sql2 = " UNION ";
+        $sql =    " SELECT ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle, ServicioPeriodo, ".
             " ServicioFechaDesde, ServicioFechaHasta, ServicioValor, ServicioPrioridad, ServicioTipo, ".
             " ServicioMora, ServicioMoraPorcentaje, servicioMoraValor, ServicioCuentaDB, ".
             " ServicioCuentaCR, ServicioPPporcentaje, ServicioPPvalor, ServicioAmbito, ".
@@ -518,8 +561,9 @@ switch ($op)
             " AND servicioClasificacionId = clasificacionId AND servicioAmbito = 'G'  AND  ".
             " inmuebleEmpresaId = servicioEmpresaId AND inmuebleClasificacionId = servicioClasificacionId AND " .
             $condicion ;
-            $sql = $sql1. ' ' . $sql2. ' ORDER BY inmuebleDepende, ServicioCodigo, inmuebleCodigo ';   
-            $result = mysqli_query($con, $sql);           
+          //  $sql = $sql1. ' ' . $sql2. ' ORDER BY inmuebleDepende, ServicioCodigo, inmuebleCodigo ';   
+            $result = mysqli_query($con, $sql);  
+            echo $sql;
     return $result; 
 }        
  
@@ -931,7 +975,6 @@ switch ($op)
                     $arr[] = $row; 
                 } 
             } 
-          
         echo $json_info = json_encode($arr);
     }
  

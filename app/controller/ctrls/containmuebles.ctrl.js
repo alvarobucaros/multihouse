@@ -120,6 +120,19 @@ $('#idForm').slideToggle();
 
 };
 
+$scope.calculos = function(){
+    valor = confirm('Recalcula el valor de los coeficientes, continua?');
+    if (valor == true) {
+        empresa = $('#e').val();
+        $http.post('modulos/mod_containmuebles.php?op=cal',{'op':'cal','empresa':empresa}).success(function(data){
+        if (data === 'Ok') {
+            getInfo(empresa);
+            alert ('Recalculos Ok. ');
+        }
+    }); 
+   }
+};
+
     
     $scope.editInfo =function(info)
     {  
@@ -133,7 +146,7 @@ $scope.exporta = function(){
    if (valor == true) {
         empresa = $('#e').val();
         $http.post('modulos/mod_containmuebles.php?op=exp',{'op':'exp','empresa':empresa}).success(function(data){
-       $('#miExcel').html(data); 
+        $('#miExcel').html(data); 
         alert('exporta a Excel. Cargue y renombre el documento... ');
         window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
     }); 

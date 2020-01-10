@@ -178,10 +178,10 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=rRcaja"><i class=""></i>Reimprime Recibo de caja</a></li>
             <li><a href="mm.php?op=rCtaCC"><i class=""></i>Consulta Cuenta de Cobro</a></li>
             <li><a href="mm.php?op=rCtaRcaj"><i class=""></i>Consulta Recibo de Caja</a></li>
-            <li><a href="mm.php?op=rResDia"><i class=""></i>Resume diario de Caja</a></li>
-            <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta</a></li>
-            <li><a href="mm.php?op=rMora"><i class=""></i>Cartera en Mora</a></li>
-            <!--li><a href="mm.php?op=rCtas"><i class=""></i>Consultas genéricas</a></li-->  
+            <li><a href="mm.php?op=rResDia"><i class=""></i>Resume Ingresos y gastos</a></li>
+            <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta Inmueble</a></li>
+            <li><a href="mm.php?op=rMora"><i class=""></i>Informe Cuentas por cobrar</a></li>
+            <li><a href="mm.php?op=lst"><i class=""></i>Lista de asistencia</a></li>  
           </ul>
         </li>
         ';
@@ -417,6 +417,9 @@ if (!isset($_GET['op'])){
             include_once 'views/frm_contaGastos.php';
         } 
 
+        if ($op ==  'lst'){
+            include_once 'views/frm_contaLlamalista.php';
+        }
 //  -------- abajo cambiar todo    gast 
 
         if ($op ==  'logo'){
@@ -427,15 +430,11 @@ if (!isset($_GET['op'])){
             include_once 'views/frm_contadocumentacion.php';
         } 
         
-        if ($op ==  'udr'){
-            include_once 'views/frm_mm_inmuebles.php';
-        }
+ 
         if ($op ==  'impo'){
             include_once 'views/frm_contaimportaXls.php';
         }
-        if ($op ==  'lst'){
-            include_once 'views/frm_mm_llamalista.php';
-        }
+
          if ($op ==  ''){
             include_once 'views/frm_contanews.php';
         }      

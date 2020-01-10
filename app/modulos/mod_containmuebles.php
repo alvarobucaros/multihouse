@@ -1,6 +1,6 @@
 <?php
 include_once("../bin/cls/clsConection.php");
-$objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+$objClase = new DBconexion();
 $con = $objClase->conectar();
 $data = json_decode(file_get_contents("php://input")); 
 $op = mysqli_real_escape_string($con, $data->op);
@@ -25,6 +25,9 @@ switch ($op)
     case 'exp':
         exportaXls($data);
         break; 
+    case 'cal':
+        recalculaCoeficientes($data);
+        break; 
     case '0':
         lista0($data);
         break;
@@ -37,7 +40,7 @@ switch ($op)
         global $objClase;
         $con = $objClase->conectar(); 
         $empresa = trim($data->empresa); 
-       { 
+        { 
             $query = "SELECT  inmuebleId, inmuebleEmpresaId, inmuebleCodigo, inmuebleDescripcion, " .
                     " inmueblePrincipal, inmuebleArea, inmuebleCoeficiente, inmuebleUbicacion, " .
                     " inmuebleClasificacionId, clasificacionCodigo,  inmuebleDepende" .
@@ -56,6 +59,29 @@ switch ($op)
        } 
     } 
  
+    function recalculaCoeficientes($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = trim($data->empresa); 
+        $area=0.0;
+        $retorno= 'Ok';
+        { 
+            $query = "SELECT sum(inmuebleArea) as area FROM containmuebles WHERE inmuebleEmpresaId =  " . $empresa ;     
+            $result = mysqli_query($con, $query);  
+            while($row = mysqli_fetch_assoc($result)) { 
+               $area = $row['area'];
+            }
+ 
+            if ($area > 0)  {  
+            $query = "UPDATE  containmuebles SET inmuebleCoeficiente = inmuebleArea / " . $area . 
+                    " WHERE inmuebleEmpresaId =  " . $empresa . " AND inmuebleId > 0";
+             $result = mysqli_query($con, $query); 
+    
+            echo $retorno;
+            }
+       }   
+    }
+    
     function borra($data)
     { 
        global $objClase;

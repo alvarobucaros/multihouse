@@ -5,10 +5,6 @@
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
                   ng-submit="insertInfo(registro);" >
-                <div>
-                    <img src="img/enDesarrollo.png" width="313" height="68" alt="enDesarrollo"/>
-
-                </div>
                 <div class="form-group">
                    <label class=" milabel col-md-4" for="Inmuebles">{{inmueble}}</label>
                    <div class="col-md-5">
@@ -21,11 +17,11 @@
                </div>   
 
                 <div class="form-group">
-                   <label class=" milabel col-md-4" for="propietarios">{{propietario}}</label>
+                   <label class=" milabel col-md-4" for="rCaja">{{rCaja}}</label>
                    <div class="col-md-5">
-                   <select id='propietarios' name='propietarios' ng-model='registro.propietario'   
-                           ng-change="buscaFacturas(registro)">
-                   <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
+                   <select id='rCaja' name='rCaja' ng-model='registro.rCaja'   
+                           ng-change="buscarCaja(registro)">
+                   <option ng-repeat='operator1 in operators1' value = " {{operator1.pagosNrReciCaja}}">{{operator1.recibo}}</option>
                     </select>
                    </div>
                </div> 

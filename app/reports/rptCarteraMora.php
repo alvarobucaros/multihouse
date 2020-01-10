@@ -43,7 +43,7 @@ require_once ('fpdf.php');
 
         $this->archivo = 'CarteraDetalaldoEdades';
         if($op==='R'){$this->archivo = 'CarteraResumenEdades';}
-        $logo = "logos/".$this->logo;
+        $logo = "images/".$this->logo;
      
         $titulo="CARTERA POR EDADES CORTE A ".$fc;
         $this->Image($logo,$der+5,14,36,20);
