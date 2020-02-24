@@ -13,6 +13,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_usuario_tipo_acceso60 = 'Superior';
     $scope.form_usuario_tipo_acceso61 = 'Administra';
     $scope.form_usuario_tipo_acceso62 = 'Consultas';
+    $scope.form_usuario_tipo_acceso63 = 'Contabiliza';
     $scope.form_usuario_estado110 = 'Activo';
     $scope.form_usuario_estado111 = 'Inactivo';
     $scope.form_usuario_tipodoc120 = 'Cédula';

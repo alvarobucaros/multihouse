@@ -650,22 +650,64 @@ CREATE TABLE mn_privilegios (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS contalistactrl;
+
+CREATE TABLE contalistactrl (
+  listactrl_id int(11) NOT NULL AUTO_INCREMENT,
+  listactrl_empresa int(11) NOT NULL,
+  listactrl_codigo varchar(45) NOT NULL,
+  listactrl_estado char(1) NOT NULL,
+  listactrl_llamado int(11) DEFAULT NULL,
+  PRIMARY KEY (listactrl_id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=utf8_spanish_ci;
+
+DROP TABLE IF EXISTS contallamalista;
+
+CREATE TABLE contallamalista (
+  lista_id int(11) NOT NULL AUTO_INCREMENT,
+  lista_empresa int(11) DEFAULT NULL,
+  lista_codigo varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_inmueble varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_asiste1 char(1) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_asiste2 char(1) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_asiste3 char(1) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_asiste4 char(1) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_asiste5 char(1) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_asiste6 char(1) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_area decimal(12,2) DEFAULT NULL,
+  lista_coeficiente decimal(12,8) DEFAULT NULL,
+  lista_propietario varchar(60) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_cedula varchar(12) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_obervacion varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+  lista_descripcion varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+  PRIMARY KEY (lista_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+DROP TABLE IF EXISTS contaplancontable;
+
+
+CREATE TABLE contaplancontable (
+  pucId int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  pucEmpresaId int(11) NOT NULL COMMENT 'EMPRESA',
+  pucCuenta varchar(20) DEFAULT NULL COMMENT 'CUENTA',
+  pucNombre varchar(60) DEFAULT NULL COMMENT 'NOMBRE CUENTA',
+  pucMayor varchar(20) DEFAULT NULL COMMENT 'MAYOR',
+  pucNivel int(11) DEFAULT NULL COMMENT 'NIVEL',
+  pucTipo char(1) DEFAULT NULL COMMENT 'TIPO',
+  pucActivo char(1) DEFAULT NULL COMMENT 'ACTIVO',
+  pucClase char(1) DEFAULT NULL COMMENT 'CLASE',
+  pucValor decimal(2,0) DEFAULT NULL COMMENT 'VALOR',
+  PRIMARY KEY (pucId),
+  UNIQUE KEY pucId_UNIQUE (pucId)
+) ENGINE=InnoDB AUTO_INCREMENT=5579 DEFAULT CHARSET=utf8;
 --
 -- Dumping data for table mn_privilegios
 --
 
-LOCK TABLES mn_privilegios WRITE;
-/*!40000 ALTER TABLE mn_privilegios DISABLE KEYS */;
-/*!40000 ALTER TABLE mn_privilegios ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+ALTER TABLE containmuebles ADD FOREIGN KEY(inmuebleClasificacionId) REFERENCES contaclasificacion(clasificacionId);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+ALTER TABLE contafactura ADD FOREIGN KEY(facturaInmuebleid) REFERENCES containmuebles(inmuebleId);
 
--- Dump completed on 2019-12-02 12:55:00
+ALTER TABLE contafactura ADD FOREIGN KEY(facturaservicioid) REFERENCES contaservicios(ServicioId);
+
+ALTER TABLE contafactura ADD FOREIGN KEY(facturaPropietario) REFERENCES contapropietarios(propietarioId);

@@ -21,6 +21,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_detalle='Detalle anticipo';
     $scope.form_acuerdoValor='Valor acuerdo';
     $scope.form_fechaAbono = "Fecha Abono";
+    $scope.form_fechaDesde="Fecha Desde"
+    $scope.form_fechaHasta="Fecha Hasta"
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
@@ -66,6 +68,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.progreso = false;
     $scope.imprime = false;
     $scope.imprimeAc = false;
+    $scope.verContabiliza=true;
+    $scope.boton = true;
     $scope.currentPage = 0;
     $scope.pageSize = 10;
     $scope.pages = [];
@@ -87,9 +91,29 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.registro.fechaAbono=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()+ ' 00:00:0000';
     $scope.fechaAbono=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear();
     procesa = $('#control').val();
+ 
     $scope.reimprime='N';
-    if(procesa === 'F'){
+    if(procesa === 'F' ){
        getInfoFac($scope.empresa);
+    }
+    if(procesa === 'C' ){
+        $scope.verContabiliza=false;
+        empresa = $scope.empresa;
+        $http.post('modulos/mod_contaprocesos.php?op=fchs',{'op':'fchs', 'empresa':empresa}).success(function(data){ 
+        rec=data.split('||');
+        if(rec[0]===''){
+            $scope.nota = 'No hay que contabilizar';
+            $scope.verContabiliza=true;
+            $scope.boton=false;
+            return;
+        }
+        if(rec[1]===''){rec[1]=rec[0];}
+        $scope.registro.fechaDesde = rec[0];
+        $scope.registro.fechaHasta = rec[1];
+        $http.post('modulos/mod_contaprocesos.php?op=conta',{'op':'conta', 'empresa':empresa}).success(function(data){
+        });
+        
+        }); 
     }
    
     if(procesa === 'A'){
@@ -433,6 +457,12 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     }
     };
     
+    $scope.contabilizar = function(){
+        fi=$scope.registro.fechaDesde;
+        ff=$scope.registro.fechaHasta;
+        alert('contabiliza' + fi + ff);
+    };
+    
     $scope.configPages = function() {
         $scope.pages.length = 0;
         var ini = $scope.currentPage - 4;
@@ -493,8 +523,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         DescDias=$scope.decDias;
         meses=[31,28,31,30,31,30,31,31,30,31,30,31];
         if ((ano % 4 === 0) && ((ano % 100 !== 0) || (ano % 400 === 0)))
-            {meses[1]=29;}
-  
+            {meses[1]=29;}  
         dia = meses[mes -1];
         fchini= ano + '-' +  mes +'-01';
         fchfin= ano + '-' +  mes +'-'+dia ;
@@ -503,7 +532,6 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.progreso = true;
 
         $http.post('modulos/mod_contaprocesos.php?op=fac',{'op':'fac', 'condicion':condicion}).success(function(data){
-        alert(data);
         if (data.substring(0,2) === 'Ok'){ 
             $http.post('modulos/mod_contaprocesos.php?op=facRes',{'op':'facRes', 'empresa':empresa}).success(function(data){
             $scope.details = data;
@@ -517,6 +545,17 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });              
     }
 
+    function fechar(periodo,pos){
+        ano = periodo.substr(0,4);
+        mes = periodo.substr(4,2);
+        meses=[31,28,31,30,31,30,31,31,30,31,30,31];
+        if ((ano % 4 === 0) && ((ano % 100 !== 0) || (ano % 400 === 0)))
+            {meses[1]=29;}  
+        dia = meses[mes -1];
+        if (pos===0){fchini = ano + '-' +  mes +'-01';}
+        if (pos===1){fchfin = ano + '-' +  mes +'-'+dia ;}
+    }
+    
     function formatMoney(number, decPlaces, decSep, thouSep) {
     decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
     decSep = typeof decSep === "undefined" ? "." : decSep;
@@ -531,11 +570,10 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
     }
 
-
-
     empresa = $scope.empresa;
     $scope.items = [];
     $scope.titulin= '';
+    
     $scope.open = function (detail) {
     size='lg';
     inmueble=detail.facturaInmuebleid;

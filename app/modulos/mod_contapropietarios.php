@@ -57,7 +57,16 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar(); 
         $query = "DELETE FROM contapropietarios WHERE propietarioId=$data->propietarioId"; 
-        mysqli_query($con, $query); 
+
+        $resul= mysqli_query($con, $query);        
+        if ($resul != 0){
+             echo mysqli_errno($con);
+        }else{
+            if(mysqli_errno($con)===1451){
+                echo 'Err. Este propietario Tiene facturación asociada, No se puede borrar';
+                return;
+            }
+        }
         echo 'Ok'; 
     }
  

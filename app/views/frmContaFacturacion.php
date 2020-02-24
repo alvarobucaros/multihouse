@@ -121,8 +121,7 @@
                         <th>VENCIMIENTO</th>
                         <th>SALDO</th>
                     </tr>
-           
-            
+
                 <tr ng-repeat="item in items">
                     <td>{{item.facturaperiodo}}</td>
                     <td>{{item.facturadetalle}}</td>

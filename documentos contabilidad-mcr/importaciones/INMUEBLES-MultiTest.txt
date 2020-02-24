@@ -1,0 +1,3 @@
+CODIGO;DESCRIPCION;AREA;COEFICIENTE;UBICACION;Responsable;Cedula;telefono;Direccion;correo
+6-101;APARTAMENTO 6-101;75,55;0,019365836;TORRE 6;Jánñifer López;19371156;81213287;av 12;alvaro.oycsoft@gmail.com
+6-102;APARTAMENTO 6-102;75,55;0,019365836;TORRE 6;Aígelúna Ñolié;62943520;15257499;av 13;alvaro.oycsoft@gmail.com

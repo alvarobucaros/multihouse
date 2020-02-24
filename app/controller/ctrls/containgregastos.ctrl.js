@@ -50,12 +50,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.pages = [];
     $scope.registro = [];
     $scope.empresa = $('#e').val();
-    
+    $scope.fecha='';
+    $scope.periodo = '';
     var defaultForm= {   
         ingastoid:0,
         ingastoempresa:$scope.empresa,
-        ingastoFecha:'',
-        ingastoperiodo:'',
+        ingastoFecha:$scope.fecha,
+        ingastoperiodo:$scope.periodo,
         ingastotipo:'',
         ingastocomprobante:0,
         ingastodetalle:'',
@@ -77,9 +78,12 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         });  
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
         rec=data.split('||');
-       
+        
+        $scope.fecha = rec[2];
         $scope.valUltiperfac = rec[12];
-        $scope.valPreriFact = rec[1];    
+        $scope.periodo = rec[1];
+        $scope.valPreriFact = rec[1];
+       
         });      
     }
 
@@ -141,7 +145,7 @@ $scope.formToggle =function(){
 $('#idForm').slideToggle();
 $scope.ingastoid=0;
 $('#idForm').css('display', 'none');
-
+$scope.registro = defaultForm;
 };
 
 $scope.show_form = true;
@@ -150,7 +154,9 @@ $scope.formToggle =function(){
 $('#idForm').slideToggle();
         $scope.formato.$setPristine();
         $scope.registro = angular.copy(defaultForm);
-
+        $scope.registro.ingastoFecha= $scope.fecha;
+        $scope.registro.ingastoperiodo= $scope.periodo;
+        $scope.registro.ingastoid=0;
 };
 
     

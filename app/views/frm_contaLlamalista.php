@@ -10,6 +10,7 @@
                  </option>
                 </select>
                 </div>
+                <div ng-hide="eligeFecha"> 
                 <div class="col-sm-2" ng-show="verNueva">
                     <button class="btn btn-primary btn-xs"  
                     ng-click="nueva()">{{form_btnNuevo}}<span class="glyphicon" aria-hidden="true"></span></button>
@@ -18,6 +19,7 @@
                     <button class='btn btn-primary btn-xs'
                     ng-click='guarda()'>{{form_btnGuarda}}</button>                             
                 </div> 
+                
                 <div class="col-sm-2">
                     <button class='btn btn-primary btn-xs'
                     ng-click='exporta()'>{{form_btnExcel}}</button>                  
@@ -25,6 +27,7 @@
                 <div class="col-sm-2">
                     <button class='btn btn-primary btn-xs'
                     ng-click='imprime()'>{{form_btnImprime}}</button>                  
+                </div>
                 </div>
             </div> 
         </nav>
@@ -66,8 +69,9 @@
             </div>
             </div>
         </nav>
-        <div> 
-        <img ng-show="ruedita" src="img/progress.gif" alt=""/></div>
+        <div ng-hide="ruedita"> 
+        <img  src="img/progress.gif" alt=""/>
+        </div>
         <div>
 
         <form>

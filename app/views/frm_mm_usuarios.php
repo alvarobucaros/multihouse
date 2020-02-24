@@ -63,6 +63,9 @@
                    <label>
                       <input type="radio" name ="usuario_tipo_acceso" ng-model="registro.usuario_tipo_acceso" value="A" >{{form_usuario_tipo_acceso61}}
                    </label>
+                    <label>
+                      <input type="radio" name ="usuario_tipo_acceso" ng-model="registro.usuario_tipo_acceso" value="K" >{{form_usuario_tipo_acceso63}}
+                   </label>
                    <label>
                       <input type="radio" name ="usuario_tipo_acceso" ng-model="registro.usuario_tipo_acceso" value="C" >{{form_usuario_tipo_acceso62}}
                    </label>

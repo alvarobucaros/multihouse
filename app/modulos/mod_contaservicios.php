@@ -84,7 +84,15 @@ SELECT  ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle,
        global $objClase;
         $con = $objClase->conectar(); 
         $query = "DELETE FROM contaservicios WHERE ServicioId=$data->ServicioId"; 
-        mysqli_query($con, $query); 
+        $resul= mysqli_query($con, $query);        
+        if ($resul != 0){
+             echo mysqli_errno($con);
+        }else{
+            if(mysqli_errno($con)===1451){
+                echo 'Err. Este Servicio Tiene facturación asociada, No se puede borrar';
+                return;
+            }
+        }
         echo 'Ok'; 
     }
  

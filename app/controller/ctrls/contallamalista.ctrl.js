@@ -2,7 +2,7 @@ var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_title = 'Asamblea o reunión - Llamado a lista';
     $scope.form_btnNuevo = 'Crear lista';
-    $scope.form_btnGuarda = 'Guarda la lista';
+    $scope.form_btnGuarda = 'Guarda cambios';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
     $scope.form_btnAnula = 'Cerrar';
@@ -36,7 +36,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.detalles = [];
     $scope.numeroLlamado=1;
     $scope.nroQuorum=0;
-    $scope.ruedita=false;
+    $scope.ruedita=true;
+    $scope.eligeFecha=true;
     
     getInfo($scope.empresa);
     getCombos($scope.empresa);
@@ -82,12 +83,12 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.nroAsisten = 0;
         $scope.registro.codigo = res[2];
         $scope.nroQuorum = sumaCoeficientes(1);
-
+        $scope.eligeFecha=false;
         });    
     };
 
     $scope.nueva =  function (){
-        $scope.ruedita=true;
+        $scope.ruedita=false;
         var codigo = traeCodigo();
         var empresa = $('#e').val();
         $http.post('modulos/mod_llamalista.php?op=rn',{'op':'rn', 'empresa':empresa,'codigo':codigo}).success(function(data){
@@ -100,7 +101,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.configPages(); 
         nomLista(1)
         });
-         $scope.ruedita=false;
+         $scope.ruedita=true;
     };
 
     $scope.guarda = function(){
@@ -228,7 +229,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.nroAsisten = nr;
         nr=coef*100;
         $scope.nroQuorum =  nr.toFixed(2);
-        if (nr > q){ return "smaforored";} else {return smaforogreen}
+        //if (nr > q){ return "smaforored";} else {return smaforogreen}
         //if (coef > q){ $scope.colorClass = { verde:true};} else {$scope.colorClass =  { rojo:true};}
    }
    

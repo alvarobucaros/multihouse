@@ -118,7 +118,7 @@ if (!isset($_GET['op'])){
       <ul class="sidebar-menu">
         <li class="logito header list-inline"><?php echo $datos[5] ?></li>
     
-        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C'){            
+        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C'){            
         echo '     
         <li class="treeview">
           <a href="#">
@@ -132,17 +132,18 @@ if (!isset($_GET['op'])){
               <li><a href="mm.php?op=prop"><i class=""></i>Propietarios</a></li>
               <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>';
         }?>
-        <?php if ($pf=='A' OR $pf=='S'){            
+        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S'){            
         echo ' 
               <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>';
         }?> 
-        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C'){            
+        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C'){            
         echo ' 
               <li><a href="mm.php?op=inmServ"><i class=""></i>Inmueble y Servicio Especial</a></li>
+              <li><a href="mm.php?op=terc"><i class=""></i>Lista de terceros</a></li>
           </ul>
         </li>';
         }?> 
-        <?php if ($pf=='A' OR $pf=='S' ){            
+        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' ){            
         echo ' 
         <li class="treeview">
           <a href="#">
@@ -158,13 +159,46 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=otrIngr"><i class=""></i>Otros Ingresos y gastos</a></li>
             <li><a href="mm.php?op=acuPago"><i class=""></i>Acuerdos de Pago</a></li>
             <li><a href="mm.php?op=anticip"><i class=""></i>Anticipos (Abonos)</a></li>
-            <li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li>            
-            <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>
-  
+            
+
           </ul>
-        </li>';
+        </li>
+               <li class="treeview">
+          <a href="#">
+            <i class="fa fa-file"></i>
+            <span>Contabilidad</span>
+            <i class="fa fa-angle-left pull-right"></i>
+          </a>
+          <ul class="treeview-menu">';
         }?> 
-        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C' ){            
+        <?php if ($pf=='K' OR $pf=='S' ){            
+        echo ' 
+       
+ 
+            <li><a href="mm.php?op=puuc"><i class=""></i>Plan único contable</a></li>
+            <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>';
+             } 
+              ?> 
+        <?php if ($pf=='K'  ){            
+        echo ' 
+            <li><a href="mm.php?op=digCpbnt"><i class=""></i>Digita Comprobante Contable</a></li>
+            <li><a href="mm.php?op=digMvto"><i class=""></i>Digita Operación Contable</a></li>
+            <li><a href="mm.php?op=actMvto"><i class=""></i>Actualiza Movimiento Contable</a></li>
+            <li><a href="mm.php?op=revMvto"><i class=""></i>Reversa Movimiento Contable</a></li>
+            <li><a href="mm.php?op=dupComp"><i class=""></i>Duplica comprobantes</a></li> 
+            <li><a href="mm.php?op=trSal2"><i class=""></i>Transfiere saldos</a></li> 
+            <li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li>            
+            <li><a href="mm.php?op=cieMes"><i class=""></i>Cierre mensual</a></li>   
+            <li><a href="mm.php?op=cieEje"><i class=""></i>Cierre Ejercicio</a></li>  ';
+             } ?> 
+        <?php if ($pf=='K' OR $pf=='S' ){            
+        echo '
+          </ul>
+        </li>
+        ';
+             } 
+        ?>       
+        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C' ){            
         echo ' 
        
         <li class="treeview">
@@ -181,16 +215,25 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=rResDia"><i class=""></i>Resume Ingresos y gastos</a></li>
             <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta Inmueble</a></li>
             <li><a href="mm.php?op=rMora"><i class=""></i>Informe Cuentas por cobrar</a></li>
-            <li><a href="mm.php?op=lst"><i class=""></i>Lista de asistencia</a></li>  
+            <li><a href="mm.php?op=lst"><i class=""></i>Lista de asistencia</a></li>
+            <li><a href="mm.php?op=porep"><i class=""></i>Poder Representación</a></li>
+            ';}
+            ?>
+        <?php if ($pf=='K'){            
+        echo '
+            
+            <li><a href="mm.php?op=ConCons"><i class=""></i>Consultas Contabilidad</a></li>  
+        <li><a href="mm.php?op=infCons"><i class=""></i>Informes Contabilidad</a></li>';}
+            ?>  
+        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C' ){            
+        echo ' 
           </ul>
         </li>
         ';
              }
         ?>
-       
-       
         
-       <?php if ($pf=='A'  OR $pf=='S'){            
+       <?php if ($pf=='K' OR $pf=='A'  OR $pf=='S'){            
         echo '
         <li class="treeview">
           <a href="#">
@@ -207,7 +250,7 @@ if (!isset($_GET['op'])){
         if ($pf=='S'){            
            echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  '; 
         }
-         echo '   if ($pf=="S"){
+         echo 'if ($pf=="S"){
                 <li><a href="mm.php?op=impor"><i class="fa fa-circle-o"></i>Importa Tablas</a></li>
                 <li><a href="mm.php?op=impPag"><i class="fa fa-circle-o"></i><span>Importa Pagos</span></a></li>      
                 <li><a href="mm.php?op=impsal2"><i class="fa fa-circle-o"></i>Importa Saldos</a></li> 
@@ -215,7 +258,7 @@ if (!isset($_GET['op'])){
        }
 
            ?>
-         <?php if ($pf=='A'  OR $pf=='S'){ 
+         <?php if ($pf=='K' OR $pf=='A'  OR $pf=='S'){ 
        echo '   </ul>
         </li>  ';
          }
@@ -300,23 +343,50 @@ if (!isset($_GET['op'])){
   
         <?php
 
+        if ($op ==  'anuRC'){
+            include_once 'views/frm_contaAnulaRcaja.php';
+        }  
+        if ($op ==  'acuPago'){
+            include_once 'views/frm_contaacuerdos.php';
+        } 
         
+        if ($op ==  'actMvto'){
+            include_once 'views/frm_actualizaMvto.php';
+        }
+        if ($op ==  'anticip'){
+            include_once 'views/frm_contapagos.php';
+        }        
         if ($op ==  'clin'){
             include_once 'views/frm_contaclasificacion.php';
+        }
+        
+        if ($op == 'digCpbnt'){
+            include_once 'views/frm_contamovicabeza.php';
+        }
+        if ($op == 'digMvto'){
+            include_once 'views/frm_contadigitamvto.php';
+        }
+        
+        if ($op ==  'empr'){
+            include_once 'views/frm_contaempresas.php';
         }
         
         if ($op ==  'inmu'){
             include_once 'views/frm_containmuebles.php';
         }
-         if ($op ==  'prop'){
-            include_once 'views/frm_contapropietarios.php';
-        }     
-       if ($op ==  'serv'){
-            include_once 'views/frm_contaservicios.php';
+        if ($op ==  'inmServ'){
+            include_once 'views/frm_containmuebleservicios.php';
+        } 
+        if ($op ==  'impor'){
+            include_once 'views/frm_contaimportaXls.php';
         }  
-        if ($op ==  'empr'){
-            include_once 'views/frm_contaempresas.php';
-        }
+        if ($op ==  'impPag'){
+            include_once 'views/frm_contaimportaPagos.php';
+        } 
+        
+        if ($op ==  'impsal2'){
+            include_once 'views/frm_contaimportaSaldos.php';
+        }        
         if ($op ==  'parGen'){
             include_once 'views/frm_contaParamGral.php';
         }
@@ -325,10 +395,17 @@ if (!isset($_GET['op'])){
         }
         if ($op ==  'proInm'){
             include_once 'views/frm_containmueblepropietario.php';
-        }
-        if ($op ==  'inmServ'){
-            include_once 'views/frm_containmuebleservicios.php';
         }        
+        if ($op ==  'prop'){
+            include_once 'views/frm_contapropietarios.php';
+        }     
+       if ($op ==  'serv'){
+            include_once 'views/frm_contaservicios.php';
+        }  
+       
+        if ($op ==  'terc'){
+            include_once 'views/frm_contaterceros.php';
+        }
         if ($op ==  'users'){
             include_once 'views/frm_mm_usuarios.php';
         }
@@ -342,16 +419,7 @@ if (!isset($_GET['op'])){
             include_once 'views/frm_contatmpagos.php';
         }
                
-        if ($op ==  'impor'){
-            include_once 'views/frm_contaimportaXls.php';
-        }  
-        if ($op ==  'impPag'){
-            include_once 'views/frm_contaimportaPagos.php';
-        } 
-        
-        if ($op ==  'impsal2'){
-            include_once 'views/frm_contaimportaSaldos.php';
-        } 
+ 
                 
         if ($op ==  'otrIngr'){
             include_once 'views/frm_containgregastos.php';
@@ -366,26 +434,11 @@ if (!isset($_GET['op'])){
             include_once 'views/frm_contaversion.php';
         }
 
-        if ($op ==  'anuRC'){
-            include_once 'views/frm_contaAnulaRcaja.php';
-        }
         
         if ($op ==  'conta'){
             include_once 'views/frm_contaContabilizacion.php';
         }        
-  
-        if ($op ==  'acuPago'){
-            include_once 'views/frm_contaacuerdos.php';
-        } 
 
-        if ($op ==  'conta'){
-            include_once 'views/frm_contaContabilizacion.php';
-        } 
-
-        if ($op ==  'anticip'){
-            include_once 'views/frm_contapagos.php';
-        }        
-  
         if ($op ==  'rCtaCob'){
             include_once 'views/frm_contaImpCtasCobro.php';
         }
@@ -420,7 +473,10 @@ if (!isset($_GET['op'])){
         if ($op ==  'lst'){
             include_once 'views/frm_contaLlamalista.php';
         }
-//  -------- abajo cambiar todo    gast 
+        if ($op ==  'porep'){
+            include_once 'views/frm_contaPoderPrepresentacion.php';
+        }
+//  -------- // porep puuc   cbnte digMvto revMvto dupComp trSal2 conta cieMes  cieEje ConCons infCons
 
         if ($op ==  'logo'){
             include_once 'views/frm_contaloadLogos.php';
@@ -430,14 +486,22 @@ if (!isset($_GET['op'])){
             include_once 'views/frm_contadocumentacion.php';
         } 
         
+        if ($op ==  'puuc'){
+            include_once 'views/frm_contaplancontable.php';
+        }
  
         if ($op ==  'impo'){
             include_once 'views/frm_contaimportaXls.php';
         }
-
-         if ($op ==  ''){
+        if ($op ==  'xxxx'){
+            include_once 'views/frm_contamovidetalle.php';
+        } 
+        if ($op ==  ''){
             include_once 'views/frm_contanews.php';
-        }      
+        } 
+        
+        
+        
         ?>
       </section>
 

@@ -1,0 +1,22 @@
+Numero Doc; Inmuebleid; Cedula Propietario; Servicio; Periodo; Fecha Factura; Fecha Vence; Saldo; Detalle;Principal
+4; AP101;19295811;Administracion Apartamentos tipo 1;201709;01/09/2017;30/09/2017;110000;Administración Apartamento;S
+4;BOD1;19295811;Admon Bodegas;201709;01/09/2017;30/09/2017;8500;Administracion Bodega;N
+4;G-01;19295811;Admon Garaje sencillo;201709;01/09/2017;30/09/2017;15000;Administración Garage;N
+1; AP101;19295811;Administracion Apartamentos tipo 1;201710;01/10/2017;30/10/2017;110000;Administración Apartamento;S
+1;BOD1;19295811;Admon Bodegas;201710;01/10/2017;30/10/2017;8500;Administracion Bodega;N
+1;G-01;19295811;Admon Garaje sencillo;201710;01/10/2017;30/10/2017;15000;Administración Garage;N
+2; AP101;19295811;Administracion Apartamentos tipo 1;201711;01/11/2017;30/11/2017;110000;Administración Apartamento;S
+2;BOD1;19295811;Admon Bodegas;201711;01/11/2017;30/11/2017;8500;Administracion Bodega;N
+2;G-01;19295811;Admon Garaje sencillo;201711;01/11/2017;30/11/2017;15000;Administración Garage;N
+3; AP101;19295811;Administracion Apartamentos tipo 1;201712;01/12/2017;30/12/2017;110000;Administración Apartamento;S
+3;BOD1;19295811;Admon Bodegas;201712;01/12/2017;30/12/2017;8500;Administracion Bodega;N
+3;G-01;19295811;Admon Garaje sencillo;201712;01/12/2017;30/12/2017;15000;Administración Garage;N
+5; AP202;51615053;Administracion Apartamentos tipo 2;201711;01/11/2017;30/11/2017;110000;Administración Apartamento;S
+5;G-04;51615053;Admon Garaje sencillo;201711;01/11/2017;30/11/2017;15000;Administración Garage;N
+6; AP202;51615053;Administracion Apartamentos tipo 2;201712;01/12/2017;30/12/2017;110000;Administración Apartamento;S
+6;G-04;51615053;Admon Garaje sencillo;201712;01/12/2017;30/12/2017;15000;Administración Garage;N
+9;G-09;62951221;Admon Garaje sencillo;201711;01/11/2017;30/11/2017;15000;Administración Garage;N
+9; AP303;62951221;Administracion Apartamentos tipo 2;201712;01/12/2017;30/12/2017;5200;Administración Apartamento;S
+10; AP402;65667104;Administracion Apartamentos tipo 3;201712;01/12/2017;30/12/2017;117000;Administración Apartamento;S
+10;BOD6;65667104;Admon Bodegas;201712;01/12/2017;30/12/2017;8500;Administracion Bodega;N
+10;G-12;65667104;Admon Garaje Doble;201712;01/12/2017;30/12/2017;25000;Administración Garage;N

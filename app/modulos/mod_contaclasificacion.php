@@ -55,7 +55,16 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar(); 
         $query = "DELETE FROM contaclasificacion WHERE clasificacionId=$data->clasificacionId"; 
-        mysqli_query($con, $query); 
+        $resul= mysqli_query($con, $query); 
+       
+        if ($resul != 0){
+             echo mysqli_errno($con);
+        }else{
+            if(mysqli_errno($con)===1451){
+                echo 'Err. Este registro Tiene información asociada, No se puede borrar';
+                return;
+            }; 
+        }
         echo 'Ok'; 
     }
  

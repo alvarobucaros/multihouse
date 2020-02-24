@@ -91,7 +91,7 @@
                         </div>
                         <div class="col-md-6" ng-show="imprime">
                             <button type="button" value="Imprimir" class="btn btn-custom pull-right btn-xs col-md-4" 
-                            ng-click="imprimeRcaja()" id="inprimir">{{form_btnImpreRc}}</button>
+                            ng-click="imprimeRcaja()" id="inprimir">{{form_btnContinua}}</button>
                         </div>  
                     </div>               
                 </div>

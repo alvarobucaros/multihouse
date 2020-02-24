@@ -8,15 +8,27 @@ $op = mysqli_real_escape_string($con, $data->op);
 
 switch ($op)
 {
-    case 'par':
-        leeParametros($data);
-        break;
+    case 'acuer2':
+        traeacuer2($data);
+        break;     
+    case 'busRc':
+        buscaRcaja($data);
+        break; 
+    case 'cnslta2':
+        consulta2($data);
+        break; 
+    case 'conta':
+        contabilizar($data);
+        break;    
+    case 'expKrt':
+        carteraEnMoraXLS($data);
+        break; 
     case 'fac':
         facturar($data);
         break;
-    case 'leeCaja':
-        leeRCaja($data);
-        break;
+    case 'fchs':
+        fechar($data);
+        break; 
     case 'facRes':
         facturaResumen($data);
         break;    
@@ -26,24 +38,20 @@ switch ($op)
     case 'facSal2':
         traeSaldo($data);
         break;
+    case 'leeCaja':
+        leeRCaja($data);
+        break;
+ 
+    case 'pagaFac':
+        pagaFactura($data);
+        break; 
+    case 'par':
+        leeParametros($data);
+        break;
     case 'saldoFac':
         saldoFacturacion($data);
         break;
-    case 'cnslta2':
-        consulta2($data);
-        break; 
-    case 'expKrt':
-        carteraEnMoraXLS($data);
-        break;     
-    case 'acuer2':
-        traeacuer2($data);
-        break;     
-    case 'busRc':
-        buscaRcaja($data);
-        break; 
-    case 'pagaFac':
-        pagaFactura($data);
-        break;     
+    
     case '0':
         traeListInmuebles($data);
         break;
@@ -52,6 +60,9 @@ switch ($op)
         break;
     
 }
+    function contabilizar($data){
+        
+    }
 
     function leeParametros($data){
        global $objClase;
@@ -98,7 +109,7 @@ switch ($op)
                     $RecargoDias = $row['empresaRecargoDias'];
                     $FactorRedondeo = $row['empresaFactorRedondeo'];
                     $PeriCierreFactura = $row['empresaPeriCierreFactura'];
-                    
+                    $estructura = $row['empresaEstructura'];
                     $query = "SELECT count(*) as nro FROM contafactura where facturaEmpresaid = " . $empresa . 
                             " AND facturaperiodo = '" . $nuevoPeriodo . "' ";  
              
@@ -114,8 +125,9 @@ switch ($op)
                             $nomComprobante = nombreComprobante($empresa, $comprobante);
                              $msg=$periodoFac.'||'.$nuevoPeriodo.'||'.$fecCorte.'||'.$comprobante .'||'.
                                   $nomComprobante.'||'.$descDias.'||'.$consecutivo.'||'.$rowcount .
-                                  '||'. $RecargoPorc .'||'. $RecargoPesos .'||'. $RecargoDias .'||'. 
-                                     $FactorRedondeo .'||'.$PeriCierreFactura.'||' . $conseRC;
+                                    '||'. $RecargoPorc .'||'. $RecargoPesos .'||'. $RecargoDias .'||'. 
+                                     $FactorRedondeo .'||'.$PeriCierreFactura.'||' . $conseRC.
+                                    '||'.$estructura;
                         }             
                     echo $msg;
                     
@@ -563,7 +575,7 @@ switch ($op)
             $condicion ;
           //  $sql = $sql1. ' ' . $sql2. ' ORDER BY inmuebleDepende, ServicioCodigo, inmuebleCodigo ';   
             $result = mysqli_query($con, $sql);  
-            echo $sql;
+//            echo $sql;
     return $result; 
 }        
  
@@ -895,8 +907,6 @@ switch ($op)
         global $objClase;
         $con = $objClase->conectar(); 
         $empresa =  $data->empresa;
-    //    $info = $data->info;
-        
         $resultado="";
         $sql = " SELECT facturaInmuebleid,  inmuebleDescripcion, propietarioNombre , sum(facturasaldo) as saldo ".
                " FROM contafactura  ".
@@ -1082,6 +1092,22 @@ switch ($op)
 //        $sql = "SELECT acuerdoid, acuerdoempresa, acuerdoinmueble, acuerdofecha, acuerdovalor, acuerdoplazo, acuerdodetalle, acuerdopropietario FROM contaacuerdos;";
 //        echo 'Ok';
 //    }
+    function fechar($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa;
+        $sql ="SELECT COALESCE(MIN(ingastoFecha),'') AS f FROM containgregastos ".
+            " WHERE ingastoempresa = " . $empresa . " AND ingastocontabiliza='N' ".
+            " UNION " .
+            " SELECT COALESCE(MAX(ingastoFecha),'') AS f FROM containgregastos ".
+            " WHERE ingastoempresa = " . $empresa . " AND ingastocontabiliza='N'";
+         $resultado = mysqli_query($con, $sql); 
+         $data="";
+         while($row = mysqli_fetch_assoc($resultado)) {
+            $data .=$row['f']."||";
+         }
+         echo $data;
+    }
     
     function recuperaUnInmueble($data){
         global $objClase;

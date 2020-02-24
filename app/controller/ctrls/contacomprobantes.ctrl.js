@@ -1,53 +1,81 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Comprobantes Contables (tipo Movimiento)';
+    $scope.form_title = 'Comprobantes y tipos de movimiento';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
     $scope.form_btnAnula = 'Cerrar';
     $scope.form_btnExcel = 'Exporta Excel';
     $scope.form_btnActualiza = 'Actualizar';
+    $scope.form_btnCta = 'Cta';
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
  
-    $scope.form_compActivo50 = 'Ingresos';
-    $scope.form_compActivo51 = 'Egresos';
-    $scope.form_compActivo52 = 'Comprobante';
+    $scope.form_compTipo30 = 'Comprobante';
+    $scope.form_compTipo31 = 'Operaciones';
+    $scope.form_compActivo130 = 'Activo';
+    $scope.form_compActivo131 = 'Inactivo';
 
     $scope.form_compId = 'ID';
     $scope.form_compEmpresaId = 'EMPRESA';
     $scope.form_compCodigo = 'CODIGO';
+    $scope.form_compTipo = 'TIPO';
     $scope.form_compNombre = 'NOMBRE';
-    $scope.form_compConsecutivo = 'SECUENCIA';
-    $scope.form_compActivo = 'TIPO';
     $scope.form_compDetalle = 'DETALLE';
-
+    $scope.form_compConsecutivo = 'SECUENCIA';
+    $scope.form_compctadb0 = 'CUENTA DB';
+    $scope.form_compctadb1 = 'CUENTA DB';
+    $scope.form_compctadb2 = 'CUENTA DB';
+    $scope.form_compctacr0 = 'CUENTA CR';
+    $scope.form_compctacr1 = 'CUENTA CR';
+    $scope.form_compctacr2 = 'CUENTA CR';
+    $scope.form_compActivo = 'ACTIVO';
+    $scope.form_moviConCuenta = "CUAL CUENTA ?"
     $scope.form_PhcompId = 'Digite id';
     $scope.form_PhcompEmpresaId = 'Digite empresa';
     $scope.form_PhcompCodigo = 'Digite codigo';
+    $scope.form_PhcompTipo = 'Digite tipo';
     $scope.form_PhcompNombre = 'Digite nombre';
-    $scope.form_PhcompConsecutivo = 'Digite secuencia';
-    $scope.form_PhcompActivo = 'Digite activo';
     $scope.form_PhcompDetalle = 'Digite detalle';
+    $scope.form_PhcompConsecutivo = 'Digite secuencia';
+    $scope.form_Phcompctadb0 = 'Digite ctadb0';
+    $scope.form_Phcompctadb1 = 'Digite ctadb1';
+    $scope.form_Phcompctadb2 = 'Digite ctadb2';
+    $scope.form_Phcompctacr0 = 'Digite ctacr0';
+    $scope.form_Phcompctacr1 = 'Digite ctacr1';
+    $scope.form_Phcompctacr2 = 'Digite ctacr2';
+    $scope.form_PhcompActivo = 'Digite activo';
    
      $scope.currentPage = 0;
      $scope.pageSize = 10;
      $scope.pages = [];
      $scope.registro = [];
      $scope.empresa = $('#e').val();
+     $scope.movto=false;
+     $scope.cualCta=false;
+     
     var defaultForm= {
    
         compId:0,
         compEmpresaId:$scope.empresa,
         compCodigo:'',
+        compTipo:'C',
         compNombre:'',
+        compDetalle:'',
         compConsecutivo:0,
-        compActivo:'',
-        compDetalle:''
+        compctadb0:'',
+        compctadb1:'',
+        compctadb2:'',
+        compctacr0:'',
+        compctacr1:'',
+        compctacr2:'',
+        compActivo:'A'
    };
     
     
     getInfo($scope.empresa);
+    
+    getCombos($scope.empresa);
     
     function getInfo(empresa){
         $http.post('modulos/mod_contacomprobantes.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
@@ -56,9 +84,53 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         });       
     }
 
-    function getCombos(){
-} 
+    function getCombos(empresa){
+        $http.post('modulos/mod_contamovicabeza.php?op=2',{'op':'2','empresa':empresa}).success(function(data){
+        $scope.operators0 = data;
+        });
+        $http.post('modulos/mod_contamovicabeza.php?op=2',{'op':'2','empresa':empresa}).success(function(data){
+        $scope.operators2 = data;
+        });
+    }
+    
+    $scope.abreCta = function(cta){
+        $scope.buscaCta = cta
+        $scope.cualCta=true;
+    };
  
+    $scope.buscaCuenta = function(){
+        i=$scope.buscaCta;
+        resultado = $scope.operators2.find(plan => plan.pucCuenta === $scope.CuentaCtble);
+    //    alert($scope.buscaCta+' '+resultado.pucCuenta);
+        switch (i) {
+            case 1:
+                $scope.registro.compctadb0 = resultado.pucCuenta;
+                $scope.nomCuentadb0 = resultado.pucNombre;
+                break;
+            case 2:
+                $scope.registro.compctadb1 = resultado.pucCuenta;
+                $scope.nomCuentadb1 = resultado.pucNombre;
+                break;
+            case 3:
+                $scope.registro.compctadb2 = resultado.pucCuenta;
+                $scope.nomCuentadb2 = resultado.pucNombre;
+                break;
+            case 4:
+                $scope.registro.compctacr0 = resultado.pucCuenta;
+                $scope.nomCuentacr0 = resultado.pucNombre;
+                break; 
+            case 5:
+                $scope.registro.compctacr1 = resultado.pucCuenta;
+                $scope.nomCuentacr1 = resultado.pucNombre;
+                break;  
+            case 6:
+                $scope.registro.compctacr2 = resultado.pucCuenta;
+                $scope.nomCuentacr2 = resultado.pucNombre;
+                break;                 
+        }
+        $scope.cualCta=false;
+    };
+    
     $scope.configPages = function() {
         $scope.pages.length = 0;
         var ini = $scope.currentPage - 4;
@@ -89,7 +161,14 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.currentPage = index - 1;
     };
 
- 
+    $scope.cambiaTipo = function(){
+        if($scope.registro.compTipo==='O'){
+            $scope.movto=true;
+        }else{
+            $scope.movto=false;
+        };
+    }
+    
 // Function to add toggle behaviour to form
 $scope.formToggle =function(){
 $('#idForm').slideToggle();
@@ -112,7 +191,21 @@ $('#idForm').slideToggle();
     {  
         $scope.registro =  info;  
         $('#idForm').slideToggle();
-
+        $scope.movto=false;
+        empresa = $('#e').val();
+        if(info.compTipo==='O'){
+            $scope.movto=true;
+            dato=info.compctadb0+'||'+info.compctadb1+'||'+info.compctadb2+'||'+info.compctacr0+'||'+info.compctacr1+'||'+info.compctacr2+' ';
+            $http.post('modulos/mod_contacomprobantes.php?op=tc',{'op':'tc', 'empresa':empresa,'dato':dato}).success(function(data){
+            $rec=data.split('||'); 
+            $scope.nomCuentadb0 = $rec[0];  
+            $scope.nomCuentadb1 = $rec[1];
+            $scope.nomCuentadb2 = $rec[2];
+            $scope.nomCuentacr0 = $rec[3];
+            $scope.nomCuentacr1 = $rec[4];
+            $scope.nomCuentacr2 = $rec[5];
+            });            
+        }
     };
 
 $scope.exporta = function(){
@@ -146,12 +239,21 @@ $scope.exporta = function(){
         if($('#compId').val()===''){er+='falta id\n';}
         if($('#compEmpresaId').val()===''){er+='falta empresa\n';}
         if($('#compCodigo').val()===''){er+='falta codigo\n';}
+        if($('#compTipo').val()===''){er+='falta tipo\n';}
         if($('#compNombre').val()===''){er+='falta nombre\n';}
-        if($('#compConsecutivo').val()===''){er+='falta secuencia\n';}
-        if($('#compActivo').val()===''){er+='falta activo\n';}
         if($('#compDetalle').val()===''){er+='falta detalle\n';}
+        if($('#compConsecutivo').val()===''){er+='falta secuencia\n';}
+        if($('#compTipo').val()==='O'){
+            if($('#compctadb0').val()===''){er+='falta ctadb0\n';}
+            if($('#compctadb1').val()===''){er+='falta ctadb1\n';}
+            if($('#compctadb2').val()===''){er+='falta ctadb2\n';}
+            if($('#compctacr0').val()===''){er+='falta ctacr0\n';}
+            if($('#compctacr1').val()===''){er+='falta ctacr1\n';}
+            if($('#compctacr2').val()===''){er+='falta ctacr2\n';}
+       }
+        if($('#compActivo').val()===''){er+='falta activo\n';}
         if (er==''){
-        $http.post('modulos/mod_contacomprobantes.php?op=a',{'op':'a', 'compId':info.compId, 'compEmpresaId':info.compEmpresaId, 'compCodigo':info.compCodigo, 'compNombre':info.compNombre, 'compConsecutivo':info.compConsecutivo, 'compActivo':info.compActivo, 'compDetalle':info.compDetalle}).success(function(data){
+        $http.post('modulos/mod_contacomprobantes.php?op=a',{'op':'a', 'compId':info.compId, 'compEmpresaId':info.compEmpresaId, 'compCodigo':info.compCodigo, 'compTipo':info.compTipo, 'compNombre':info.compNombre, 'compDetalle':info.compDetalle, 'compConsecutivo':info.compConsecutivo, 'compctadb0':info.compctadb0, 'compctadb1':info.compctadb1, 'compctadb2':info.compctadb2, 'compctacr0':info.compctacr0, 'compctacr1':info.compctacr1, 'compctacr2':info.compctacr2, 'compActivo':info.compActivo}).success(function(data){
         if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');
@@ -177,4 +279,4 @@ $scope.exporta = function(){
          };
      });  
 	 
-// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Sep 09, 2019 10:33:12   <<<<<<< 
+// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Feb 10, 2020 8:53:04   <<<<<<< 
