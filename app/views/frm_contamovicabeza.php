@@ -48,7 +48,7 @@
                     <div class="col-md-6">
                     <select id='movicaComprId' name='movicaComprId' ng-model='registro.movicaComprId' 
                             ng-change="buscaCompro(registro)">
-                     <option ng-repeat='operator0 in operators0' value = " {{operator0.compId}}">{{operator0.compNombre}}</option>
+                     <option ng-repeat='operator0 in operators0' value = " {{operator0.compCodigo}}">{{operator0.compNombre}}</option>
                     </select>
                     </div>
                 </div> 
@@ -307,7 +307,17 @@
                     </select>
                     </div>
                 </div> 
-<div  style='display: none'>
+                <div  style='display: none'> 
+                <div class="form-group">
+                    <label class="milabel col-md-3" for="moviConId">{{form_moviConId}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="moviConId" name="moviConId"
+                         ng-model="registroMov.moviConId"  value="{{registroMov.moviConId}}" />
+                    </div>
+                    <div>
+                        <input type="text"  id="controlMov" ng-model="controlMov" value="C" />
+                    </div> 
+                </div> 
                 <div class="form-group">
                     <label class="milabel col-md-3" for="moviDocum1">{{form_moviDocum1}}</label>
                    <div class="col-md-6">
@@ -329,7 +339,7 @@
                         ng-model="registroMov.moviTipoCta" 
                         value="{{registroMov.moviTipoCta}}" />
                 </div> 
-</div>
+            </div>
                 <div class="form-group">
                     <div class="col-md-5">
                         <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 
@@ -344,36 +354,36 @@
             </form>
 	</div>
 	<div class="clearfix"></div>
-        <div class="col-md-10">
+        <div class="col-md-12">
             <!-- Table to show employee detalis -->
             <div class="table-responsive">
                 <div class="form-group"> 
-                <label class="milabel col-md-2" for="vrlDeb">{{form_vrlDeb}}</label>
-                <div class="col-md-2">
-                    <input type="text" class="form-control mitexto" id="vrlDeb" name="vrlDeb"
-                         ng-model="vrlDeb" value="vrlDeb" />
-                </div>
-                <label class="milabel col-md-2" for="vrlCre">{{form_vrlCre}}</label>
-                        <div class="col-md-2">
-                    <input type="text" class="form-control mitexto" id="vrlCre" name="vrlCre"
-                         ng-model="vrlCre" value="vrlCre" />
-                </div>
-                <label class="milabel col-md-2" for="vrlTot">{{form_vrlTot}}</label>
-                        <div class="col-md-2">
-                    <input type="text" class="form-control mitexto" id="vrlTot" name="vrlTot"
-                         ng-model="vrlTot" value="vrlTot" />
-                </div>
+                    <label class="milabel col-md-2" for="vrlDeb">{{form_vrlDeb}}</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control mitexto" id="vrlDeb" name="vrlDeb"
+                             ng-model="vrlDeb" value="vrlDeb" />
+                    </div>
+                    <label class="milabel col-md-2" for="vrlCre">{{form_vrlCre}}</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control mitexto" id="vrlCre" name="vrlCre"
+                             ng-model="vrlCre" value="vrlCre" />
+                    </div>
+                    <label class="milabel col-md-2" for="vrlTot">{{form_vrlTot}}</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control mitexto" id="vrlTot" name="vrlTot"
+                             ng-model="vrlTot" value="vrlTot" />
+                    </div>
                 </div>
                 <table class="table table-hover tablex" id="tabMvto">
                     <tr>
                         <!--th>ID</th>
                         <th>CABEZA</th-->
-                        
                         <th>CUENTA</th>
+                        <th>NOM CTA</th>
                         <th>DEBITO</th>
                         <th>CREDITO</th>
                         <th>DETALLE</th>
-                        <th>BASE</th>
+                        <!--th>BASE</th-->
                         <th>TIPO IMP</th>
                         <th>IMPUESTO %</th>
                         <th>IMPUESTO VALOR</th>
@@ -387,10 +397,11 @@
                     <!--td>{{detailMv.moviConId}}</td>
                     <td>{{detailMv.moviConCabezaId}}</td-->                   
                     <td>{{detailMv.moviConCuenta}}</td>
+                    <td>{{detailMv.pucNombre}}</td>
                     <td>{{detailMv.moviConDebito}}</td>
                     <td>{{detailMv.moviConCredito}}</td>
                     <td>{{detailMv.moviConDetalle}}</td>
-                    <td>{{detailMv.moviConBase}}</td>
+                    <!--td>{{detailMv.moviConBase}}</td-->
                     <td>{{detailMv.moviConImpTipo}}</td>
                     <td>{{detailMv.moviConImpPorc}}</td>
                     <td>{{detailMv.moviConImpValor}}</td>

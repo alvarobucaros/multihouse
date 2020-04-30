@@ -1,14 +1,14 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Instala MultiHouse';
+    $scope.form_title = 'Instala MultiHouse / MultiAccount';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnAnula = 'Cerrar';
     $scope.form_btnActualiza = 'Actualizar';
     $scope.form_Phbusca = 'Consulta';
  
-    $scope.form_estado50 = 'Contribuyó ahora';
-    $scope.form_estado51 = 'Lo haré mas tarde';
+    $scope.form_estado50 = 'LOCAL';
+    $scope.form_estado51 = 'WEB';
 
     $scope.form_id = 'ID';
     $scope.form_servidor = 'SERVIDOR'
@@ -30,7 +30,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.pages = [];
     $scope.registro = [];
     $scope.registro.estado=0;
-    $scope.registro.basedatos='mmeeting';
+    $scope.registro.basedatos='atominge_ncr';
     $scope.registro.id=0;
     $scope.registro.password='admin123';
     $scope.registro.servidor='localhost';
@@ -73,8 +73,7 @@ $('#idForm').slideToggle();
 
 
     $scope.updateInfo =function(info)
-    {
-        
+    {        
     er='';
      $('#id').val(0);
      $scope.registro.id=0;
@@ -82,22 +81,16 @@ $('#idForm').slideToggle();
         if($('#servidor').val()===''){er+='falta servidor\n';}
         if($('#basedatos').val()===''){er+='falta basedatos\n';}
         if($('#usuario').val()===''){er+='falta usuario\n';}
-     //   if($('#password').val()===''){er+='falta password\n';}
+        if(info.estado === 0){er+='falta estado\n';}
         if($('#estado').val()===''){er+='falta estado\n';}
-        if (er==''){
+        if (er===''){
             $scope.procesa = true;
- //   Estaslineas las dejo pendientes mientras arreglo como crear la BD directamente           
- //           $http.post('app/modulos/mod_mm_instala.php?op=a',{'op':'a', 'id':info.id, 
- //               'servidor':info.servidor, 'basedatos':info.basedatos, 'usuario':info.usuario, 
- //               'password':info.password, 'estado':info.estado}).success(function(data){
- //           $('#nota').html(data);
-            $http.post('app/modulos/mod_mm_instala.php?op=a2',{'op':'a2', 'id':info.id, 
-                'servidor':info.servidor, 'basedatos':info.basedatos, 'usuario':info.usuario, 
-                'password':info.password, 'estado':info.estado}).success(function(data){
-                alet(data);
-            $('#nota').html(data);            
+            dato = info.servidor +'~'+info.basedatos +'~'+info.usuario +'~'+
+                   info.password +'~'+info.estado ;
+            $http.post('app/modulos/mod_mm_instala.php?op=a2',{'op':'a2',  'dato':dato}).success(function(data){
+            $('#nota').html(data);
+            $scope.procesa = false;
         });
-        $scope.procesa = false;
    }else{alert (er);}  
     };
     

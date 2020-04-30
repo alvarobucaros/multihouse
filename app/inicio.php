@@ -4,7 +4,7 @@
 ?> 
     <div id='content'>
  <?php
-    $op='ini';
+ //   $op='ini';
     $clasesConn="classes/conexion.class.php";
  
     include_once ($clasesConn);

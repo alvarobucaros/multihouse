@@ -32,8 +32,24 @@ switch ($op)
         $con = $objClase->conectar();
         $empresa = $data->empresa;
         { 
-            $query = "SELECT  empresaId, empresaClave, empresaNombre, empresaNit, empresaDigito, empresaDireccion, empresaCiudad, empresaTelefonos, empresaFchCreacion, empresaFchModificacion, empresaFchVigencia, empresaPeriodoActual, empresaTwiter, empresaFacebook, empresaWeb, empresaEmail, empresaActiva, empresaPuertoCorreo, empresaRepresentante, empresaIdentifRepresentante, empresaContador, empresaMatriculaContador, empresaIdentifContador, empresaRevisor, empresaMatriculaRevisor, empresaIdentifRevisor, empresaAnoFiscal, empresaEstructura, empresaAdministrador, empresaAdministradorCed, empresaSecretaria, empresaSecretariaCedula, empresaMensaje1, empresaMensaje2, empresaPeriodoFactura, empresaPeriCierreFactura, empresaCompFra, empresaCompRcaja, empresaCompAjustes, empresaCompEgreso, empresaCompCierreMes, empresaCompApertura, empresaCuentaCierre, empresaCuentaCaja, empresaRecargoPorc, empresaRecargoPesos, empresaRecargoDias, empresaDescPorc, empresaDescPesos, empresaDescDias, empresaPagosParciales, empresaPeriodosAnuales, empresaFactorRedondeo, empresaConsecRcaja, empresaConsecFactura, empresaIdioma, empresaNroInmuebles, empresaLogo, empresaccosto, empresaservicios, empresafacturaNota, empresafacturaresDIAN, empresafacturaNumeracion, empresafacturanotaiva, empresafacturanotaica, empresafacturactacxc, empresafacturactaivta, empresafacturactaica, empresafacturactaiva, empresaRegimen, empresaporcentajeiva" 
-                    . " FROM contaempresas WHERE empresaId = " . $empresa .
+            $query = "SELECT  empresaId, empresaClave, empresaNombre, empresaNit, empresaDigito, empresaDireccion, " .
+                    " empresaCiudad, empresaTelefonos, empresaFchCreacion, empresaFchModificacion, empresaFchVigencia,  " .
+                    " empresaPeriodoActual, empresaTwiter, empresaFacebook, empresaWeb, empresaEmail, empresaActiva,  " .
+                    " empresaPuertoCorreo, empresaRepresentante, empresaIdentifRepresentante, empresaContador,  " .
+                    " empresaMatriculaContador, empresaIdentifContador, empresaRevisor, empresaMatriculaRevisor,  " .
+                    " empresaIdentifRevisor, empresaAnoFiscal, empresaEstructura, empresaAdministrador,  " .
+                    " empresaAdministradorCed, empresaSecretaria, empresaSecretariaCedula, empresaMensaje1,  " .
+                    " empresaMensaje2, empresaPeriodoFactura, empresaPeriCierreFactura, empresaCompFra,  " .
+                    " empresaCompRcaja, empresaCompAjustes, empresaCompEgreso, empresaCompCierreMes,  " .
+                    " empresaCompApertura, empresaCuentaCierre, empresaCuentaCaja, empresaRecargoPorc,  " .
+                    " empresaRecargoPesos, empresaRecargoDias, empresaDescPorc, empresaDescPesos, empresaDescDias,  " .
+                    " empresaPagosParciales, empresaPeriodosAnuales, empresaFactorRedondeo, empresaConsecRcaja,  " .
+                    " empresaConsecFactura, empresaIdioma, empresaNroInmuebles, empresaLogo, empresaccosto,  " .
+                    " empresaservicios, empresafacturaNota, empresafacturaresDIAN, empresafacturaNumeracion,  " .
+                    " empresafacturanotaiva, empresafacturanotaica, empresafacturactacxc, empresafacturactaivta,  " .
+                    " empresafacturactaica, empresafacturactaiva, empresaRegimen, empresaporcentajeiva, empresatercero," .
+                    " empresaProformaCon, empresaProformaFac,  empresaProformaLimSup, empresaProformaLimInf " .
+                    " FROM contaempresas WHERE empresaId = " . $empresa .
                     " ORDER BY empresaNombre ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
@@ -55,7 +71,9 @@ switch ($op)
  $rec['empresaConsecFactura'].'||'.$rec['empresaIdioma'].'||'.$rec['empresaNroInmuebles'].'||'.$rec['empresaLogo'].'||'.$rec['empresaccosto'].'||'.
  $rec['empresaservicios'].'||'.$rec['empresafacturaNota'].'||'.$rec['empresafacturaresDIAN'].'||'.$rec['empresafacturaNumeracion'].'||'.
  $rec['empresafacturanotaiva'].'||'.$rec['empresafacturanotaica'].'||'.$rec['empresafacturactacxc'].'||'.$rec['empresafacturactaivta'].'||'.
- $rec['empresafacturactaica'].'||'.$rec['empresafacturactaiva'].'||'.$rec['empresaRegimen'].'||'.$rec['empresaporcentajeiva'];
+ $rec['empresafacturactaica'].'||'.$rec['empresafacturactaiva'].'||'.$rec['empresaRegimen'].'||'.
+ $rec['empresaporcentajeiva'].'||'.$rec['empresatercero'].'||'.$rec['empresaProformaCon'].'||'.$rec['empresaProformaFac'].'||'.
+ $rec['empresaProformaLimSup'].'||'.$rec['empresaProformaLimInf'];   
                     } 
                 } 
             echo $ret; 
@@ -147,7 +165,11 @@ switch ($op)
         $empresafacturactaiva =  $data->empresafacturactaiva; 
         $empresaRegimen =  $data->empresaRegimen; 
         $empresaporcentajeiva =  $data->empresaporcentajeiva; 
-   
+        $empresatercero = $data->empresatercero;
+        $empresaProformaCon  = $data->empresaProformaCon;
+        $empresaProformaFac  = $data->empresaProformaFac;
+        $empresaProformaLimSup  = $data->empresaProformaLimSup;
+        $empresaProformaLimInf  = $data->empresaProformaLimInf;
         if($empresaId  == 0) 
         { 
            $query = "INSERT INTO contaempresas(empresaClave, empresaNombre, empresaNit, empresaDigito, empresaDireccion,"
@@ -165,9 +187,32 @@ switch ($op)
                    . " empresaIdioma, empresaNroInmuebles, empresaLogo, empresaccosto, empresaservicios, "
                    . " empresafacturaNota, empresafacturaresDIAN, empresafacturaNumeracion, empresafacturanotaiva, "
                    . " empresafacturanotaica, empresafacturactacxc, empresafacturactaivta, empresafacturactaica, "
-                   . " empresafacturactaiva, empresaRegimen, empresaporcentajeiva)";
-           $query .= "  VALUES ('" . $empresaClave."', '".$empresaNombre."', '".$empresaNit."', '".$empresaDigito."', '".$empresaDireccion."', '".$empresaCiudad."', '".$empresaTelefonos."', '".$empresaFchCreacion."', '".$empresaFchModificacion."', '".$empresaFchVigencia."', '".$empresaPeriodoActual."', '".$empresaTwiter."', '".$empresaFacebook."', '".$empresaWeb."', '".$empresaEmail."', '".$empresaActiva."', '".$empresaPuertoCorreo."', '".$empresaRepresentante."', '".$empresaIdentifRepresentante."', '".$empresaContador."', '".$empresaMatriculaContador."', '".$empresaIdentifContador."', '".$empresaRevisor."', '".$empresaMatriculaRevisor."', '".$empresaIdentifRevisor."', '".$empresaAnoFiscal."', '".$empresaEstructura."', '".$empresaAdministrador."', '".$empresaAdministradorCed."', '".$empresaSecretaria."', '".$empresaSecretariaCedula."', '".$empresaMensaje1."', '".$empresaMensaje2."', '".$empresaPeriodoFactura."', '".$empresaPeriCierreFactura."', '".$empresaCompFra."', '".$empresaCompRcaja."', '".$empresaCompAjustes."', '".$empresaCompEgreso."', '".$empresaCompCierreMes."', '".$empresaCompApertura."', '".$empresaCuentaCierre."', '".$empresaCuentaCaja."', '".$empresaRecargoPorc."', '".$empresaRecargoPesos."', '".$empresaRecargoDias."', '".$empresaDescPorc."', '".$empresaDescPesos."', '".$empresaDescDias."', '".$empresaPagosParciales."', '".$empresaPeriodosAnuales."', '".$empresaFactorRedondeo."', '".$empresaConsecRcaja."', '".$empresaConsecFactura."', '".$empresaIdioma."', '".$empresaNroInmuebles."', '".$empresaLogo."', '".$empresaccosto."', '".$empresaservicios."', '".$empresafacturaNota."', '".$empresafacturaresDIAN."', '".$empresafacturaNumeracion."', '".$empresafacturanotaiva."', '".$empresafacturanotaica."', '".$empresafacturactacxc."', '".$empresafacturactaivta."', '".$empresafacturactaica."', '".$empresafacturactaiva."', '".$empresaRegimen."', '".$empresaporcentajeiva."')";  
-            mysqli_query($con, $query);
+                   . " empresafacturactaiva, empresaRegimen, empresaporcentajeiva, empresaProformaCon, "
+                   . " empresaProformaFac, empresatercero)";
+           $query .= "  VALUES ('" . $empresaClave."', '".$empresaNombre."', '".$empresaNit."', '".$empresaDigito."', '".
+                   $empresaDireccion."', '".$empresaCiudad."', '".$empresaTelefonos."', '".$empresaFchCreacion."', '".
+                   $empresaFchModificacion."', '".$empresaFchVigencia."', '".$empresaPeriodoActual."', '".
+                   $empresaTwiter."', '".$empresaFacebook."', '".$empresaWeb."', '".$empresaEmail."', '".
+                   $empresaActiva."', '".$empresaPuertoCorreo."', '".$empresaRepresentante."', '".
+                   $empresaIdentifRepresentante."', '".$empresaContador."', '".$empresaMatriculaContador."', '".
+                   $empresaIdentifContador."', '".$empresaRevisor."', '".$empresaMatriculaRevisor."', '".
+                   $empresaIdentifRevisor."', '".$empresaAnoFiscal."', '".$empresaEstructura."', '".
+                   $empresaAdministrador."', '".$empresaAdministradorCed."', '".$empresaSecretaria."', '".
+                   $empresaSecretariaCedula."', '".$empresaMensaje1."', '".$empresaMensaje2."', '".
+                   $empresaPeriodoFactura."', '".$empresaPeriCierreFactura."', '".$empresaCompFra."', '".
+                   $empresaCompRcaja."', '".$empresaCompAjustes."', '".$empresaCompEgreso."', '".
+                   $empresaCompCierreMes."', '".$empresaCompApertura."', '".$empresaCuentaCierre."', '".
+                   $empresaCuentaCaja."', '".$empresaRecargoPorc."', '".$empresaRecargoPesos."', '".
+                   $empresaRecargoDias."', '".$empresaDescPorc."', '".$empresaDescPesos."', '".$empresaDescDias."', '".
+                   $empresaPagosParciales."', '".$empresaPeriodosAnuales."', '".$empresaFactorRedondeo."', '".
+                   $empresaConsecRcaja."', '".$empresaConsecFactura."', '".$empresaIdioma."', '".
+                   $empresaNroInmuebles."', '".$empresaLogo."', '".$empresaccosto."', '".$empresaservicios."', '".
+                   $empresafacturaNota."', '".$empresafacturaresDIAN."', '".$empresafacturaNumeracion."', '".
+                   $empresafacturanotaiva."', '".$empresafacturanotaica."', '".$empresafacturactacxc."', '".
+                   $empresafacturactaivta."', '".$empresafacturactaica."', '".$empresafacturactaiva."', '".
+                   $empresaRegimen."', '".$empresaporcentajeiva."', '" .$empresaProformaCon ."', '". 
+                   $empresaProformaFac."', '".$empresatercero."')";   
+            mysqli_query($con, $query);     
             echo 'Ok';
         } 
         else 
@@ -218,24 +263,28 @@ switch ($op)
                     . "empresafacturactacxc = '".$empresafacturactacxc."', "
                     . "empresafacturactaivta = '".$empresafacturactaivta."', "
                     . "empresafacturactaica = '".$empresafacturactaica."', "
+                    . "empresatercero = '".$empresatercero."', "
                     . "empresafacturactaiva = '".$empresafacturactaiva."', empresaRegimen = '".$empresaRegimen."', "
                     . "empresaporcentajeiva = '".$empresaporcentajeiva."' WHERE empresaId = ".$empresaId;
+        
             mysqli_query($con, $query); 
              $query = "UPDATE contaempresas  SET ".
-                     " empresa_nombre = '".$empresaNombre. "', ".
-                     " empresa_nit = '" . $empresaNit . "', ".
-                     " empresa_web = '" . $empresaWeb. "', ".
-                     " empresa_direccion = '" . $empresaDireccion. "', ".
-                     " empresa_telefonos = '" . $empresaTelefonos . "', ".
-                     " empresa_ciudad = '" . $empresaCiudad . "', ".
-                     " empresa_lenguaje = '" . $empresaIdioma . "', ".
-                     " empresa_logo = '" . $empresaLogo . "', ".
-  
-                     " empresa_clave = '" . $empresaClave. "', ".
-                     " empresa_email = '" . $empresaEmail."', ".
-            
-                     " FROM mm_empresa WHERE  empresa_id = " .$empresaId;
-             mysqli_query($con, $query);          
+                     " empresaNombre = '".$empresaNombre. "', ".
+                     " empresaNit = '" . $empresaNit . "', ".
+                     " empresaWeb = '" . $empresaWeb. "', ".
+                     " empresaDireccion = '" . $empresaDireccion. "', ".
+                     " empresaTelefonos = '" . $empresaTelefonos . "', ".
+                     " empresaCiudad = '" . $empresaCiudad . "', ".
+                     " empresaIdioma = '" . $empresaIdioma . "', ".
+                     " empresaLogo = '" . $empresaLogo . "', ".  
+                     " empresaClave = '" . $empresaClave. "', ".
+                     " empresaEmail = '" . $empresaEmail."', ".
+                     " empresaProformaCon = '" . $empresaProformaCon ."', ".
+                     " empresaProformaFac = '". $empresaProformaFac. "', ".                     
+                     " empresaProformaLimSup = '". $empresaProformaLimSup  ."', ".
+                     " empresaProformaLimInf = '". $empresaProformaLimInf  ."' ".                  
+                     " WHERE  empresaId = " .$empresaId;
+             mysqli_query($con, $query);  
             echo 'Ok';
         } 
  
@@ -262,7 +311,23 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar();	 
         $empresaId = $data->empresaId;      
-        $query = "SELECT  empresaId, empresaClave, empresaNombre, empresaNit, empresaDigito, empresaDireccion, empresaCiudad, empresaTelefonos, empresaFchCreacion, empresaFchModificacion, empresaFchVigencia, empresaPeriodoActual, empresaTwiter, empresaFacebook, empresaWeb, empresaEmail, empresaActiva, empresaPuertoCorreo, empresaRepresentante, empresaIdentifRepresentante, empresaContador, empresaMatriculaContador, empresaIdentifContador, empresaRevisor, empresaMatriculaRevisor, empresaIdentifRevisor, empresaAnoFiscal, empresaEstructura, empresaAdministrador, empresaAdministradorCed, empresaSecretaria, empresaSecretariaCedula, empresaMensaje1, empresaMensaje2, empresaPeriodoFactura, empresaPeriCierreFactura, empresaCompFra, empresaCompRcaja, empresaCompAjustes, empresaCompEgreso, empresaCompCierreMes, empresaCompApertura, empresaCuentaCierre, empresaCuentaCaja, empresaRecargoPorc, empresaRecargoPesos, empresaRecargoDias, empresaDescPorc, empresaDescPesos, empresaDescDias, empresaPagosParciales, empresaPeriodosAnuales, empresaFactorRedondeo, empresaConsecRcaja, empresaConsecFactura, empresaIdioma, empresaNroInmuebles, empresaLogo, empresaccosto, empresaservicios, empresafacturaNota, empresafacturaresDIAN, empresafacturaNumeracion, empresafacturanotaiva, empresafacturanotaica, empresafacturactacxc, empresafacturactaivta, empresafacturactaica, empresafacturactaiva, empresaRegimen, empresaporcentajeiva  " . 
+        $query = "SELECT  empresaId, empresaClave, empresaNombre, empresaNit, empresaDigito, empresaDireccion, "
+                . "empresaCiudad, empresaTelefonos, empresaFchCreacion, empresaFchModificacion, empresaFchVigencia, "
+                . "empresaPeriodoActual, empresaTwiter, empresaFacebook, empresaWeb, empresaEmail, empresaActiva, "
+                . "empresaPuertoCorreo, empresaRepresentante, empresaIdentifRepresentante, empresaContador, "
+                . "empresaMatriculaContador, empresaIdentifContador, empresaRevisor, empresaMatriculaRevisor, "
+                . "empresaIdentifRevisor, empresaAnoFiscal, empresaEstructura, empresaAdministrador, "
+                . "empresaAdministradorCed, empresaSecretaria, empresaSecretariaCedula, empresaMensaje1, "
+                . "empresaMensaje2, empresaPeriodoFactura, empresaPeriCierreFactura, empresaCompFra, empresaCompRcaja, "
+                . "empresaCompAjustes, empresaCompEgreso, empresaCompCierreMes, empresaCompApertura, "
+                . "empresaCuentaCierre, empresaCuentaCaja, empresaRecargoPorc, empresaRecargoPesos, "
+                . "empresaRecargoDias, empresaDescPorc, empresaDescPesos, empresaDescDias, empresaPagosParciales, "
+                . "empresaPeriodosAnuales, empresaFactorRedondeo, empresaConsecRcaja, empresaConsecFactura, "
+                . "empresaIdioma, empresaNroInmuebles, empresaLogo, empresaccosto, empresaservicios, "
+                . "empresafacturaNota, empresafacturaresDIAN, empresafacturaNumeracion, empresafacturanotaiva, "
+                . "empresafacturanotaica, empresafacturactacxc, empresafacturactaivta, empresafacturactaica, "
+                . "empresafacturactaiva, empresaRegimen, empresaporcentajeiva, empresaProformaCon, "
+                . " empresaProformaFac, empresatercero  " . 
                     " FROM contaempresas  WHERE empresaId = " . $empresaId  . 
                     " ORDER BY empresaNombre "; 
         $result = mysqli_query($con, $query); 

@@ -46,8 +46,8 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  '. $cta;
         $titulo="CUENTA DE COBRO";
-        $this->Image($logo,$der+5,14,20,10);
-        $this->Image($logo,$izq+5,14,20,10);
+//        $this->Image($logo,$der+5,14,20,10);
+//        $this->Image($logo,$izq+5,14,20,10);
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);
@@ -183,7 +183,7 @@ require_once ('fpdf.php');
                         $pdf->SetXY($desplaza+7,$y);
                         $pdf->Cell(60,4, 'Intereses saldos en mora',0, 0 , 'L' );
                         $pdf->SetXY($desplaza+115,$y);
-                        $pdf->Cell(20,4,number_format($SaldoMora, 2, '.', ','),0,0,R);
+                        $pdf->Cell(20,4,number_format($SaldoMora, 2, '.', ','),0,0,'R');
                         $saldo += $SaldoMora; 
                     }
                     if($descuentos>0){
@@ -191,7 +191,7 @@ require_once ('fpdf.php');
                         $pdf->SetXY($desplaza+7,$y);
                         $pdf->Cell(60,4, 'Descuento PP aplicado',0, 0 , 'L' );
                         $pdf->SetXY($desplaza+115,$y);
-                        $pdf->Cell(20,4,number_format($descuentos, 2, '.', ','),0,0,R); 
+                        $pdf->Cell(20,4,number_format($descuentos, 2, '.', ','),0,0,'R'); 
                         $saldo -= $descuentos;
                     }
                     $y +=4;
@@ -201,7 +201,7 @@ require_once ('fpdf.php');
                     $pdf->SetFont('Arial','BU',6);
                     $pdf->Cell(60,4,  'TOTAL A PAGAR' ,0, 0 , 'R' );
                     $pdf->SetXY($desplaza+115,$y);
-                    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,R);
+                    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,'R');
                     $pdf->SetFont('Arial','',6);
                     $y +=6;
                     $pdf->SetXY($desplaza+7,$y);
@@ -265,7 +265,7 @@ require_once ('fpdf.php');
         $pdf->Cell(60,4, $detalle,0, 0 , 'L' );
         $pdf->SetXY($desplaza+115,$y);
   //      $pdf->Cell(15,4,$valor,0, 0 , 'R' );
-        $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,R);
+        $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,'R');
  //      $pdf->Cell(15,4,$reg['facturavalor'],0, 0 , 'R' );
         $saldo = $saldo + $reg['facturavalor'];
             if ($reg['facturadescuento']>0){$descuentos += (float)$reg['facturadescuento'];}
@@ -277,7 +277,7 @@ require_once ('fpdf.php');
     $pdf->SetXY($desplaza+7,$y);
     $pdf->Cell(60,4,  'TOTAL A PAGAR' ,0, 0 , 'R' );
     $pdf->SetXY($desplaza+115,$y);
-    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,R); 
+    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,'R'); 
     $y+=4; 
     $pdf->SetXY(8,$y);
    

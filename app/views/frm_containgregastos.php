@@ -71,12 +71,21 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="ingastocomprobante">{{form_ingastocomprobante}}</label>
                     <div class="col-md-6">
-                    <select id='ingastocomprobante' name='ingastocomprobante' ng-model='registro.ingastocomprobante' >
-                     <option ng-repeat='operator0 in operators0' value = " {{operator0.compId}}">{{operator0.compNombre}}</option>
-                    </select>
+                        <select ng-change="seleccion()" id='ingastocomprobante' name='ingastocomprobante' ng-model='registro.ingastocomprobante' >
+                            <option ng-repeat='operator0 in operators0' value = " {{operator0.compId}}">{{operator0.compNombre}}</option>
+                        </select>
                     </div>
                 </div> 
 
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="ingastotercero">{{form_ingastotercero}}</label>
+                    <div class="col-md-6">
+                        <select id='ingastotercero' name='ingastotercero' ng-model='registro.ingastotercero' >
+                            <option ng-repeat='operator1 in operators1' value = " {{operator1.terceroId}}">{{operator1.terceroNombre}}</option>
+                        </select>
+                    </div>
+                </div>   
+                
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="ingastodetalle">{{form_ingastodetalle}}</label>
                    <div class="col-md-6">
@@ -105,7 +114,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="ingastocontabiliza">{{form_ingastocontabiliza}}</label>
                     <div class="btn-group  col-md-6"  data-toggle="buttons">
                    <label>
@@ -128,10 +137,21 @@
                                  id="send_btnCe">{{form_btnAnula}}</button> 
                     </div>
                 </div>       
-                <div style='display: none'>
-                <input type="text"	 ng-model="registro.ingastoid" id ='ingastoid'  name ='ingastoid' value="{{registro.ingastoid}}"/>
-  
+                <div style='display: none'>  
+                <input type="text"	 ng-model="registro.ingastoid" id ='ingastoid'  name ='ingastoid' 
+                       value="{{registro.ingastoid}}"/>
+                <input type="text"	 ng-model="registro.ingastoctadb" id ='ingastoctadb'  name ='ingastoctadb' 
+                       value="{{registro.ingastoctadb}}"/>  
+                <input type="text"	 ng-model="registro.ingastoctacr" id ='ingastoctacr'  name ='ingastoctacr' 
+                       value="{{registro.ingastoctacr}}"/>
+                <input type="text"	 ng-model="registro.ingastonomdb" id ='ingastonomdb'  name ='ingastonomdb' 
+                       value="{{registro.ingastonomdb}}"/>  
+                <input type="text"	 ng-model="registro.ingastonomcr" id ='ingastoctacr'  name ='ingastoctacr' 
+                       value="{{registro.ingastoctacr}}"/>   
+                <input type="text"	 ng-model="registro.ingastocompro" id ='ingastocompro'  name ='ingastocompro' 
+                       value="{{registro.ingastocompro}}"/>  
                 </div>
+
                 <div id='miExcel' style='display: none'>
                 </div> 
             </form>
@@ -181,24 +201,27 @@
                         <th>EMPRESA</th-->
                         <th>FECHA</th>
                         <th>PERIODO</th>
-                        <th>TIPO</th>
+                        
                         <th>COMPROBANTE</th>
                         <th>DETALLE</th>
                         <th>DOC</th>
                         <th>VALOR</th>
+                        <th>TIPO</th>
                         <th>SALDO</th>
                     </tr>
                    
-                    <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
+                    <tr id='tbl' ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
                     <!--td>{{detail.ingastoid}}</td>
                     <td>{{detail.ingastoempresa}}</td-->
                     <td>{{detail.ingastoFecha}}</td>
                     <td>{{detail.ingastoperiodo}}</td>
-                    <td>{{detail.ingastotipo}}</td>
+                    
                     <td>{{detail.ingastocomprobante}}</td>
                     <td>{{detail.ingastodetalle}}</td>
                     <td>{{detail.ingastoDocumento}}</td>
-                    <td>{{detail.ingastovalor | currency}}</td>
+                    <td>{{detail.ingastovalor | currency}}</td> 
+                    <td>{{detail.nomtipo}}</td>
+                    <!--td>{{detail.ingastotipo}}</td-->
                     <td>{{detail.saldo | currency}}</td>
                     <td>
                     <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>

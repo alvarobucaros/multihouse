@@ -35,9 +35,11 @@ if (!isset($_GET['op'])){
  else {
   $op=$_GET['op']; 
 }
-
- $nodo = '';
- $subNodo='';
+$nodo = '';
+$subNodo='';
+$app='House';
+$titApp='Administración de copropiedades';
+if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';} 
 
  function is_session_started()
 {
@@ -56,7 +58,7 @@ if (!isset($_GET['op'])){
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>multi House</title>
+  <title><?PHP echo $titApp ?></title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
   <link href="css/AdminLTE.css" rel="stylesheet" type="text/css"/>
@@ -72,32 +74,29 @@ if (!isset($_GET['op'])){
 <body class="hold-transition skin-black sidebar-mini"   ng-app="app" >
 <!-- Site wrapper -->
 <div class="wrapper">
-
+ 
   <header class="main-header">
     <!-- Logo -->
     <a href="#" class="logo logito">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>M</b>enú</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Multi</b>House</span>
+      <span class="logo-lg"><b>Multi</b><?php echo $app ?></span>
       <img  src=<?php echo $logo ?> alt="Logo"/>
     </a>
     <!-- Header Navbar: style can be found in header.less  --> 
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"></a>
-    
+      <span class="logo-lg"><?php echo $titApp ?></span>
       <div id='titbar' class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-            
-          <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="usuario();">
-              <img id='my_image' src="<?php echo $avatar ?>" class="user-image" alt="User Image">  
-              <span id='my-name' class="hidden-xs"><?php echo $datos[0] ?></span>
-            </a>  
-          </li>
-      
+                <img id='my_image' src="<?php echo $avatar ?>" class="user-image" alt="User Image">  
+                <span id='my-name' class="hidden-xs"><?php echo $datos[0] ?></span>
+              </a>  
+          </li>      
         </ul>
       </div>
     </nav>
@@ -108,8 +107,7 @@ if (!isset($_GET['op'])){
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
      
-        <div  id='titulito'  class="input-group">
-          
+        <div  id='titulito'  class="input-group">        
        
         </div>
       
@@ -117,33 +115,44 @@ if (!isset($_GET['op'])){
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="logito header list-inline"><?php echo $datos[5] ?></li>
-    
-        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C'){            
-        echo '     
         <li class="treeview">
           <a href="#">
             <i class="fa fa-archive"></i>
-            <span>Tablas Administración</span>
+             <?php if ($pf=='K'){ 
+                 echo '
+                 <span>Tablas Generales</span>';
+             }else{
+                 echo '<span>Tablas Administración</span>';
+             };
+             ?>
+           
             <i class="fa fa-angle-left pull-right"></i>
           </a>
           <ul class="treeview-menu"> 
+        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C'){            
+        echo '     
               <li><a href="mm.php?op=clin"><i class=""></i>Clasificación de inmuebles</a></li>                      
               <li><a href="mm.php?op=inmu"><i class=""></i>Inmuebles</a></li>
               <li><a href="mm.php?op=prop"><i class=""></i>Propietarios</a></li>
-              <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>';
-        }?>
-        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S'){            
-        echo ' 
-              <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>';
-        }?> 
-        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C'){            
-        echo ' 
+              <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>
+              <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>
               <li><a href="mm.php?op=inmServ"><i class=""></i>Inmueble y Servicio Especial</a></li>
+              <li><a href="mm.php?op=cbnte2"><i class=""></i>Tipo Ingresos Gastos</a></li>
               <li><a href="mm.php?op=terc"><i class=""></i>Lista de terceros</a></li>
-          </ul>
-        </li>';
-        }?> 
-        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' ){            
+              <li><a href="mm.php?op=users"><i class=""></i> <span>Usuarios</span></a></a></li>';
+       }else{
+        echo '<li><a href="mm.php?op=puuc"><i class=""></i>Plan único contable</a></li>
+              <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes y Operaciones</a></li>
+              <li><a href="mm.php?op=tpInf"><i class=""></i>Tipos de Informe</a></li>
+              <li><a href="mm.php?op=esInf"><i class=""></i>Estructura de Informe</a></li>
+              <li><a href="mm.php?op=nts"><i class=""></i>Notas contables</a></li>
+              <li><a href="mm.php?op=terc"><i class=""></i>Lista de terceros</a></li>';
+        }; 
+        ?>
+              </ul>
+        </li>
+ 
+        <?php if ($pf=='A' OR $pf=='S' ){            
         echo ' 
         <li class="treeview">
           <a href="#">
@@ -158,82 +167,102 @@ if (!isset($_GET['op'])){
             <li><a href="mm.php?op=anuRC"><i class=""></i>Anula Recibo de Caja</a></li>
             <li><a href="mm.php?op=otrIngr"><i class=""></i>Otros Ingresos y gastos</a></li>
             <li><a href="mm.php?op=acuPago"><i class=""></i>Acuerdos de Pago</a></li>
-            <li><a href="mm.php?op=anticip"><i class=""></i>Anticipos (Abonos)</a></li>
-            
-
+            <li><a href="mm.php?op=anticip"><i class=""></i>Anticipos (Abonos)</a></li> 
           </ul>
-        </li>
-               <li class="treeview">
-          <a href="#">
-            <i class="fa fa-file"></i>
-            <span>Contabilidad</span>
-            <i class="fa fa-angle-left pull-right"></i>
-          </a>
-          <ul class="treeview-menu">';
+        </li>' ;
         }?> 
-        <?php if ($pf=='K' OR $pf=='S' ){            
-        echo ' 
-       
- 
-            <li><a href="mm.php?op=puuc"><i class=""></i>Plan único contable</a></li>
-            <li><a href="mm.php?op=cbnte"><i class=""></i>Comprobantes contabilidad</a></li>';
-             } 
-              ?> 
-        <?php if ($pf=='K'  ){            
-        echo ' 
-            <li><a href="mm.php?op=digCpbnt"><i class=""></i>Digita Comprobante Contable</a></li>
-            <li><a href="mm.php?op=digMvto"><i class=""></i>Digita Operación Contable</a></li>
-            <li><a href="mm.php?op=actMvto"><i class=""></i>Actualiza Movimiento Contable</a></li>
-            <li><a href="mm.php?op=revMvto"><i class=""></i>Reversa Movimiento Contable</a></li>
-            <li><a href="mm.php?op=dupComp"><i class=""></i>Duplica comprobantes</a></li> 
-            <li><a href="mm.php?op=trSal2"><i class=""></i>Transfiere saldos</a></li> 
-            <li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li>            
-            <li><a href="mm.php?op=cieMes"><i class=""></i>Cierre mensual</a></li>   
-            <li><a href="mm.php?op=cieEje"><i class=""></i>Cierre Ejercicio</a></li>  ';
-             } ?> 
-        <?php if ($pf=='K' OR $pf=='S' ){            
-        echo '
+        <li class="treeview">
+            <a href="#">
+                <i class="fa fa-file"></i>
+                    <span>Contabilidad</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">'
+            <?php if ($pf=='K'  ){            
+            echo ' 
+                <li><a href="mm.php?op=digCpbnt"><i class=""></i>Digita Comprobante Contable</a></li>
+                <li><a href="mm.php?op=digMvto"><i class=""></i>Digita Operación Contable</a></li>
+                <li><a href="mm.php?op=actMvto"><i class=""></i>Actualiza Comprobante Contable</a></li>
+                <li><a href="mm.php?op=revMvto"><i class=""></i>Reversa Comprobante Contable</a></li>
+                <li><a href="mm.php?op=dupComp"><i class=""></i>Duplica Comprobante</a></li> 
+                <li><a href="mm.php?op=trSal2"><i class=""></i>Transfiere saldos</a></li>                     
+                <li><a href="mm.php?op=cieMes"><i class=""></i>Cierre mensual</a></li>   
+                <li><a href="mm.php?op=cieEje"><i class=""></i>Cierre Ejercicio</a></li>  ';
+                 }
+             else {
+        echo '<li><a href="mm.php?op=conta"><i class=""></i>Contabiliza Movimiento Mensual</a></li> ';         
+             }?>    
           </ul>
         </li>
-        ';
-             } 
-        ?>       
-        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C' ){            
-        echo ' 
-       
+        
         <li class="treeview">
           <a href="#">
             <i class="fa fa-file"></i>
             <span>Informes / Consultas</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="mm.php?op=rCtaCob"><i class=""></i>Reimprime Cuentas de Cobro</a></li>
-            <li><a href="mm.php?op=rRcaja"><i class=""></i>Reimprime Recibo de caja</a></li>
-            <li><a href="mm.php?op=rCtaCC"><i class=""></i>Consulta Cuenta de Cobro</a></li>
-            <li><a href="mm.php?op=rCtaRcaj"><i class=""></i>Consulta Recibo de Caja</a></li>
-            <li><a href="mm.php?op=rResDia"><i class=""></i>Resume Ingresos y gastos</a></li>
-            <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta Inmueble</a></li>
-            <li><a href="mm.php?op=rMora"><i class=""></i>Informe Cuentas por cobrar</a></li>
-            <li><a href="mm.php?op=lst"><i class=""></i>Lista de asistencia</a></li>
-            <li><a href="mm.php?op=porep"><i class=""></i>Poder Representación</a></li>
-            ';}
-            ?>
-        <?php if ($pf=='K'){            
-        echo '
-            
-            <li><a href="mm.php?op=ConCons"><i class=""></i>Consultas Contabilidad</a></li>  
-        <li><a href="mm.php?op=infCons"><i class=""></i>Informes Contabilidad</a></li>';}
-            ?>  
-        <?php if ($pf=='K' OR $pf=='A' OR $pf=='S' OR $pf=='C' ){            
+          <ul class="treeview-menu"> 
+              
+        <?php if ($pf=='A' OR $pf=='S' OR $pf=='C' ){            
         echo ' 
+            <li class="treeview">
+                <a href="#">
+                  <i class="fa fa-eye"></i>
+                  <span>Informes Admistración</span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </a> 
+                <ul class="treeview-menu">
+                    <li><a href="mm.php?op=rCtaCob"><i class=""></i>Reimprime Cuentas de Cobro</a></li>
+                    <li><a href="mm.php?op=rRcaja"><i class=""></i>Reimprime Recibo de caja</a></li>
+                    <li><a href="mm.php?op=rCtaCC"><i class=""></i>Consulta Cuenta de Cobro</a></li>
+                    <li><a href="mm.php?op=rCtaRcaj"><i class=""></i>Consulta Recibo de Caja</a></li>
+                    <li><a href="mm.php?op=rResDia"><i class=""></i>Resume Ingresos y gastos</a></li>
+                    <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta Inmueble</a></li>
+                    <li><a href="mm.php?op=rMora"><i class=""></i>Informe Cuentas por cobrar</a></li>
+                </ul>
+        </li>
+            <li class="treeview">
+                <a href="#">
+                  <i class="fa fa-clipboard"></i>
+                  <span>Informes Reuniones</span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </a> 
+                <ul class="treeview-menu">
+                    <li><a href="mm.php?op=lst"><i class=""></i>Lista de asistencia</a></li>
+                    <li><a href="mm.php?op=porep"><i class=""></i>Poder Representación</a></li>
+                </ul>
+            </li>'
+            ; }        
+        else{
+            echo  '        
+            <li class="treeview">
+                <a href="#">
+                  <i class="fa fa-calculator"></i>
+                  <span>Informes Contabilidad</span>
+                  <i class="fa fa-angle-left pull-right"></i>
+                </a> 
+                <ul class="treeview-menu">  
+                    <li><a href="mm.php?op=rCompr"><i class=""></i>Comprobantes por periodo</a></li>
+                    <li><a href="mm.php?op=rBalpr"><i class=""></i>Estados Financieros</a></li>
+                    <li><a href="mm.php?op=rLibDia"><i class=""></i>Libro Diario</a></li>
+                    <li><a href="mm.php?op=rLibMa"><i class=""></i>Libro Mayor</a></li>
+                    <li><a href="mm.php?op=rLibAux"><i class=""></i>Libro auxiliar</a></li>
+                    <li><a href="mm.php?op=rCtaMov"><i class=""></i>Cuentas y su movimiento</a></li>
+                    <li><a href="mm.php?op=rMovTer"><i class=""></i>Movimiento por terceros</a></li>                                
+                    <li><a href="mm.php?op=rSal2"><i class=""></i>Saldos contables</a></li> 
+                    </li-->
+                </ul>
+            </li>
+
+            ';}
+           echo ' 
           </ul>
         </li>
-        ';
-             }
+        ';       
         ?>
+  
         
-       <?php if ($pf=='K' OR $pf=='A'  OR $pf=='S'){            
+       <?php            
         echo '
         <li class="treeview">
           <a href="#">
@@ -241,37 +270,42 @@ if (!isset($_GET['op'])){
             <span>Administración</span>
             <i class="fa fa-angle-left pull-right"></i>
           </a>
-          <ul class="treeview-menu">
-         
+          <ul class="treeview-menu">';
+        if ($pf=='A'  OR $pf=='C'  OR $pf=='S' ) {   
+           echo '         
             <li><a href="mm.php?op=parGen"><i class=""></i> <span>Parámetros Generales</span></a></li>
             <li><a href="mm.php?op=parFac"><i class=""></i> <span>Parámetros Facturación</span></a></li>
-            <li><a href="mm.php?op=users"><i class=""></i> <span>Usuarios</span></a></a></li>
-            <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>';
-        if ($pf=='S'){            
-           echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  '; 
+            <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>;';
         }
-         echo 'if ($pf=="S"){
-                <li><a href="mm.php?op=impor"><i class="fa fa-circle-o"></i>Importa Tablas</a></li>
-                <li><a href="mm.php?op=impPag"><i class="fa fa-circle-o"></i><span>Importa Pagos</span></a></li>      
-                <li><a href="mm.php?op=impsal2"><i class="fa fa-circle-o"></i>Importa Saldos</a></li> 
-           }';
-       }
-
+        if ($pf == 'K'){   
+           echo ' <li><a href="mm.php?op=parCont"><i class=""></i> <span>Parámetros Contabilidad</span></a></li>
+                  <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>
+                  <li><a href="mm.php?op=imppucc"><i class=""></i> <span>Importa plan contable</span></a></li>';
+           }
+        if ($pf=='XXXX'){            
+           echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  
+                 <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>;';        
+        }
+         if ($pf=='A' OR $pf=='S' ) { 
+             echo '   <li><a href="mm.php?op=impor"><i class="fa fa-circle-o"></i>Importa Tablas</a></li>
+                <li><a href="mm.php?op=impPag"><i class="fa fa-circle-o"></i><span>Importa Pagos</span></a></li>     
+                <li><a href="mm.php?op=impsal2"><i class="fa fa-circle-o"></i>Importa Saldos</a></li> ';
+               
+           };
            ?>
-         <?php if ($pf=='K' OR $pf=='A'  OR $pf=='S'){ 
-       echo '   </ul>
-        </li>  ';
-         }
-        ?>
+          </ul>
+        </li>  
+         
+     
         <?php
         if($cr=='S'){
             echo '<li class="treeview">
                     <a href="#">
-                        <i class="fa fa-building-o "></i>
+                    <i class="fa fa-building-o "></i>
             <span>Conjunto Residencial</span>
             <i class="fa fa-angle-left pull-right"></i>
-          </a>
-          <ul class="treeview-menu">
+           </a>
+           <ul class="treeview-menu">
             <li><a href="mm.php?op=udr"><i class="fa fa-building"></i> <span>Unidades residenciales</span></a></li>
             <li><a href="mm.php?op=impo"><i class="fa fa-file-excel-o"></i> <span>Cragar desde Excel</span></a></li>
             <li><a href="mm.php?op=lst"><i class="fa fa-calculator"></i> <span>Lista de asistencia</span></a></a></li>
@@ -351,7 +385,7 @@ if (!isset($_GET['op'])){
         } 
         
         if ($op ==  'actMvto'){
-            include_once 'views/frm_actualizaMvto.php';
+            include_once 'views/frm_contaActualizaMvto.php';
         }
         if ($op ==  'anticip'){
             include_once 'views/frm_contapagos.php';
@@ -366,7 +400,9 @@ if (!isset($_GET['op'])){
         if ($op == 'digMvto'){
             include_once 'views/frm_contadigitamvto.php';
         }
-        
+        if ($op ==  'dupComp'){
+            include_once 'views/frm_contaDuplicaCpbnte.php';
+        }
         if ($op ==  'empr'){
             include_once 'views/frm_contaempresas.php';
         }
@@ -386,20 +422,27 @@ if (!isset($_GET['op'])){
         
         if ($op ==  'impsal2'){
             include_once 'views/frm_contaimportaSaldos.php';
-        }        
+        } 
+        if ($op ==  'imppucc'){
+            include_once 'views/frm_contaimportaPuuc.php';
+        } 
+        
         if ($op ==  'parGen'){
             include_once 'views/frm_contaParamGral.php';
         }
         if ($op ==  'parFac'){
             include_once 'views/frm_contaParamFac.php';
         }
+        if ($op ==  'parCont'){
+            include_once 'views/frm_contaParamConta.php';
+        }  
         if ($op ==  'proInm'){
             include_once 'views/frm_containmueblepropietario.php';
         }        
         if ($op ==  'prop'){
             include_once 'views/frm_contapropietarios.php';
         }     
-       if ($op ==  'serv'){
+        if ($op ==  'serv'){
             include_once 'views/frm_contaservicios.php';
         }  
        
@@ -417,28 +460,25 @@ if (!isset($_GET['op'])){
         }        
         if ($op ==  'pagos'){
             include_once 'views/frm_contatmpagos.php';
-        }
-               
- 
-                
+        }                
         if ($op ==  'otrIngr'){
             include_once 'views/frm_containgregastos.php';
         }
         if ($op ==  'cbnte'){
             include_once 'views/frm_contacomprobantes.php';
         }
+         if ($op ==  'cbnte2'){
+            include_once 'views/frm_contacomprobantes2.php';
+        }       
         if ($op ==  'contc'){
-            include_once 'views/frm_mm_Contacto.php';
+            include_once 'views/frm_contacontacto.php';
         }
         if ($op ==  'Versi'){
             include_once 'views/frm_contaversion.php';
-        }
-
-        
+        }        
         if ($op ==  'conta'){
             include_once 'views/frm_contaContabilizacion.php';
-        }        
-
+        }  
         if ($op ==  'rCtaCob'){
             include_once 'views/frm_contaImpCtasCobro.php';
         }
@@ -465,7 +505,10 @@ if (!isset($_GET['op'])){
 
         if ($op ==  'rCtas'){
             include_once 'views/frm_contaConsultas.php';
-        }        
+        } 
+        if ($op ==  'revMvto'){
+            include_once 'views/frm_contaReversaCpbnte.php';
+        }
         if ($op ==  'gast'){
             include_once 'views/frm_contaGastos.php';
         } 
@@ -476,8 +519,53 @@ if (!isset($_GET['op'])){
         if ($op ==  'porep'){
             include_once 'views/frm_contaPoderPrepresentacion.php';
         }
-//  -------- // porep puuc   cbnte digMvto revMvto dupComp trSal2 conta cieMes  cieEje ConCons infCons
+        if ($op ==  'trSal2'){
+            include_once 'views/frm_contaTrasfiereSaldos.php';
+        }
+         if ($op ==  'cieMes'){
+            include_once 'views/frmContaCierreMes.php';
+         }
+         if ($op ==  'cieEje'){
+            include_once 'views/frmContaCierreEjercicio.php';
+         }         
 
+        if ($op ==  'tpInf'){
+            include_once 'views/frm_contatipoinforme.php';
+        }
+        if ($op ==  'rSal2'){
+            include_once 'views/frm_contaImpSaldos.php';
+        }
+        if ($op ==  'rCompr'){
+            include_once 'views/frm_contaImpCmpbntes.php';
+        }
+        if ($op ==  'rCtaMov'){
+            include_once 'views/frmRepMayorMvts.php';
+        }
+        if ($op ==  'rMovTer'){
+            include_once 'views/frmRepMoviTerceros.php';
+        }
+        
+        if ($op ==  'rLibMa'){
+            include_once 'views/frmRepLibroMayor.php';
+        }        
+        if ($op ==  'rLibDia'){
+            include_once 'views/frmRepLibroDiario.php';
+        } 
+        if ($op ==  'rLibAux'){
+            include_once 'views/frmRepLibroAuxi.php';
+        }         
+        if ($op ==  'rBalpr'){
+            include_once 'views/frm_contaRepInfoNif.php';
+        }  
+        if ($op ==  'rEdoRes'){
+            include_once 'views/frm_contaRepInfoNif.php';
+        }       
+        if ($op ==  'esInf'){
+            include_once 'views/frm_containformes.php';
+        } 
+        if ($op ==  'nts'){
+            include_once 'views/frm_contanotascont.php';
+        } 
         if ($op ==  'logo'){
             include_once 'views/frm_contaloadLogos.php';
         }
@@ -511,14 +599,17 @@ if (!isset($_GET['op'])){
     <input type="text"  id ='u' value = '<?php echo $u ?>' >
     <input type="text"  id ='p' value = '<?php echo $pf ?>' >
     <input type="text"  id ='ctrl' value = '<?php echo $ctrl ?>' >
-
+    <input type="text"  id ='idioma' value = '<?php echo $idioma ?>' >
+    <input type="text"  id ='app' value = '<?php echo $app ?>' >
+    <input type="text"  id ='titApp' value = '<?php echo $titApp ?>' >
+    
 </div>
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0.2
     </div>
-    <strong>Copyright &copy; 2016 <a href="http://atomingenieria.com">Atominge sas.</a> </strong> Derechos reservados
+    <strong>Copyright &copy; 2016, 2018, 2020 <a href="http://atomingenieria.com">Atominge sas.</a> </strong> Derechos reservados
   </footer>
 
 
@@ -592,10 +683,6 @@ function usuario(){
         return false;
     });
 </script>
-
-
-
-
 </body>
 </html>
 

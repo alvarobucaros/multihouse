@@ -17,7 +17,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_ingastotipo42 = 'Apertura';
     $scope.form_ingastocontabiliza80 = 'Si';
     $scope.form_ingastocontabiliza81 = 'NO';
-
+    $scope.form_ingastotercero = "TERCERO";
     $scope.form_ingastoid = 'ID';
     $scope.form_ingastoempresa = 'EMPRESA';
     $scope.form_ingastoFecha = 'FECHA';
@@ -88,8 +88,12 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     }
 
     function getCombos(empresa){
-          $http.post('modulos/mod_containgregastos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
+        $http.post('modulos/mod_containgregastos.php?op=0',{'op':'0', 'empresa':empresa}).success(function(data){
             $scope.operators0 = data;
+         });
+         
+        $http.post('modulos/mod_containgregastos.php?op=1',{'op':'1', 'empresa':empresa}).success(function(data){
+            $scope.operators1 = data;
          });
     } 
  
@@ -134,6 +138,15 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.currentPage = index - 1;
     };
 
+    $scope.seleccion = function(){
+        $http.post('modulos/mod_containgregastos.php?op=nc',{'op':'nc', 'empresa':$scope.empresa,'comp':$scope.registro.ingastocomprobante}).success(function(data){
+            rec = data.split('||');
+            $scope.registro.ingastoctadb = rec[0];
+            $scope.registro.ingastoctacr = rec[1];
+            $scope.registro.ingastocompro  = rec[2];
+         });
+    };
+    
     $scope.cambiaperi = function(){;
         f=$scope.registro.ingastoFecha.substring(0, 4)+$scope.registro.ingastoFecha.substring(5, 7);
         $scope.registro.ingastoperiodo = f;
@@ -250,19 +263,21 @@ $('#idForm').slideToggle();
         if($('#ingastoempresa').val()===''){er+='falta empresa\n';}
         if($('#ingastoFecha').val()===''){er+='falta fecha\n';}
         if($('#ingastoperiodo').val()===''){er+='falta periodo\n';}
-        if($('#ingastotipo').val()===''){er+='falta tipo\n';}
-        if($('#ingastocomprobante').val()===''){er+='falta comprobante\n';}
+        if(info.ingastotipo===''){er+='falta tipo\n';}
+        if($('#ingastocomprobante').val()===''){er+='falta movimiento\n';}
         if($('#ingastodetalle').val()===''){er+='falta detalle\n';}
-        if($('#ingastoDocumento').val()===''){er+='falta Documento\n';}
+      //  if($('#ingastoDocumento').val()===''){er+='falta Documento\n';}
         if($('#ingastovalor').val()===''){er+='falta valor\n';}
         if($('#ingastocontabiliza').val()===''){er+='falta contabiliza\n';}
-        if (er==''){
+        if(info.ingastotercero === null){er+='falta el tercero\n';}
+        if (er===''){
         $http.post('modulos/mod_containgregastos.php?op=a',{'op':'a', 'ingastoid':info.ingastoid, 'ingastoempresa':info.ingastoempresa, 
             'ingastoFecha':info.ingastoFecha, 'ingastoperiodo':info.ingastoperiodo, 'ingastotipo':info.ingastotipo, 
             'ingastocomprobante':info.ingastocomprobante, 'ingastodetalle':info.ingastodetalle, 'ingastoDocumento':info.ingastoDocumento,
-            'ingastovalor':info.ingastovalor, 'ingastocontabiliza':info.ingastocontabiliza}).success(function(data){
-           
-        if (data === 'Ok') {
+            'ingastovalor':info.ingastovalor, 'ingastocontabiliza':info.ingastocontabiliza,
+            'ingastotercero':info.ingastotercero,'ingastoctadb':info.ingastoctadb,
+            'ingastoctacr':info.ingastoctacr,'ingastocompro':info.ingastocompro}).success(function(data){  
+        if (data === 'Ok') {  
             getInfo(empresa);
             alert ('Registro Actualizado ');
             $('#idForm').slideToggle();

@@ -23,6 +23,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_fechaAbono = "Fecha Abono";
     $scope.form_fechaDesde="Fecha Desde"
     $scope.form_fechaHasta="Fecha Hasta"
+    $scope.form_fechaCorte='Fecha de corte';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
@@ -70,11 +71,12 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.imprimeAc = false;
     $scope.verContabiliza=true;
     $scope.boton = true;
+    $scope.ruedita = false;
     $scope.currentPage = 0;
     $scope.pageSize = 10;
     $scope.pages = [];
     $scope.registro = [];
-    
+    $scope.fechaCorte = '';
     $scope.empresa = $('#e').val();
     $scope.nrComprobante = '';
     $scope.decDias = 0;
@@ -87,9 +89,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.enMora = 0;
     $scope.corriente = 0;
     $scope.vlrTotal = $scope.enMora + $scope.corriente;
-    var f = new Date();  
-    $scope.registro.fechaAbono=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()+ ' 00:00:0000';
-    $scope.fechaAbono=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear();
+
     procesa = $('#control').val();
  
     $scope.reimprime='N';
@@ -121,18 +121,31 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         getInfoAnticipo($scope.empresa);
         $scope.reimprime='S';
         $scope.registro.reimprimeCtas='S';
-    }   
-    if(procesa === 'R'){
+    }
+    
+    if(procesa === 'CN'){
+        empresa = $scope.empresa;
+        $scope.fechaCorte = $scope.fechaAbono;
+        $http.post('modulos/mod_contaprocesos.php?op=conNr',{'op':'conNr', 'empresa':empresa}).success(function(data){ 
+        if(data==='0'){
+            $scope.nota='No hay registros para contabilizar'; 
+            $scope.boton = false;
+        }else{
+            $scope.nota='hay '+data+ ' registros para contabilizar'; 
+        }
+         });       
+    }
+    if(procesa === 'R' || procesa === 'CN'){
         $scope.Mensaje='';
-        getInfoRcaja($scope.empresa);
+        getInfoRcaja($scope.empresa, procesa);
         getCombos($scope.empresa);
     }
     
      function getInfoAnticipo(empresa){
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
-        rec=data.split('||');
         $scope.periodo = rec[1];
         $scope.registro.ultimoPeriodo =  rec[1];
+        return rec;
          }); 
      }
      function getInfoFac(empresa){
@@ -165,10 +178,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });           
      }
      
-    function getInfoRcaja(empresa){
+    function getInfoRcaja(empresa, procesa){
         mes = ['31', '28', '31','30','31','30','31','31','30','31','30','31' ];
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
-
         rec=data.split('||');
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];
@@ -183,6 +195,10 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.factorRedondeo = rec[11];
         $scope.periCierreFactura = rec[12];
         m=rec[12].substring(4, 6)-1;
+        if (procesa === 'CN'){
+            $scope.fechaCorte = rec[12].substring(0, 4)+'-'+rec[12].substring(4, 6)+'-'+mes[m];
+            return;
+        }
         $scope.fchPago = rec[12].substring(0, 4)+'-'+rec[12].substring(4, 6)+'-'+mes[m];
         $scope.registro.fechaAbono = $scope.fchPago;
         $scope.factura = true; 
@@ -449,18 +465,19 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         else{
        
         $http.post('modulos/mod_contaprocesos.php?op=cnslta2',{'op':'cnslta2','empresa':empresa,'inmueble':inmu,
-        'propietario':prop}).success(function(data){
-       
+        'propietario':prop}).success(function(data){       
         $scope.details = data;
-         });
-        
+         });     
     }
     };
     
     $scope.contabilizar = function(){
-        fi=$scope.registro.fechaDesde;
-        ff=$scope.registro.fechaHasta;
-        alert('contabiliza' + fi + ff);
+        empresa = $scope.empresa;
+        $scope.ruedita = true;
+        $http.post('modulos/mod_contaprocesos.php?op=ctblza',{'op':'ctblza','empresa':empresa,'fecha':$scope.fechaCorte}).success(function(data){       
+        alert('Contabilización finalizada Ok');
+        });
+        $scope.ruedita = false;
     };
     
     $scope.configPages = function() {

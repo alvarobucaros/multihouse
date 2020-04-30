@@ -54,7 +54,7 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  '. $cta;
         $titulo="CUENTA DE COBRO";
-        $this->Image($logo,$der+5,14,20,10);
+    //    $this->Image($logo,$der+5,14,20,10);
 
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -178,7 +178,7 @@ require_once ('fpdf.php');
         $pdf->Cell(60,4,  $reg['facturadetalle'],0, 0 , 'L' );
 
         $pdf->SetXY($der+120,$y);
-        $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,R);
+        $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,'R');
         $saldo = $saldo + (float)$reg['facturasaldo'];
         if ($reg['facturadescuento']>0){$descuentos += (float)$reg['facturadescuento'];}
         if ($reg['facturaMora']>0){$SaldoMora += (float)$reg['facturaMora'];}
@@ -191,7 +191,7 @@ require_once ('fpdf.php');
     $pdf->SetFont('Arial','BU',6);
     $pdf->Cell(60,4,  'TOTAL A PAGAR' ,0, 0 , 'R' );
     $pdf->SetXY($der+120,$y);
-    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,R);
+    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,'R');
     $y +=5;
     $pdf->SetXY($der+7,$y);
     $pdf->MultiCell(132,4, utf8_decode( $resultado ) );

@@ -328,6 +328,47 @@ function importaDatos($empresa, $file, $data){
          $resultado =  mysqli_query($con, $query);
     }
       
+
+    function importaPUCC($empresa, $file, $data){
+        $empresa = trim($empresa);
+        include_once("../bin/cls/clsConection.php");
+        $objClase = new DBconexion(); 
+        $con = $objClase->conectar();
+  
+        $array =  explode(';',  $data);
+        $retorno='Importacion Correcta';
+        $respuesta=" proceso ";
+        $cuenta = trim($array[0]);
+        $nombre = trim($array[1]);
+        $tipo = trim($array[2]);
+        $clase = trim($array[3]);
+        $l = strlen($cuenta);
+        $mayor = '0';
+        $nivel = 1;
+        if ($l===2){
+            $nivel = 2;
+            $mayor = substr($cuenta,0,1);
+        }
+        if ($l===4){
+            $nivel = 3;
+            $mayor = substr($cuenta,0,2);
+        }
+        if ($l===6){
+            $nivel = 4;
+            $mayor = substr($cuenta,0,4);
+        }        
+        if ($l===8){
+            $nivel = 5;
+            $mayor = substr($cuenta,0,6);
+        }
+        
+        $query="INSERT INTO contaplancontable(pucEmpresaId, pucCuenta, pucNombre, pucMayor, " .
+                " pucNivel, pucTipo, pucActivo, pucClase, pucValor) VALUES ('".
+        $empresa . "', '" .$cuenta . "', '" .$nombre ."', '" .$mayor ."', '" .
+        $nivel ."','".$tipo."','A','". $clase. "',0)";
+         $resultado =  mysqli_query($con, $query);
+         echo $query;
+    }
     
  function borraTablas($empresa){
     $empresa = trim($empresa);
@@ -380,7 +421,16 @@ function importaDatos($empresa, $file, $data){
     return $retorno;
  }
  
- 
+   function borrapucc($empresa){
+    $empresa = trim($empresa);
+    include_once("../bin/cls/clsConection.php");
+    $objClase = new DBconexion(); 
+    $con = $objClase->conectar();
+    $retorno='';
+    $query = "DELETE FROM contaplancontable WHERE pucEmpresaId  = ". $empresa ;
+    $resultado =  mysqli_query($con, $query);
+    return $retorno;
+ }
  
     function nroRegistros($sql){ 
 // echo $sql;      

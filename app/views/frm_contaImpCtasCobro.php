@@ -40,7 +40,7 @@
                    <div class="col-md-5">
                    <select id='propietarios' name='propietarios' ng-model='registro.propietario'>
                    <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
-                    </select>
+                   </select>
                    </div>
                </div> 
 

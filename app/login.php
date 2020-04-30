@@ -78,17 +78,17 @@ include_once 'inc/'.$idioma;
     $('#btnIngreso').click(function()
     {
         msg='';
-        if ($('#mail').val() == '') { msg += $('#erini01').val()+'\n';
+        if ($('#mail').val() === '') { msg += $('#erini01').val()+'\n';
         }
-        if ($('#pwd').val() == '') {  msg += $('#erini02').val()+'\n';
+        if ($('#pwd').val() === '') {  msg += $('#erini02').val()+'\n';
         }
-        if (msg==''){
+        if (msg===''){
          
             ant=$('#autentica').val();
-            parametro= $('#mail').val()+'||'+ $('#pwd').val()+'||'+ ant 
+            parametro= $('#mail').val()+'||'+ $('#pwd').val()+'||'+ ant ;
             
             $.post("inc/opcGrales.php", {accion:'valiUser', condicion:parametro}, function(data){  
-                if (data.substr(0,5)=='Error'){
+                if (data.substr(0,5)==='Error'){
                      alert(data);        
                 }
                else
@@ -96,13 +96,13 @@ include_once 'inc/'.$idioma;
                  var dat = data.split('||');
                  location.href="mm.php?w="+dat[3]+"&z="+dat[4]+"&op=";
                 }
-             })
+             });
      }
      else
      {
          alert(msg);
      }    
-     })  
+     })  ;
 </script>
 </body>
 </html>

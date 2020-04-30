@@ -23,7 +23,7 @@ app.controller("mainController",['$scope','$http', function($scope,$http){
     $scope.form_empresa_baseDatos = 'Nombre Base de Datos';
     $scope.form_empresa_version = 'Versión';
     $scope.form_btnActualiza= 'Al menu';
-    $scope.vista=false;
+    $scope.vista=true;
     getInfo();
  
 
@@ -31,14 +31,14 @@ app.controller("mainController",['$scope','$http', function($scope,$http){
         empresa = $('#e').val();
         $http.post('modulos/mod_contaversion.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
         dato=data.split('||'); 
-    $scope.empresa_nombre=dato[3];
-    $scope.empresa_versionPrd=dato[0]; 
-    $scope.empresa_versionBd = dato[1]; 
-    $scope.empresa_clave = dato[2]; 
-    $scope.empresa_nit=dato[4]; 
-    $scope.empresa_servidor = dato[5]; 
-    $scope.empresa_baseDatos = dato[6]; 
-    $scope.empresa_version =dato[9];       
+        $scope.empresa_nombre=dato[3];
+        $scope.empresa_versionPrd=dato[0]; 
+        $scope.empresa_versionBd = dato[1]; 
+        $scope.empresa_clave = dato[2]; 
+        $scope.empresa_nit=dato[4]; 
+        $scope.empresa_servidor = dato[5]; 
+        $scope.empresa_baseDatos = dato[6]; 
+        $scope.empresa_version =dato[9];       
         });       
     }        
 }]);

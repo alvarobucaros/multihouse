@@ -56,7 +56,7 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  '. $cta;
         $titulo="RELACION DE INGESOS Y GASTOS PERIODO ".$periIni. " AL " .$periFin;
-        $this->Image($logo,$der+5,14,20,10);
+ //       $this->Image($logo,$der+5,14,20,10);
 
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -134,13 +134,13 @@ require_once ('fpdf.php');
             $pdf->SetXY($izq+22,$y);
             $pdf->Cell(60,4, $ref,0, 0 , 'L' );
             $pdf->SetXY($izq+98,$y);
-            $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,R);
+            $pdf->Cell(20,4,number_format($valor, 2, '.', ','),0,0,'R');
             $pdf->SetXY($izq+120,$y);
-            $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,R);
+            $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,'R');
             $y +=4;           
         }  
         $pdf->SetXY($izq+120,$y);
-        $pdf->Cell(20,4,'----------------',0,0,R);
+        $pdf->Cell(20,4,'----------------',0,0,'R');
     }
     else {
         $pdf->SetXY($izq+9,$y);

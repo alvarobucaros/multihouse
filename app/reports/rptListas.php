@@ -32,7 +32,7 @@
         $tel = 'TELEFONO  : '.$empre[5];           
         $logo = "images/".$logo;
         
-        $this->Image( $logo ,25,15,20,10);
+ //       $this->Image( $logo ,25,15,20,10);
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((310-$w)/2);

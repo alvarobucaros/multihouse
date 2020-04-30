@@ -59,7 +59,7 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
         
         $titulo="PODER ";
-        $this->Image($logo,$der+5,14,20,10);
+//        $this->Image($logo,$der+5,14,20,10);
 
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -146,13 +146,13 @@ require_once ('fpdf.php');
             'En caso de resultar elegido(a) también tiene facultades para representarme en las reuniones '.
             'que se convoquen y a las que yo no pueda asistir.';
     $pdf->SetXY(10,$y);
-    $pdf->Multicell(128,4, utf8_decode($tit),0, L );
+    $pdf->Multicell(128,4, utf8_decode($tit),0, 'L' );
     $y=$pdf->GetY()+6; 
     $pdf->SetXY(10,$y);
     $tit = 'Este poder será suficiente para una nueva fecha si la reunión es suspendida o para el caso de requerirse '.
             'una eventual segunda convocatoria o citación a la reunión, si no se logra realizar en la primera '.
             'por falta de quórum';
-    $pdf->Multicell(128,4, utf8_decode($tit),0, L );
+    $pdf->Multicell(128,4, utf8_decode($tit),0,'L' );
     $y=$pdf->GetY()+6; 
     $pdf->SetXY(10,$y);
     $pdf->Cell(60,4, 'Atentamente,',0, 0 , 'L' );

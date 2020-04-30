@@ -43,6 +43,7 @@ if(isset($_POST["accion"])){
         if ($tipo === 'T'){$result = $obj->importaDatos($empresa, $file, $datos);}
         if ($tipo === 'P'){$result = $obj->importaPagos($empresa, $file, $datos);}
         if ($tipo === 'S'){$result = $obj->importaSaldos($empresa, $file, $datos);}
+        if ($tipo === 'U'){$result = $obj->importaPUCC($empresa, $file, $datos);}
         echo $result;  
     }     
     
@@ -50,6 +51,14 @@ if(isset($_POST["accion"])){
         
     }
     
+    if (  $accion== 'borrapucc'){
+        $data = explode('||', $condicion);
+        $empresa = $condicion;
+        include_once ("../modulos/mod_contacargaData.php");
+        $obj = new opcCargaData();
+        $result = $obj->borrapucc($empresa);
+        echo $result;         
+    }
     if (  $accion== 'borraSaldos'){
         $data = explode('||', $condicion);
         $empresa = $condicion;

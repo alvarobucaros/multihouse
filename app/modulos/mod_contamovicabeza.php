@@ -10,21 +10,55 @@ switch ($op)
     case 'r':
         leeRegistros($data);
         break;
+    case 'a':
+        actualiza($data);
+        break; 
+    case 'ac':
+        actualizaComprobantes($data);
+        break; 
+    case 'ao':
+        actualizaOper($data);
+        break; 
+    case 'am':
+        actualizaMov($data);
+        break; 
+    
+    case 'b':
+        borra($data);
+        break;   
+    case 'bc':
+        borraComprobante($data);
+        break;     
+    case 'bo':
+        buscaComprobante($data);
+        break;    
+    case 'cp':
+        comprobante($data);
+        break;
+    case 'dp':
+        duplicaComprobante($data);
+        break;
     case 'rm':
         leeRegistrosMov($data);
         break;
     case 'sm':
         sumaDbyCr($data);
         break;
-    case 'b':
-        borra($data);
+    case 'te':
+        traeEncabezados($data);
+        break;   
+    case 'ts':
+        transfiereSaldos($data);
+        break;      
+    case 'tc':
+        traeCabezas($data);
         break;
-    case 'a':
-        actualiza($data);
+    case 'tn':
+        traeNroCpbnte($data);
         break; 
-    case 'am':
-        actualizaMov($data);
-        break;    
+     case 'to':
+        traeNombreCpbnte($data);
+        break; 
     case 'u':
         unRegistro($data);
         break;
@@ -34,15 +68,8 @@ switch ($op)
     case 'exp':
         exportaXls($data);
         break; 
-    case 'cp':
-        comprobante($data);
-        break;
-    case 'bo':
-        buscaComprobante($data);
-        break;
-    case 'te':
-        traeEncabezados($data);
-        break;
+
+
     case '0':
         lista0($data);
         break;
@@ -52,6 +79,9 @@ switch ($op)
     case '2':
         lista2($data);
         break;
+    case '2c':
+        lista2c($data);
+        break;    
 }
   
     function  leeRegistros($data) 
@@ -64,10 +94,10 @@ switch ($op)
             $query = "SELECT  movicaId, movicaEmpresaId, movicaComprId, compNombre,  movicaCompNro, movicaTerceroId, ".
                     " terceroNombre, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec" .
                     " FROM contamovicabeza  ".
-                    " INNER JOIN contacomprobantes ON movicaComprId=compId " .
+                    " INNER JOIN contacomprobantes ON movicaComprId=compCodigo AND movicaEmpresaId = compEmpresaId " .
                     " INNER JOIN contaterceros ON movicaTerceroId = terceroId ".
                     " WHERE movicaEmpresaId = " . $empresa . " AND movicaPeriodo = '" . $periodo . "' ". 
-                    " ORDER BY movicaPeriodo ";             
+                    " AND movicaProcesado = 'N' ORDER BY movicaPeriodo ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -84,11 +114,14 @@ switch ($op)
     { 
         global $objClase;
         $con = $objClase->conectar(); 
-        $cabeza = $data->cabeza;     
-        $query = "SELECT moviConId ,moviConCabezaId ,moviConDetalle ,moviConCuenta ,moviConDebito ,".
-                " moviConCredito ,moviConBase ,moviConImpTipo ,moviConImpPorc ,moviConImpValor ,".
-                " moviConIdTercero ,moviDocum1 ,moviDocum2, moviTipoCta ".
-                " FROM contamovidetalle WHERE moviConCabezaId = " . $cabeza .
+        $cabeza = $data->cabeza; 
+        $empresa = $data->empresa;
+
+        $query = "SELECT moviConId ,moviConCabezaId ,moviConDetalle ,moviConCuenta, pucNombre ,".
+                " moviConDebito , moviConCredito ,moviConBase ,moviConImpTipo ,moviConImpPorc ,".
+                " moviConImpValor , moviConIdTercero ,moviDocum1 ,moviDocum2, moviTipoCta ".
+                " FROM contamovidetalle INNER JOIN contaplancontable ON moviConCuenta = pucCuenta ".
+                " WHERE moviConCabezaId = " . $cabeza . " AND pucEmpresaId = " .$empresa. 
                 " ORDER BY moviTipoCta DESC, moviConCuenta";
         $result = mysqli_query($con, $query); 
         $arr = array(); 
@@ -101,19 +134,30 @@ switch ($op)
         echo $json_info = json_encode($arr);         
     }
     
-    function traeEncabezados($data){
+    function  traeCabezas($data) 
+    { 
         global $objClase;
-        $con = $objClase->conectar();  
-        $empresa = $data->empresa; 
-        $query = " SELECT movicaId,  movicaEmpresaId, movicaComprId, compNombre, movicaCompNro, movicaTerceroId, " .
-                 " terceroNombre, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal,  " .
-                 " movicaDocumSec   " .
-                 " FROM contamovicabeza  " .
-                 " INNER JOIN contacomprobantes ON compId = movicaComprId  " .
-                 " INNER JOIN contaterceros ON terceroId = movicaTerceroId  " .
-                 " WHERE movicaEmpresaId = " . $empresa .
-                 " AND compEmpresaId = movicaEmpresaId AND terceroEmpresaId = movicaEmpresaId AND " .
-                 " movicaProcesado = 'N' ";
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa;
+        $periodo = $data->periodo; 
+        $op = $data->ope;
+        $query = "SELECT movicaId, movicaComprId, compNombre, movicaCompNro, movicaTerceroId, terceroNombre, " .
+                 " movicaDetalle, movicaPeriodo, movicaFecha " .
+                 " FROM contamovicabeza " .
+                 " INNER JOIN contacomprobantes ON movicaComprId = compCodigo " .
+                 " INNER JOIN contaterceros ON movicaTerceroId = terceroId ".
+                 " WHERE movicaEmpresaId = " . $empresa . " AND compEmpresaId = movicaEmpresaId " .
+                 " AND terceroEmpresaId = movicaEmpresaId  " . " AND movicaPeriodo = '" . $periodo;
+        if($op === 'ac'){
+            $query .=  "' AND movicaProcesado = 'N' " ;
+        }else if($op === 'rc'){
+             $query .=  "' AND movicaProcesado = 'S' " ;
+        }else
+        {
+            $query .=  "' ";
+        }
+        $query .= " ORDER BY movicaPeriodo, movicaCompNro";
+ 
         $result = mysqli_query($con, $query); 
         $arr = array(); 
         if(mysqli_num_rows($result) != 0)  
@@ -125,6 +169,66 @@ switch ($op)
         echo $json_info = json_encode($arr); 
     }
     
+    function traeEncabezados($data){
+        global $objClase;
+        $con = $objClase->conectar();  
+        $empresa = $data->empresa; 
+        $periodo = $data->periodo; 
+        $op = $data->ope;
+        $query = " SELECT movicaId,  movicaEmpresaId, movicaComprId, compNombre, movicaCompNro, movicaTerceroId, " .
+                 " terceroNombre, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal,  " .
+                 " movicaDocumSec   " .
+                 " FROM contamovicabeza  " .
+                 " INNER JOIN contacomprobantes ON compCodigo = movicaComprId  " .
+                 " INNER JOIN contaterceros ON terceroId = movicaTerceroId  " .
+                 " WHERE movicaEmpresaId = " . $empresa . " AND movicaPeriodo = '" . $periodo .
+                 "' AND compEmpresaId = movicaEmpresaId AND terceroEmpresaId = movicaEmpresaId AND " ;
+        if($op === 'ac'){
+            $query .= " movicaProcesado = 'N' ";
+        }else{
+            $query .= " movicaProcesado = 'S' "; 
+        }
+ //echo $query;                
+        $result = mysqli_query($con, $query); 
+        $arr = array(); 
+        if(mysqli_num_rows($result) != 0)  
+            { 
+                while($row = mysqli_fetch_assoc($result)) { 
+                    $arr[] = $row; 
+                } 
+            } 
+        echo $json_info = json_encode($arr); 
+    }
+    
+    function traeNombreCpbnte($data){
+        global $objClase;
+        $con = $objClase->conectar();  
+        $empresa = $data->empresa; 
+        $cmpbnte = $data->cmpbnte;
+        $compNombre='';
+        $query = " SELECT compNombre  FROM contacomprobantes " .
+                " WHERE compEmpresaId = ".$empresa. " AND compCodigo = '". $cmpbnte. "'";
+        $result = mysqli_query($con, $query);  
+        while($row = mysqli_fetch_assoc($result)) { 
+            $compNombre=$row['compNombre'];
+        } 
+        echo $compNombre;
+    }  
+      function traeNroCpbnte($data){
+        global $objClase;
+        $con = $objClase->conectar();  
+        $empresa = $data->empresa; 
+        $cmpbnte = $data->cmpbnte;
+        $nro=0;
+        $query = " SELECT compConsecutivo + 1 As nro FROM contacomprobantes " .
+                " WHERE compEmpresaId = ".$empresa. " AND compCodigo = '". $cmpbnte. "'";
+        $result = mysqli_query($con, $query);  
+        while($row = mysqli_fetch_assoc($result)) { 
+            $nro=$row['nro'];
+        } 
+        echo $nro;
+    }    
+        
     function sumaDbyCr($data){
         global $objClase;
         $con = $objClase->conectar(); 
@@ -148,12 +252,63 @@ switch ($op)
     function borra($data)
     { 
        global $objClase;
-        $con = $objClase->conectar(); 
-        $query = "DELETE FROM contamovicabeza WHERE movicaId=$data->movicaId"; 
-        mysqli_query($con, $query); 
+        $con = $objClase->conectar();
+        $moviConId = $data->moviConId;
+        $query = "DELETE FROM contamovidetalle WHERE moviConId = ".$moviConId; 
+        $result = mysqli_query($con, $query);
         echo 'Ok'; 
     }
     
+    
+     function borraComprobante($data)
+    { 
+        global $objClase;
+        $con = $objClase->conectar();
+        $movicaId = $data->movicaId;
+        $empresa = $data->empresa; 
+        $query = "DELETE FROM contamovidetalle WHERE moviConCabezaId = ".$movicaId ;
+        $result = mysqli_query($con, $query);
+ 
+        $query = "DELETE FROM contamovicabeza WHERE movicaId = ".$movicaId .
+                 "  AND movicaEmpresaId = " . $empresa;
+        $result = mysqli_query($con, $query);   
+        echo 'Ok'; 
+    }
+    function duplicaComprobante($data)
+       { 
+       global $objClase;
+        $con = $objClase->conectar();
+        $dato = explode('||',  $data->dato);
+
+        $cpr= $dato[2];
+        $ter= $dato[0];
+        $det= $dato[1]; 
+        $nro= $dato[3];
+        $fch= $dato[4];
+        $per = substr($fch,0,4).substr($fch,5,2);
+        $empresa =  $dato[5];
+        $id =  $dato[6];
+        $query = "INSERT INTO contamovicabeza(movicaEmpresaId, movicaComprId, movicaCompNro, " .
+                " movicaTerceroId, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, " .
+                " movicaDocumPpal, movicaDocumSec)";
+        $query .= "  VALUES ('" . $empresa."', '".$cpr."', '".$nro."', '".$ter."', '".$det."', 'N', '".
+                $fch."', '".$per."', '', '')";  
+        mysqli_query($con, $query);
+        $nroCabeza = mysqli_insert_id($con);
+        
+        $query = "INSERT INTO contamovidetalle (moviConCabezaId ,moviConDetalle, moviConCuenta, ".
+         " moviConDebito, moviConCredito, moviConBase, moviConImpTipo, moviConImpPorc, ".
+         " moviConImpValor, moviConIdTercero, moviDocum1, moviDocum2, moviTipoCta) SELECT '" .
+        $nroCabeza ."','" . $det . "', moviConCuenta, moviConDebito, moviConCredito, moviConBase," . 
+         " moviConImpTipo, moviConImpPorc, moviConImpValor,'" . $ter . "', moviDocum1, moviDocum2, " . 
+         "  moviTipoCta FROM contamovidetalle where moviConCabezaId = " . $id;
+        mysqli_query($con, $query);
+        $query="UPDATE contacomprobantes set compConsecutivo = compConsecutivo + 1 ".
+        " WHERE compId = ".$cpr." AND compEmpresaId = " . $empresa;
+        mysqli_query($con, $query);
+        echo 'Ok Creado el comprobante '. $cpr."  Nro:  ".$nro.' en el periodo '. $per;
+
+    }
     
     function comprobante($data)
     { 
@@ -162,7 +317,7 @@ switch ($op)
         $empresa =  $data->empresa;
         $cpbnte = $data->cp;
         $consec = 0;
-        $query = "SELECT compConsecutivo FROM contacomprobantes WHERE compId = '" . $cpbnte .
+        $query = "SELECT compConsecutivo FROM contacomprobantes WHERE compCodigo = '" . $cpbnte .
                 "' AND compEmpresaId = " .$empresa; 
         $result = mysqli_query($con, $query); 
         while($row = mysqli_fetch_assoc($result)) { 
@@ -180,15 +335,17 @@ switch ($op)
         $cpbnte = $data->cp;
         $res=array();
         $response='';
-        $query = "SELECT compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, compDetalle ".
-                " FROM contacomprobantes WHERE compEmpresaId = " . $empresa . " AND compId = " . $cpbnte;
+        $query = "SELECT compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2,  ".
+                " compDetalle, compcpbnte FROM contacomprobantes ".
+                " WHERE compEmpresaId = " . $empresa . " AND compCodigo = '" . $cpbnte ."' ";
         $result = mysqli_query($con, $query); 
         while($row = mysqli_fetch_assoc($result)) {
-            array_push($res,$row['compConsecutivo'],$row['compDetalle'],$row['compctadb0'],$row['compctadb1'],
+            array_push($res,$row['compcpbnte'],$row['compDetalle'],$row['compctadb0'],$row['compctadb1'],
                     $row['compctadb2'],$row['compctacr0'],$row['compctacr1'],$row['compctacr2']);
         }
         $response= $res[0].'||'.$res[1].'||'; 
-        $query = "SELECT compCodigo, compNombre, compConsecutivo FROM contacomprobantes  WHERE compId = " . $res[0];
+        $query = "SELECT compCodigo, compNombre, compConsecutivo FROM contacomprobantes  ".
+                " WHERE compEmpresaId = " . $empresa . " AND compCodigo = '" . $res[0] ."' ";
         $result = mysqli_query($con, $query); 
         while($row = mysqli_fetch_assoc($result)) { 
             $response .= $row['compCodigo'].'||'.$row['compNombre'].'||'. ($row['compConsecutivo']+1).'||';
@@ -205,7 +362,7 @@ switch ($op)
             }
                 $response.= $res[$i].'&'.$nombre.'||';
         }
-   
+
         echo $response;    
     }
  
@@ -229,75 +386,349 @@ switch ($op)
    
         if($movicaId  == 0) 
         { 
-           $query = "INSERT INTO contamovicabeza(movicaEmpresaId, movicaComprId, movicaCompNro, movicaTerceroId, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec)";
-           $query .= "  VALUES ('" . $movicaEmpresaId."', '".$movicaComprId."', '".$movicaCompNro."', '".$movicaTerceroId."', '".$movicaDetalle."', '".$movicaProcesado."', '".$movicaFecha."', '".$movicaPeriodo."', '".$movicaDocumPpal."', '".$movicaDocumSec."')";  
+            $query = "INSERT INTO contamovicabeza(movicaEmpresaId, movicaComprId, movicaCompNro, movicaTerceroId, ".
+                    " movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec)";
+            $query .= "  VALUES ('" . $movicaEmpresaId."', '".$movicaComprId."', '".$movicaCompNro."', '".
+                   $movicaTerceroId."', '".$movicaDetalle."', '".$movicaProcesado."', '".$movicaFecha."', '".
+                   $movicaPeriodo."', '".$movicaDocumPpal."', '".$movicaDocumSec."')";  
             mysqli_query($con, $query);
-            echo 'Ok';
+            $nroCabeza = mysqli_insert_id($con);
+            $query = "UPDATE contacomprobantes  SET compConsecutivo = compConsecutivo + 1  ".
+                     " WHERE compEmpresaId = ".$movicaEmpresaId. " AND compCodigo = '".$movicaComprId."' ";
+            mysqli_query($con, $query);
+            echo 'Ok,'.$nroCabeza;
         } 
         else 
         { 
-            $query = "UPDATE contamovicabeza  SET movicaEmpresaId = '".$movicaEmpresaId."', movicaComprId = '".$movicaComprId."', movicaCompNro = '".$movicaCompNro."', movicaTerceroId = '".$movicaTerceroId."', movicaDetalle = '".$movicaDetalle."', movicaProcesado = '".$movicaProcesado."', movicaFecha = '".$movicaFecha."', movicaPeriodo = '".$movicaPeriodo."', movicaDocumPpal = '".$movicaDocumPpal."', movicaDocumSec = '".$movicaDocumSec."' WHERE movicaId = ".$movicaId;
+            $query = "UPDATE contamovicabeza  SET movicaEmpresaId = '".$movicaEmpresaId.
+                    "', movicaComprId = '".$movicaComprId."', movicaCompNro = '".$movicaCompNro.
+                    "', movicaTerceroId = '".$movicaTerceroId."', movicaDetalle = '".$movicaDetalle.
+                    "', movicaProcesado = '".$movicaProcesado."', movicaFecha = '".$movicaFecha.
+                    "', movicaPeriodo = '".$movicaPeriodo."', movicaDocumPpal = '".$movicaDocumPpal.
+                    "', movicaDocumSec = '".$movicaDocumSec."' WHERE movicaId = ".$movicaId;
             mysqli_query($con, $query); 
             echo 'Ok';
-        } 
- 
+        }  
     } 
  
+    function actualizaComprobantes($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa;
+        $periodo = $data->periodo;
+        $ids =  $data->ids;
+        $op = $data->op;
+        $multiplicador = $data->multi;
+        $tit='Reversados';
+        if($multiplicador===1){
+           $tit='Actualizados';
+        }
+        $id = explode(',',$ids);
+        $tit= count($id). " Comprobantes ".$tit.". Saldos contables actualizados \n";
+        $errados=0;
+        for ($i=0; $i < count($id) ;$i++){
+            $er='';
+            $er .= validaComp($empresa, $id[$i]);
+
+            if ($er === ''){
+            $query = " SELECT moviConCuenta, moviConDebito, moviConCredito FROM contamovidetalle ".
+                     " WHERE moviConCabezaId = ".$id[$i];
+            $result = mysqli_query($con, $query); 
+            
+            while($row = mysqli_fetch_assoc($result)) { 
+                $cuenta=$row['moviConCuenta'];
+                $debito=$row['moviConDebito'];
+                $credito=$row['moviConCredito'];           
+                $ok=true;
+                while($ok) {                
+                    $query="SELECT count(*) AS nrec FROM contasaldoscontables WHERE saldcontEmpresaid = " . $empresa .
+                        " AND saldcontPeriodo = '".  $periodo .  "' AND saldcontTipo = 'cont' " .
+                        " AND saldcontCuentaContable = '" .$cuenta ."' ";           
+                    $resultac  = mysqli_query($con, $query); 
+                    while($fila = mysqli_fetch_assoc($resultac))
+                    {
+                        $nr = $fila['nrec'];
+                        if ($nr == 0)
+                        {                
+                            $query = "INSERT INTO contasaldoscontables(saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
+                                " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, ".
+                                " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr) VALUES ( ". 
+                            $empresa .", '" . $periodo . "','cont', '', '" .$cuenta. "',0,0," . $debito . ",".$credito .",0,0)" ;
+                            $resultag =  mysqli_query($con, $query);        
+                        }
+                        else
+                        {
+                            $query = "UPDATE contasaldoscontables SET saldcontDebitos =  saldcontDebitos + " . 
+                                    $debito * $multiplicador .
+                                    ", saldcontCreditos = saldcontCreditos + " . $credito * $multiplicador . 
+                                    " WHERE saldcontEmpresaid = " . $empresa .
+                                    " AND saldcontPeriodo = '".  $periodo . 
+                                    "' AND saldcontTipo = 'cont'   AND saldcontCuentaContable = '" .$cuenta .
+                                    "'  AND saldcontId > 0 ";                        
+                            $resultag =  mysqli_query($con, $query);
+                        }
+                    }               
+                        $query = " SELECT pucMayor FROM contaplancontable " .
+                                 " WHERE pucEmpresaId=" .$empresa." AND pucCuenta = '".$cuenta."'";
+                
+                    $resultag = mysqli_query($con, $query); 
+                    while($row = mysqli_fetch_assoc($resultag)) { 
+                        $cuenta=$row['pucMayor'];
+                    }
+                    if($cuenta === '0'){
+                        $ok=false;
+                    }
+                }
+            }
+            
+            if($multiplicador===1){
+                $query = "UPDATE contamovicabeza SET movicaProcesado = 'S' WHERE movicaId = ".$id[$i];
+            }else{
+                $query = "UPDATE contamovicabeza SET movicaProcesado = 'N' WHERE movicaId = ".$id[$i];
+            }
+            $resultag =  mysqli_query($con, $query);
+            }
+            else{
+                $errados += 1;
+            }
+        }
+        if ($er != ''){
+            $tit .= " Hay ". $errados . " comprobantes errados y no se actualizaron : \n" . $er;
+        }
+        echo $tit;
+    }
+    
+    function validaComp($empresa, $id){
+        $er='';
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $query = "SELECT  sum(moviConDebito - moviConCredito) sl2 FROM contamovidetalle ".
+                 " WHERE moviConCabezaId = ".$id;
+        $result = mysqli_query($con, $query);             
+        while($row = mysqli_fetch_assoc($result)) {
+            $sl2 = $row['sl2'];
+        } 
+        if($sl2 != 0){
+            $query = "SELECT concat(movicaComprId,'-', movicaCompNro) comp FROM contamovicabeza ".
+                    " WHERE movicaId = ".$id ." AND movicaEmpresaId = " . $empresa ;
+            $result = mysqli_query($con, $query);             
+            while($row = mysqli_fetch_assoc($result)) {
+                $comp = $row['comp'];
+            }
+            $er .= $comp . " descuadrado en ". $sl2 ."\n";
+        }
+        return $er;
+    }
+    
+    function actualizaMoviContamovidetalle($empresa,$periodo,$tipo,$cuenta,$cuentaContable,$multiplicador, $ValorDb, $valorCr)
+    {
+    $miObjeto = new contamovicabeza();
+    $objClase=new DBManager;
+        if($objClase->conectar()==true){
+            $sql="SELECT count(*) AS nrec FROM contasaldoscontables WHERE saldcontEmpresaid = " . $empresa .
+                 " AND saldcontPeriodo = '".  $periodo . "' AND saldcontTipo = '" . $tipo . 
+                 "'  AND saldcontCuenta = '" . $cuenta . "' AND saldcontCuentaContable = '" .$cuentaContable ."' ";           
+            $resultac = mysql_query($sql); 
+            while($fila = mysql_fetch_array($resultac))
+            {
+                $nr = $fila['nrec'];
+                if ($nr == 0)
+                {
+                
+                $sql = "INSERT INTO contasaldoscontables(saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
+                        " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, saldcontDebitos, ".
+                        "saldcontCreditos, saldcontFinalDb, saldconFinalCr) VALUES ( ". 
+                $empresa .", '" . $periodo . "','" .$tipo . "', '" . $cuenta . "', '" .$cuentaContable. "',0,0," . $ValorDb . ",".$valorCr .",0,0)" ;
+                $resultag = mysql_query($sql);         
+                }
+                else
+                {
+                $sql = "UPDATE contasaldoscontables SET saldcontDebitos =  saldcontDebitos + " . $ValorDb * $multiplicador .
+                        ", saldcontCreditos = saldcontCreditos + " . $valorCr * $multiplicador . " WHERE saldcontEmpresaid = " . $empresa .
+                 " AND saldcontPeriodo = '".  $periodo . "' AND saldcontTipo = '" . $tipo . 
+                 "'  AND saldcontCuenta = '" . $cuenta . "' AND saldcontCuentaContable = '" .$cuentaContable ."'  AND saldcontId > 0 ";                        
+                $resultag = mysql_query($sql);
+                }
+            }
+        }    
+    }            
+    
+    
     function actualizaMov($data)
     {     
        global $objClase;
         $con = $objClase->conectar(); 
         $dato =  $data->dato;
         $rec = explode('||',$dato);
+        $nr=0;
+        $query="SELECT count(*) as nr FROM contamovidetalle WHERE moviConCabezaId = ".$rec[1];
+        $resultac = mysqli_query($con, $query); 
+        while($row = mysqli_fetch_assoc($resultac)) 
+//        {
+//            $nr = $row['nr'];
+//        }
+        if($rec[0] === '0')  
+        {        
         $query = "INSERT INTO contamovidetalle (moviConCabezaId ,moviConDetalle, moviConCuenta, ".
                  " moviConDebito, moviConCredito, moviConBase, moviConImpTipo, moviConImpPorc, ".
                  " moviConImpValor, moviConIdTercero, moviDocum1, moviDocum2, moviTipoCta) VALUES (".
                  $rec[1].",'".$rec[2]."','".$rec[3]."','".$rec[4]."','".$rec[5]."','".$rec[6]."','".
                  $rec[7]."','".$rec[8]."','".$rec[9]."','".$rec[10]."','".$rec[11]."','".
                  $rec[12]."','".$rec[13]."')";
-                    mysqli_query($con, $query);
+                mysqli_query($con, $query);              
             echo 'Ok';
-        //0||1||Compra de productos de aseo y cafetería||110505||100||0||0||K||5||5||235||||||D
-        //
-//                        dato=$scope.registroMov.moviConId+'||'+$scope.registroMov.moviConCabezaId+'||'+$scope.registroMov.moviConDetalle+'||'
-//                dato+=$scope.registroMov.moviConCuenta+'||'+$scope.registroMov.moviConDebito+'||'+$scope.registroMov.moviConCredito+'||'
-//                dato+=$scope.registroMov.moviConBase+'||'+$scope.registroMov.moviConImpTipo+'||'+$scope.registroMov.moviConImpPorc+'||'
-//                dato+=$scope.registroMov.moviConImpValor+'||'+$scope.registroMov.moviConIdTercero+'||';
-//                dato+=$scope.registroMov.moviDocum1+'||'+$scope.registroMov.moviDocum2+'||'+$scope.registroMov.moviTipoCta;
-// 
+        }
+        else{
+            $query = " UPDATE contamovidetalle SET " .
+                    " moviConDetalle = '".$rec[2]."',".
+                    " moviConCuenta = '".$rec[3]."',".
+                    " moviConDebito = '".$rec[4]."',".
+                    " moviConCredito = '".$rec[5]."',".
+                    " moviConBase = '".$rec[6]."',".
+                    " moviConImpTipo = '".$rec[7]."',".
+                    " moviConImpPorc = '".$rec[8]."',".
+                    " moviConImpValor = '".$rec[9]."',".
+                    " moviConIdTercero = '".$rec[10]."',".
+                    " moviDocum1 = '".$rec[11]."',".
+                    " moviDocum2 = '".$rec[12]."',".
+                    " moviTipoCta = '".$rec[13]."' ".
+                    " WHERE moviConId = " .$rec[0];
+            mysqli_query($con, $query);                
+            echo 'Ok';            
+        } // "0||753||Ingresos||111005||13000000||0||0||||0||0||1010||||||D"
+// echo '  '.$query;
     }
+       
+    function transfiereSaldos($data)
+    {     
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa =  $data->empresa;
+        $perIni =  $data->perIni;
+        $perFin =  $data->perFin;
+
+        $mesini=  substr($perIni, 4, 2);
+        $mesfin=  substr($perFin, 4, 2);
+        $respuesta='';
+        for ($i=$mesini; $i<$mesfin; $i++){
+            $perini = (int)substr($perIni, 0, 4);
+            $perfin = substr($perIni, 0, 4);
+            if($i<10){$perini.='0';}
+            $perini.=(int)$i;
+            $j=$i+1;
+            if($j<10){$perfin.='0';}
+            $perfin.=(int)$j;
+            
+            $query="UPDATE contasaldoscontables SET saldcontFinalDb = saldcontInicialDb + saldcontDebitos, ".
+                 " saldconFinalCr=saldcontInicialCr+saldcontCreditos ".
+                 " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $perini . "' ";
+            mysqli_query($con, $query);
+            $query="SET SQL_SAFE_UPDATES = 0; UPDATE contasaldoscontables s1, contasaldoscontables s2 " .
+                 " SET s1.saldcontInicialDb = s2.saldcontFinalDb, s1.saldcontInicialCr = s2.saldconFinalCr " .
+                 " WHERE s1.saldcontEmpresaid = s2.saldcontEmpresaid AND  " .
+                 " s1.saldcontTipo = s2.saldcontTipo AND  " .
+                 " s1.saldcontCuentaContable = s2.saldcontCuentaContable AND " .
+                 " s1.saldcontPeriodo = '". $perini . "'  AND s2.saldcontPeriodo = '" . $perfin .
+                 "' AND s1.saldcontEmpresaid=". $empresa ;
+             mysqli_query($con, $query);
+            $respuesta .= " Del " . $perini .' Al '.$perfin .' ';
+        }
+        $respuesta = "Saldos trasferidos ". $respuesta;
+        echo $respuesta;
+        return $respuesta;        
+    }   
     
- function exportaXls($data){ 
-       global $objClase;
+    function actualizaOper($data)
+    {     
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $dato =  $data->dato;
+        $rec = explode('||',$dato);
+        $query = "INSERT INTO contamovicabeza(movicaEmpresaId, movicaComprId, movicaCompNro, movicaTerceroId, " .
+                 " movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec) " .
+                 " VALUES ('".$rec[1] . "','".$rec[12] . "','".$rec[11] . "','" .$rec[4] . "','" .
+                 $rec[5] . "','N','".$rec[3] . "','".$rec[2] . "','0','".$rec[0] . "')";
+        mysqli_query($con, $query);
+        $nroCabeza = mysqli_insert_id($con);
+
+        $an[0][0] = 13;
+        $an[0][1] = 14;
+        $an[1][0] = 15;
+        $an[1][1] = 16;
+        $an[2][0] = 17;
+        $an[2][1] = 18;
+        $an[3][0] = 19;
+        $an[3][1] = 20;
+        $an[4][0] = 21;
+        $an[4][1] = 22;
+        $an[5][0] = 23;
+        $an[5][1] = 24;
+
+        for($i=25;$i<31;$i++){
+            if($rec[$i] != ''){
+                $db=$an[$i-25][0];
+                $cr=$an[$i-25][1];
+                $tpCta='D';
+                if($rec[$cr] !=''){ $tpCta='C';}
+                $query = "INSERT INTO contamovidetalle (moviConCabezaId ,moviConDetalle, moviConCuenta, ".
+                " moviConDebito, moviConCredito, moviConBase, moviConImpTipo, moviConImpPorc, ".
+                " moviConImpValor, moviConIdTercero, moviDocum1, moviDocum2, moviTipoCta) VALUES (".
+                $nroCabeza.",'".$rec[5]."','".$rec[$i]."','".$rec[$db]."','".$rec[$cr]."','0','','0','0','".
+                        $rec[4]."','','". $rec[0]."','".$tpCta."')";
+                mysqli_query($con, $query);
+            }
+        }
+        $query=" UPDATE contacomprobantes SET compConsecutivo = compConsecutivo + 1 ".
+               " WHERE compCodigo = '".$rec[12]."' AND compEmpresaId = " . $rec[1];
+         mysqli_query($con, $query);
+         echo 'Ok';
+    }
+ 
+                 //"OLD||5||201703||2017-03-29||973||Ingresos por Old Mutual marzo||--31||||undefined||undefined||06||27||06||3600000||||3600000||||||||||3600000||||3600000||||||122510||111005||||311505||122510||"
+   
+    function exportaXls($data){ 
+        global $objClase;
         $con = $objClase->conectar(); 
         $empresa = $data->empresa; 
+        $periodo = $data->periodo;
         $expo=''; 
         $expo .= '<table border=1 class="table2Excel"> '; 
         $expo .=  '<tr> '; 
-      $expo .=  '          <th>ID</th>';
-      $expo .=  '          <th>EMPRESA</th>';
-      $expo .=  '          <th>COMPROBANTE</th>';
-      $expo .=  '          <th>NUMERO</th>';
-      $expo .=  '          <th>TERCERO</th>';
-      $expo .=  '          <th>DETALLE</th>';
-      $expo .=  '          <th>PROCESADO</th>';
-      $expo .=  '          <th>FECHA</th>';
-      $expo .=  '          <th>PERIODO</th>';
-      $expo .=  '          <th>DOCUMPPAL</th>';
-      $expo .=  '          <th>DOCUMSEC</th>';
-            $query = "SELECT  movicaId, movicaEmpresaId, movicaComprId, movicaCompNro, movicaTerceroId, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec" 
-                    . " FROM contamovicabeza ORDER BY movicaPeriodo ";             
+//        $expo .=  '          <th>ID</th>';
+//        $expo .=  '          <th>EMPRESA</th>';
+        $expo .=  '          <th>COMPROBANTE</th>';
+        $expo .=  '          <th>NOM COMPROBANTE</th>';
+        $expo .=  '          <th>NUMERO</th>';
+        $expo .=  '          <th>TERCERO</th>';
+        $expo .=  '          <th>DETALLE</th>';
+        $expo .=  '          <th>PROCESADO</th>';
+        $expo .=  '          <th>FECHA</th>';
+        $expo .=  '          <th>PERIODO</th>';
+        $expo .=  '          <th>DOCUMPPAL</th>';
+        $expo .=  '          <th>DOCUMSEC</th>';
+//            $query = "SELECT  movicaId, movicaEmpresaId, movicaComprId, movicaCompNro, movicaTerceroId, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec" 
+//                    . " FROM contamovicabeza ORDER BY movicaPeriodo ";  
+//            
+            $query = "SELECT  movicaId, movicaEmpresaId, movicaComprId, compNombre,  movicaCompNro, movicaTerceroId, ".
+                    " terceroNombre, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec" .
+                    " FROM contamovicabeza  ".
+                    " INNER JOIN contacomprobantes ON movicaComprId=compCodigo AND movicaEmpresaId = compEmpresaId " .
+                    " INNER JOIN contaterceros ON movicaTerceroId = terceroId ".
+                    " WHERE movicaEmpresaId = " . $empresa . " AND movicaPeriodo = '" . $periodo . "' ". 
+                    " ORDER BY movicaPeriodo ";              
             $result = mysqli_query($con, $query); 
             if(mysqli_num_rows($result) != 0)  
                 { 
                 while($row = mysqli_fetch_assoc($result)) { 
                     $expo .=  '<tr> '; 
-                    $expo .=  	'<td>' .$row['movicaId']. '</td> ';
-                    $expo .=  	'<td>' .$row['movicaEmpresaId']. '</td> ';
-                    $expo .=  	'<td>' .$row['movicaComprId']. '</td> ';
+//                    $expo .=  	'<td>' .$row['movicaId']. '</td> ';
+//                    $expo .=  	'<td>' .$row['movicaEmpresaId']. '</td> ';
+//                    $expo .=  	'<td>' .$row['movicaComprId']. '</td> ';
+                    $expo .=  	'<td>' .$row['movicaComprId']. '</td> ';                    
+                    $expo .=  	'<td>' .$row['compNombre']. '</td> ';
                     $expo .=  	'<td>' .$row['movicaCompNro']. '</td> ';
-                    $expo .=  	'<td>' .$row['movicaTerceroId']. '</td> ';
-                    $expo .=  	'<td>' .$row['movicaDetalle']. '</td> ';
+                    $expo .=  	'<td>' .utf8_decode($row['terceroNombre']). '</td> ';
+                    $expo .=  	'<td>' .utf8_decode($row['movicaDetalle']). '</td> ';
                     $expo .=  	'<td>' .$row['movicaProcesado']. '</td> ';
                     $expo .=  	'<td>' .$row['movicaFecha']. '</td> ';
                     $expo .=  	'<td>' .$row['movicaPeriodo']. '</td> ';
@@ -346,6 +777,7 @@ switch ($op)
  
     } 
  
+    
 	 
     function lista0($data)
     { 
@@ -353,7 +785,7 @@ switch ($op)
         $con = $objClase->conectar();
         $empresa = $data->empresa;
         $control = $data->control;
-        $query = "SELECT compId, compNombre FROM contacomprobantes WHERE compEmpresaId = " . $empresa;
+        $query = "SELECT compCodigo, compNombre FROM contacomprobantes WHERE compEmpresaId = " . $empresa;
         if ($control === 'M'){
             $query .= " AND compTipo = 'O' ";
         }else{
@@ -394,9 +826,14 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar();	
         $empresa = $data->empresa;
-         $query = "SELECT pucCuenta,  pucNombre FROM contaplancontable " .
+        $control = $data->control;
+        $query = '';
+        if($control==='C2'){
+            $query .= "SELECT '' AS pucCuenta , 'Ninguna' As pucNombre UNION  ";
+        }
+        $query .= "SELECT pucCuenta,  CONCAT(pucCuenta,'-', pucNombre) pucNombre FROM contaplancontable " .
                   "WHERE pucTipo = 'M' AND pucEmpresaId = " . $empresa . 
-                 " ORDER BY  pucNombre";
+                 " ORDER BY  pucCuenta";
          $result = mysqli_query($con, $query); 
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)
@@ -408,5 +845,23 @@ switch ($op)
       echo $json_info = json_encode($arr); 
     }
  
+    function lista2c($data)
+     { 
+       global $objClase;
+        $con = $objClase->conectar();	
+        $empresa = $data->empresa;
+        $query = "SELECT pucCuenta,  CONCAT(pucCuenta,'-', pucNombre) pucNombre FROM contaplancontable " .
+                  "WHERE pucTipo = 'T' AND pucEmpresaId = " . $empresa . 
+                 " ORDER BY  pucCuenta";
+         $result = mysqli_query($con, $query); 
+         $arr = array(); 
+         if(mysqli_num_rows($result) != 0)
+         { 
+             while($row = mysqli_fetch_assoc($result)) {
+                 $arr[] = $row;
+              }
+         } 
+      echo $json_info = json_encode($arr); 
+    }
  
 // >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Feb 11, 2020 7:44:09   <<<<<<< 

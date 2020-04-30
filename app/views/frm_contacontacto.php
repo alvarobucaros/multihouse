@@ -3,8 +3,7 @@
         <h3 class="text-left">{{form_title}}</h3>
         <h4>{{form_subtitle}}</h4>
     </div>
-    <section id="intro">
-        
+    <section id="intro">        
             <div class="container">
                 <div class="col-md-8 col-md-offset-1 animate-box">
                     <form class="form-horizontal alert alert-mm color-palette-set" name="contactForm" id="contactForm"
@@ -53,5 +52,4 @@
     </section>
 </div>
 
-    <script src="controller/min/mm_contacto.ctrl.min.js" type="text/javascript"></script>
- 
+    <script src="controller/ctrls/contacontacto.ctrl.js" type="text/javascript"></script>

@@ -99,15 +99,6 @@
                 </div> 
 
                 <div class="form-group">
-                    <label class="control-label milabel col-md-4" for="empresaPeriodoActual">{{form_empresaPeriodoActual}}</label>
-                   <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="empresaPeriodoActual" name="empresaPeriodoActual"
-                         ng-model="registro.empresaPeriodoActual" required Placeholder="{{form_PhempresaPeriodoActual}}" 
-                         value="{{registro.empresaPeriodoActual}}" />
-                    </div>
-                </div> 
-
-                <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaTwiter">{{form_empresaTwiter}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="empresaTwiter" name="empresaTwiter"
@@ -142,16 +133,26 @@
                          value="{{registro.empresaEmail}}" />
                     </div>
                 </div> 
+                
+                <div class="form-group"> 
+                    <label class="control-label milabel col-md-4" for="empresatercero">{{form_empresatercero}}</label>
+                    <div class="col-md-3">
+                   <select id='empresatercero' name='empresatercero' ng-model='registro.empresatercero'>
+                   <option ng-repeat='operator0 in operators0' value = " {{operator0.terceroId}}">{{operator0.terceroNombre}}</option>
+                    </select>
+                   </div>  
+                </div>
 
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaActiva">{{form_empresaActiva}}</label>
                     <div class="btn-group  col-md-6"  data-toggle="buttons">
+                  <label>
+                      <input type="radio" name ="empresaActiva" ng-model="registro.empresaActiva" value="A" >{{form_empresaActiva161}}
+                   </label>                        
                    <label>
                       <input type="radio" name ="empresaActiva" ng-model="registro.empresaActiva" value="I" >{{form_empresaActiva160}}
                    </label>
-                   <label>
-                      <input type="radio" name ="empresaActiva" ng-model="registro.empresaActiva" value="A" >{{form_empresaActiva161}}
-                   </label>
+ 
                     </div>
                 </div> 
 
@@ -254,7 +255,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaAdministrador">{{form_empresaAdministrador}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="empresaAdministrador" name="empresaAdministrador"
@@ -263,7 +264,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaAdministradorCed">{{form_empresaAdministradorCed}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="empresaAdministradorCed" name="empresaAdministradorCed"
@@ -272,7 +273,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaSecretaria">{{form_empresaSecretaria}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="empresaSecretaria" name="empresaSecretaria"
@@ -281,7 +282,7 @@
                     </div>
                 </div> 
 
-                <div class="form-group">
+                <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaSecretariaCedula">{{form_empresaSecretariaCedula}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="empresaSecretariaCedula" name="empresaSecretariaCedula"
@@ -516,6 +517,41 @@
                 </div> 
 
                 <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaRegimen">{{form_empresaProformaCon}}</label>
+                    <div class="btn-group  col-md-4"  data-toggle="buttons">
+                   <label>
+                      <input type="radio" name ="empresaProformaCon" ng-model="registro.empresaProformaCon" value="N" >{{form_empresaProformaCon0}}
+                   </label>
+                   <label>
+                      <input type="radio" name ="empresaProformaCon" ng-model="registro.empresaProformaCon" value="S" >{{form_empresaProformaCon1}}
+                   </label>
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaRegimen">{{form_empresaProformaFac}}</label>
+                    <div class="btn-group  col-md-4"  data-toggle="buttons">
+                   <label>
+                      <input type="radio" name ="empresaProformaFac" ng-model="registro.empresaProformaFac" value="C" >{{form_empresaProformaFac0}}
+                   </label>
+                   <label>
+                      <input type="radio" name ="empresaProformaFac" ng-model="registro.empresaProformaFac" value="S" >{{form_empresaProformaFac1}}
+                   </label>
+                    </div>
+                </div> 
+
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaRegimen">{{empresaProformaLimite}}</label>
+                    <div class="btn-group  col-md-8"  data-toggle="buttons">
+                   <label>{{empresaProformaLimiteSup}}
+                       <input type="text"  class="form-control mitexto" ng-model="registro.empresaProformaLimSup" id ='empresaProformaLimSup'  name ='empresaProformaLimSup' />
+                   </label>
+                   <label>{{empresaProformaLimiteInf}} 
+                       <input type="text"  class="form-control mitexto" ng-model="registro.empresaProformaLimInf" id ='empresaProformaLimInf'  name ='empresaProformaLimInf' />
+                   </label>
+                    </div>
+                </div>                
+           
+                <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaNroInmuebles">{{form_empresaNroInmuebles}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="empresaNroInmuebles" name="empresaNroInmuebles"
@@ -671,7 +707,7 @@
                 <div style='display: none'>
                 <input type="text" ng-model="registro.empresaId" id ='empresaId'  name ='empresaId' value="{{registro.empresaId}}"/>
                 <input type="text" ng-model="tipo" id ='empresaId'  name ='tipo' value="G"/>
-   
+    
                 </div>
                 <div id='miExcel' style='display: none'>
                 </div> 

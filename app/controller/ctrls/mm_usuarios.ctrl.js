@@ -195,7 +195,8 @@ $scope.exporta = function(){
         if($('#usuario_ciudad').val()===''){er+='falta ciudad\n';}
         if (er==''){
         $http.post('modulos/mod_mm_usuarios.php?op=a',{'op':'a', 'usuario_id':info.usuario_id, 'usuario_empresa':info.usuario_empresa, 'usuario_nombre':info.usuario_nombre, 'usuario_email':info.usuario_email, 'usuario_celular':info.usuario_celular, 'usuario_password':info.usuario_password, 'usuario_tipo_acceso':info.usuario_tipo_acceso, 'usuario_fechaCreado':info.usuario_fechaCreado, 'usuario_fechaActualizado':info.usuario_fechaActualizado, 'usuario_perfil':info.usuario_perfil, 'usuario_avatar':info.usuario_avatar, 'usuario_estado':info.usuario_estado, 'usuario_tipodoc':info.usuario_tipodoc, 'usuario_nrodoc':info.usuario_nrodoc, 'usuario_direccion':info.usuario_direccion, 'usuario_ciudad':info.usuario_ciudad}).success(function(data){
-        if (data === 'Ok') {
+  alert (data);     
+            if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');
             $('#idForm').slideToggle();

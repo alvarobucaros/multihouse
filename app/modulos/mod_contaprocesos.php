@@ -17,9 +17,12 @@ switch ($op)
     case 'cnslta2':
         consulta2($data);
         break; 
-    case 'conta':
+    case 'ctblza':
         contabilizar($data);
-        break;    
+        break;   
+    case 'conNr':
+        nroAcontabilizar($data);
+        break; 
     case 'expKrt':
         carteraEnMoraXLS($data);
         break; 
@@ -61,15 +64,111 @@ switch ($op)
     
 }
     function contabilizar($data){
-        
+        global $objClase;
+        $con = $objClase->conectar(); 
+ 
+        $fechaCorte =  $data->fecha; 
+        $empresa =  $data->empresa; 
+        $data = leeParametros($data);
+        $reg = explode('||',$data);
+        $tercero = $reg[21];
+        $comAjuste = $reg[20];
+  
+        $valor=0.0;
+        $ingr=0.0;
+        $egre=0.0;
+        $query = "SELECT ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ".
+                 " ingastocomprobante,  ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, ".
+                 " ingastoctadb, ingastoctacr, ingastotercero, ingastocompctble  ".
+                 " FROM containgregastos WHERE ingastoempresa = " .$empresa.
+                 " AND ingastocontabiliza = 'N' ORDER BY ingastotipo, ingastoFecha;"; 
+        $result = mysqli_query($con, $query); 
+
+        while( $rec =  mysqli_fetch_assoc($result))           
+        {
+            $id=0;
+            $nr=0;
+            $idGas = $rec['ingastoid'];
+            if($rec['ingastotipo'] === 'A'){
+                $valor += $rec['ingastovalor'] ;
+            }else {
+                if($rec['ingastotipo'] === 'I'){
+                    $ingr += $rec['ingastovalor'] ;
+                }else{
+                    $egre += $rec['ingastovalor'] ;
+                }
+                
+                $query = "SELECT compId, compConsecutivo + 1 AS nro FROM contacomprobantes WHERE compEmpresaId = ".
+                         $empresa . " AND compCodigo = '" . $rec['ingastocompctble']. "' ";
+                $resultado = mysqli_query($con, $query); 
+                while( $reg =  mysqli_fetch_assoc($resultado))           
+                {
+                    $id=$reg['compId'];
+                    $nr=$reg['nro']; 
+                }
+                $query = "UPDATE contacomprobantes SET compConsecutivo = " . $nr . " WHERE compId = ". $id;
+                $resultado = mysqli_query($con, $query);  
+
+                $query = "INSERT INTO contamovicabeza (movicaEmpresaId, movicaComprId, movicaCompNro, ".
+                         " movicaTerceroId, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, ".
+                         " movicaDocumPpal,movicaDocumSec) VALUES ('" .$empresa . "','" . $rec['ingastocompctble'] . 
+                         "','" . $nr . "','" . $rec['ingastotercero'] . "','" . $rec['ingastodetalle'] .
+                         "','N','" . $rec['ingastoFecha'] . "','" . $rec['ingastoperiodo'] . 
+                         "','" . $rec['ingastoDocumento'] . "','')" ;
+                $resultado = mysqli_query($con, $query);  
+                $id = mysqli_insert_id($con);
+
+                $query = "INSERT INTO contamovidetalle( moviConCabezaId, moviConDetalle, moviConCuenta, ".
+                         " moviConDebito, moviConCredito, moviConBase, moviConImpTipo, moviConImpPorc, ".
+                         " moviConImpValor, moviConIdTercero, moviDocum1, moviDocum2, moviTipoCta) VALUES (".
+                         $id. ",'" . $rec['ingastodetalle']. "','" . $rec['ingastoctadb']. "','" .
+                         $rec['ingastovalor']. "',0,0,'". $rec['ingastotipo'] . "',0,0,'" . $rec['ingastotercero'] . 
+                         "','" . $rec['ingastoDocumento'] . "','','D'), (" .
+                         $id. ",'" . $rec['ingastodetalle']. "','" .  $rec['ingastoctacr']. "',0,'" .
+                         $rec['ingastovalor']. "',0,'". $rec['ingastotipo'] . "',0,0,'" . $rec['ingastotercero'] . 
+                         "','" . $rec['ingastoDocumento'] . "','','C')";
+                $resultado = mysqli_query($con, $query);  
+            }
+            
+            $query = "UPDATE containgregastos SET ingastocontabiliza  = 'S'  WHERE ingastoid = " . $idGas;
+            $resultado = mysqli_query($con, $query);
+         
+        }
+       
+        $valor = $valor + $ingr - $egre;
+        $periodo=  substr($fechaCorte,0,4).substr($fechaCorte,5,2);
+        $query = "INSERT INTO containgregastos(ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ".
+                 " ingastocomprobante,  ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, ".
+                 " ingastoctadb, ingastoctacr, ingastotercero) ".
+                 " VALUES ( ".$empresa.",'".$fechaCorte."','".$periodo."','A','".$comAjuste."','Saldos a ".$fechaCorte."','','".
+                 $valor . "','N','','',".$tercero.")";
+      
+         $resultado = mysqli_query($con, $query);
+         echo 'Ok';
     }
 
+    function nroAcontabilizar($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa =  $data->empresa;
+        $rowcount=0;
+        $msg = '';        
+        $query = " SELECT count(*) as nro  FROM containgregastos ".
+                 " WHERE ingastoempresa = ".$empresa." AND ingastocontabiliza = 'N'"; 
+        $result = mysqli_query($con, $query); 
+        while( $rec =  mysqli_fetch_assoc($result))           
+        {
+            $rowcount = $rec['nro'];
+        }
+        echo $rowcount;
+        return $rowcount;    
+    }
+    
     function leeParametros($data){
        global $objClase;
        $con = $objClase->conectar(); 
        $empresa =  $data->empresa;
-       $msg = '';
-        
+       $msg = '';        
             $query = 'SELECT empresaId,empresaClave,empresaNombre,empresaNit,empresaDigito,empresaDireccion,
             empresaCiudad,empresaTelefonos,empresaFchCreacion,empresaFchModificacion,empresaFchVigencia,
             empresaPeriodoActual,empresaTwiter,empresaFacebook,empresaWeb,empresaEmail,empresaActiva,
@@ -84,8 +183,8 @@ switch ($op)
             empresaNroInmuebles,empresaLogo,empresaccosto, empresaservicios,
             empresafacturaNota,empresafacturaresDIAN,empresafacturaNumeracion,
             empresaCompCierreMes,  empresaCompApertura,  empresaCuentaCierre,empresafacturanotaiva,
-            empresafacturanotaica,empresafacturactacxc,empresafacturactaivta,empresafacturactaica,
-            empresafacturactaiva,empresaRegimen, empresaporcentajeiva, empresaCompEgreso
+            empresafacturanotaica,empresafacturactacxc,empresafacturactaivta,empresafacturactaica,empresafacturactaiva,
+            empresaRegimen, empresaporcentajeiva, empresaCompEgreso, empresatercero
             FROM contaempresas WHERE empresaId = '. $empresa;
             $result = mysqli_query($con, $query); 
             if(mysqli_num_rows($result) != 0)  
@@ -101,15 +200,21 @@ switch ($op)
                     $consecutivo = $row['empresaConsecFactura'];
                     $comprobante = $row['empresaCompFra'];
                     $paramempresaDescDias = $row['empresaDescDias'];
-                    $nombrePeriodo =  periodoNombre($periodoFac);
+ //                   $nombrePeriodo =  periodoNombre($periodoFac);
                     $descDias = $row['empresaDescDias'];
-                    
+                    $periConta = $row['empresaPeriodoActual'];
                     $RecargoPorc = $row['empresaRecargoPorc'];
                     $RecargoPesos = $row['empresaRecargoPesos'];
                     $RecargoDias = $row['empresaRecargoDias'];
                     $FactorRedondeo = $row['empresaFactorRedondeo'];
                     $PeriCierreFactura = $row['empresaPeriCierreFactura'];
                     $estructura = $row['empresaEstructura'];
+                    $empresaAnoFiscal = $row['empresaAnoFiscal'];
+                    $empresaCompCierreMes = $row['empresaCompCierreMes'];  
+                    $empresaCompApertura = $row['empresaCompApertura'];  
+                    $empresaCuentaCierre = $row['empresaCuentaCierre'];
+                    $empresaCompAjustes = $row['empresaCompAjustes'];
+                    $empresatercero = $row['empresatercero'];
                     $query = "SELECT count(*) as nro FROM contafactura where facturaEmpresaid = " . $empresa . 
                             " AND facturaperiodo = '" . $nuevoPeriodo . "' ";  
              
@@ -127,10 +232,12 @@ switch ($op)
                                   $nomComprobante.'||'.$descDias.'||'.$consecutivo.'||'.$rowcount .
                                     '||'. $RecargoPorc .'||'. $RecargoPesos .'||'. $RecargoDias .'||'. 
                                      $FactorRedondeo .'||'.$PeriCierreFactura.'||' . $conseRC.
-                                    '||'.$estructura;
-                        }             
+                                    '||'.$estructura.'||'.$periConta.'||'.$empresaAnoFiscal.
+                                    '||'.$empresaCompCierreMes.'||'.$empresaCompApertura.'||'.$empresaCuentaCierre.
+                                    '||'.$empresaCompAjustes.'||'.$empresatercero;
+                        } 
                     echo $msg;
-                    
+                    return $msg;
                 } 
             } 
           

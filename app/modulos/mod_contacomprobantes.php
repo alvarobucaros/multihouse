@@ -35,11 +35,21 @@ switch ($op)
     function  leeRegistros($data) 
     { 
        global $objClase;
-      $con = $objClase->conectar(); 
+       $con = $objClase->conectar(); 
+       $empresa = $data->empresa;
+       $control = $data->control;
+       $qry=" CASE compTipo WHEN 'C' THEN 'Cbnte' ELSE 'Oper' END nonTipo";
+       $wen = " AND compTipo IN ('C','O') ";
+       if ($control == 'C2'){
+           $qry=" CASE compTipo WHEN 'C' THEN 'Cbnte' ELSE 'In/Eg' END nonTipo";
+           $wen = " AND compTipo = 'O' ";
+       }
        { 
-            $query = "SELECT  compId, compEmpresaId, compCodigo, compTipo, " .
-                    " CASE compTipo WHEN 'C' THEN 'Cbnte' ELSE 'Oper' END nonTipo, compNombre, compDetalle, compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, compActivo" 
-                    . " FROM contacomprobantes ORDER BY compTipo, compNombre ";             
+            $query = "SELECT  compId, compEmpresaId, compCodigo, compTipo, " . $qry .
+                    ", compNombre, compDetalle, " .
+                    " compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, ".
+                    " compActivo, compcpbnte "  .
+                    " FROM contacomprobantes WHERE compEmpresaId = " . $empresa. $wen ." ORDER BY compTipo, compNombre ";  
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -104,17 +114,27 @@ switch ($op)
         $compctacr1 =  $data->compctacr1; 
         $compctacr2 =  $data->compctacr2; 
         $compActivo =  $data->compActivo; 
-   
+        $compcpbnte =  $data->compcpbnte;
         if($compId  == 0) 
         { 
-           $query = "INSERT INTO contacomprobantes(compEmpresaId, compCodigo, compTipo, compNombre, compDetalle, compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, compActivo)";
-           $query .= "  VALUES ('" . $compEmpresaId."', '".$compCodigo."', '".$compTipo."', '".$compNombre."', '".$compDetalle."', '".$compConsecutivo."', '".$compctadb0."', '".$compctadb1."', '".$compctadb2."', '".$compctacr0."', '".$compctacr1."', '".$compctacr2."', '".$compActivo."')";  
+           $query = "INSERT INTO contacomprobantes(compEmpresaId, compCodigo, compTipo, compNombre, compDetalle, ".
+                   " compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, ".
+                   " compctacr2, compActivo, compcpbnte)";
+           $query .= "  VALUES ('" . $compEmpresaId."', '".$compCodigo."', '".$compTipo."', '".$compNombre."', '".
+                   $compDetalle."', '".$compConsecutivo."', '".$compctadb0."', '".$compctadb1."', '".
+                   $compctadb2."', '".$compctacr0."', '".$compctacr1."', '".$compctacr2."', '".$compActivo.
+                   "', '".$compcpbnte."')";  
             mysqli_query($con, $query);
             echo 'Ok';
         } 
         else 
         { 
-            $query = "UPDATE contacomprobantes  SET compEmpresaId = '".$compEmpresaId."', compCodigo = '".$compCodigo."', compTipo = '".$compTipo."', compNombre = '".$compNombre."', compDetalle = '".$compDetalle."', compConsecutivo = '".$compConsecutivo."', compctadb0 = '".$compctadb0."', compctadb1 = '".$compctadb1."', compctadb2 = '".$compctadb2."', compctacr0 = '".$compctacr0."', compctacr1 = '".$compctacr1."', compctacr2 = '".$compctacr2."', compActivo = '".$compActivo."' WHERE compId = ".$compId;
+            $query = "UPDATE contacomprobantes  SET compEmpresaId = '".$compEmpresaId."', compCodigo = '".$compCodigo.
+                    "', compTipo = '".$compTipo."', compNombre = '".$compNombre."', compDetalle = '".$compDetalle.
+                    "', compConsecutivo = '".$compConsecutivo."', compctadb0 = '".$compctadb0.
+                    "', compctadb1 = '".$compctadb1."', compctadb2 = '".$compctadb2."', compctacr0 = '".$compctacr0.
+                    "', compctacr1 = '".$compctacr1."', compctacr2 = '".$compctacr2.
+                    "', compActivo = '".$compActivo."', compcpbnte = '".$compcpbnte."' WHERE compId = ".$compId;
             mysqli_query($con, $query); 
             echo 'Ok';
         } 
@@ -135,26 +155,32 @@ switch ($op)
         $expo .=  '          <th>NOMBRE</th>';
         $expo .=  '          <th>DETALLE</th>';
         $expo .=  '          <th>SECUENCIA</th>';
-        $expo .=  '          <th>CTADB0</th>';
-        $expo .=  '          <th>CTADB1</th>';
-        $expo .=  '          <th>CTADB2</th>';
-        $expo .=  '          <th>CTACR0</th>';
-        $expo .=  '          <th>CTACR1</th>';
-        $expo .=  '          <th>CTACR2</th>';
+        $expo .=  '          <th>CTA DB0</th>';
+        $expo .=  '          <th>CTA DB1</th>';
+        $expo .=  '          <th>CTA DB2</th>';
+        $expo .=  '          <th>CTA CR0</th>';
+        $expo .=  '          <th>CTA CR1</th>';
+        $expo .=  '          <th>CTA CR2</th>';
+        $expo .=  '          <th>COMPROBANTE CTBLE</th>';
         $expo .=  '          <th>ACTIVO</th>';
-            $query = "SELECT  compId, compEmpresaId, compCodigo, compTipo, compNombre, compDetalle, compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, compActivo" 
-                    . " FROM contacomprobantes ORDER BY compTipo desc, compNombre ";             
-            $result = mysqli_query($con, $query); 
-            if(mysqli_num_rows($result) != 0)  
+        $query = "SELECT  compId, compEmpresaId, compCodigo, " .
+                " CASE compTipo WHEN 'C' THEN 'Comprobante' ELSE 'Operacion' END compTipo, " .
+                " compNombre, compDetalle, compConsecutivo, compctadb0, compctadb1, compctadb2, " .
+                " compctacr0, compctacr1, compctacr2, compcpbnte, compActivo " .
+                " FROM contacomprobantes WHERE compEmpresaId = " . $empresa .
+                " ORDER BY compTipo desc, compNombre ";  
+   
+        $result = mysqli_query($con, $query); 
+        if(mysqli_num_rows($result) != 0)  
                 { 
                     while($row = mysqli_fetch_assoc($result)) { 
                 $expo .=  '<tr> '; 
                 $expo .=  	'<td>' .$row['compId']. '</td> ';
                 $expo .=  	'<td>' .$row['compEmpresaId']. '</td> ';
-                $expo .=  	'<td>' .$row['compCodigo']. '</td> ';
-                $expo .=  	'<td>' .$row['compTipo']. '</td> ';
-                $expo .=  	'<td>' .$row['compNombre']. '</td> ';
-                $expo .=  	'<td>' .$row['compDetalle']. '</td> ';
+                $expo .=  	'<td>' .strval($row['compCodigo']). '</td> ';
+                $expo .=  	'<td>' . utf8_decode($row['compTipo']). '</td> ';
+                $expo .=  	'<td>' . utf8_decode($row['compNombre']). '</td> ';
+                $expo .=  	'<td>' . utf8_decode($row['compDetalle']). '</td> ';
                 $expo .=  	'<td>' .$row['compConsecutivo']. '</td> ';
                 $expo .=  	'<td>' .$row['compctadb0']. '</td> ';
                 $expo .=  	'<td>' .$row['compctadb1']. '</td> ';
@@ -162,6 +188,7 @@ switch ($op)
                 $expo .=  	'<td>' .$row['compctacr0']. '</td> ';
                 $expo .=  	'<td>' .$row['compctacr1']. '</td> ';
                 $expo .=  	'<td>' .$row['compctacr2']. '</td> ';
+                $expo .=  	'<td>' .$row['compcpbnte']. '</td> ';
                 $expo .=  	'<td>' .$row['compActivo']. '</td> ';
                 $expo .=  '</tr> '; 
                 } 
@@ -191,7 +218,8 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar();	 
         $compId = $data->compId;      
-        $query = "SELECT  compId, compEmpresaId, compCodigo, compTipo, compNombre, compDetalle, compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, compActivo  " . 
+        $query = "SELECT  compId, compEmpresaId, compCodigo, compTipo, compNombre, compDetalle, compConsecutivo, " .
+                " compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, compActivo, comcpbnte " . 
                     " FROM contacomprobantes  WHERE compId = " . $compId  . 
                     " ORDER BY compNombre "; 
         $result = mysqli_query($con, $query); 

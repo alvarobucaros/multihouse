@@ -28,9 +28,18 @@ switch ($op)
     case 'exp':
         exportaXls($data);
         break; 
+    case 'tc':
+        traeCuentas($data);
+        break; 
+    case 'nc':
+        traeNomCuentas($data);
+        break;     
     case '0':
         lista0($data);
         break;
+    case '1':
+        lista1($data);
+        break;    
 }
   
 
@@ -43,12 +52,12 @@ switch ($op)
         $perfin = $data->ff;
         $empresa = $data->empresa;
         $saldo = 0;
-        $codi= " ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa ;
-        if ($perini != ''){ $codi .= " AND ingastoperiodo >= ".$perini;}
-        if ($perfin != ''){ $codi .= " AND ingastoperiodo <= ".$perfin;}
+        $codi= " ingastocontabiliza = 'N' AND ingastoempresa =  " .$empresa ;
         { 
-            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, ingastocomprobante," . 
-                    " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+            $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " . 
+                    " CASE ingastotipo WHEN 'A' THEN 'Aper' WHEN 'I' THEN 'Ingre' ELSE 'Gasto' END nomtipo, " . 
+                    " ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, " .
+                    " 0 AS saldo, ingastoctadb, ingastoctacr, ingastotercero, ingastocompctble " .
                     " FROM containgregastos WHERE " .$codi .
                     " ORDER BY ingastoFecha ";             
             $result = mysqli_query($con, $query); 
@@ -90,16 +99,20 @@ switch ($op)
         $ingastovalor =  $data->ingastovalor; 
         $ingastocontabiliza =  $data->ingastocontabiliza; 
         $ingastoDocumento  =  $data->ingastoDocumento; 
-        if($ingastoid  == 0) 
+        $ingastoctadb = $data->ingastoctadb;
+        $ingastoctacr = $data->ingastoctacr;
+        $ingastotercero = $data->ingastotercero;
+        $ingastocompro = $data->ingastocompro;
+        if($ingastoid  == 0)   
         { 
            $query = "INSERT INTO containgregastos(ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
-                   " ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza)" .
+                   " ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, " .
+                   " ingastoctadb, ingastoctacr,ingastotercero, ingastocompctble )" .
                    " VALUES ('" . $ingastoempresa."', '".$ingastoFecha."', '".$ingastoperiodo."', '".
                    $ingastotipo."', '".$ingastocomprobante."', '".$ingastodetalle."', '". $ingastoDocumento."', '".
-                   $ingastovalor."', '".$ingastocontabiliza."')";  
-            mysqli_query($con, $query);
+                   $ingastovalor."', '".$ingastocontabiliza."', '".$ingastoctadb."', '".$ingastoctacr."', '".
+                   $ingastotercero."', '".$ingastocompro."')";          
 
-            echo 'Ok';
         } 
         else 
         { 
@@ -108,12 +121,14 @@ switch ($op)
                     $ingastotipo."', ingastocomprobante = '".$ingastocomprobante."', ingastodetalle = '".
                     $ingastodetalle. "', ingastoDocumento = '".$ingastoDocumento. "', ingastovalor = '".
                     $ingastovalor."', ingastocontabiliza = '".
-                    $ingastocontabiliza."' WHERE ingastoid = ".$ingastoid;
-            mysqli_query($con, $query); 
-           
-            echo 'Ok';
+                    $ingastocontabiliza ."', ingastoctadb = '".
+                    $ingastoctadb ."', ingastoctacr = '".
+                    $ingastoctacr ."', ingastotercero = '" . $ingastotercero ."', ingastocompctble = '" . $ingastocompro . 
+                    "' WHERE ingastoid = ".$ingastoid; 
         } 
- 
+        mysqli_query($con, $query);
+        echo 'Ok';
+        return 'Ok';
     } 
     
     function exportaXls($data){ 
@@ -135,10 +150,13 @@ switch ($op)
         $expo .=  '          <th>DETALLE</th>';
         $expo .=  '          <th>VALOR</th>';
         $expo .=  '          <th>SALDO</th>';
+        $expo .=  '          <th>CTA DEBITO</th>';
+        $expo .=  '          <th>CTA CREDITO</th>';
         $expo .=  '          <th>CONTABILIZA</th>';
             $query = "SELECT  ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
                     " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE 'Inicial' END tipo," . 
-                    "  ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
+                    " ingastocomprobante, ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, " .
+                    " ingastoctadb, ingastoctacr, 0 AS saldo, ingastotercero" .
                     " FROM containgregastos WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa .
                     " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
                     " ORDER BY ingastoFecha ";              
@@ -161,6 +179,8 @@ switch ($op)
                         $expo .=  '<td>' .$row['ingastodetalle']. '</td> ';
                         $expo .=  '<td>' .number_format($valor, 2, '.', ','). '</td> ';
                         $expo .=  '<td>' .number_format($saldo, 2, '.', ','). '</td> ';
+                        $expo .=  '<td>' .$row['ingastoctadb']. '</td> ';
+                        $expo .=  '<td>' .$row['ingastoctacr']. '</td> ';
                         $expo .=  '<td>' .$row['ingastocontabiliza']. '</td> ';
                         $expo .=  '</tr> '; 
                     } 
@@ -236,14 +256,51 @@ switch ($op)
  
     } 
  
+    
+        function traeNomCuentas($data){
+            global $objClase;
+            $con = $objClase->conectar(); 
+            $comp = $data->comp;
+            $empresa = $data->empresa;
+            $query = "SELECT compctadb0, compctacr0, compcpbnte FROM contacomprobantes  ".
+                     " WHERE  compEmpresaId = ".$empresa. " AND compId = ".$comp;
+                    $result = mysqli_query($con, $query); 
+            while($row = mysqli_fetch_assoc($result)) { 
+                $ret = $row['compctadb0'].'||'.$row['compctacr0'].'||'.$row['compcpbnte']; 
+            } 
+            echo $ret; 
+            return $ret; 
+    }
+    
+    function traeCuentas($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $comp = $data->comp;
+        $empresa = $data->empresa;
+        $query = " SELECT  compDetalle, compctadb0, cdb.pucNombre debito, compctacr0, ccr.pucNombre credito, compcpbnte  " . 
+                " FROM contacomprobantes  " . 
+                " INNER JOIN contaplancontable cdb ON compctadb0 = cdb.pucCuenta AND cdb.pucEmpresaId = compEmpresaId  " . 
+                " INNER JOIN contaplancontable ccr ON compctacr0 = ccr.pucCuenta AND ccr.pucEmpresaId = compEmpresaId  " . 
+                " WHERE compEmpresaId = ". $empresa ." AND compId = ".$comp ;
+        $result = mysqli_query($con, $query); 
+        while($row = mysqli_fetch_assoc($result)) { 
+            $ret = $row['compDetalle'].'||'.$row['compctadb0'].'||'.$row['debito'].
+                   '||'.$row['compctacr0']. '||'.$row['credito'].'||'.$row['compcpbnte']; 
+        } 
+        echo $ret; 
+        return $ret; 
+    }
+    
+    
+    
 	 
     function lista0($data) 
     { 
        global $objClase;
        $empresa = $data->empresa; 
         $con = $objClase->conectar();	 
-         $query = "SELECT compId,  compNombre FROM contacomprobantes ".
-         " WHERE compEmpresaId = " . $empresa . " AND compActivo IN ('I','E') ORDER BY  compNombre";
+         $query = "SELECT compId, compNombre FROM contacomprobantes ".
+         " WHERE compEmpresaId = " . $empresa . " AND compTipo IN ('O') ORDER BY  compNombre";
          $result = mysqli_query($con, $query); 
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)
@@ -255,5 +312,21 @@ switch ($op)
       echo $json_info = json_encode($arr); 
     } 
  
- 
+     function lista1($data) 
+    { 
+       global $objClase;
+       $empresa = $data->empresa; 
+        $con = $objClase->conectar();	 
+         $query = "SELECT  terceroId, terceroNombre FROM contaterceros  ".
+         "  WHERE  terceroEmpresaId = " . $empresa . " AND terceroActivo='A' ORDER BY  terceroNombre";
+         $result = mysqli_query($con, $query); 
+         $arr = array(); 
+         if(mysqli_num_rows($result) != 0)
+         { 
+             while($row = mysqli_fetch_assoc($result)) {
+                 $arr[] = $row;
+              }
+         } 
+      echo $json_info = json_encode($arr); 
+    } 
 // >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Wednesday,Nov 27, 2019 1:57:50   <<<<<<< 

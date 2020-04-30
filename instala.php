@@ -59,10 +59,10 @@
                     <label class="control-label milabel col-md-4" for="estado">{{form_estado}}</label>
                     <div class="btn-group  col-md-6"  data-toggle="buttons">
                    <label>
-                      <input type="radio" name ="estado" ng-model="registro.estado" value="0" >{{form_estado50}}
+                      <input type="radio" name ="estado" ng-model="registro.estado" value="L" >{{form_estado50}}
                    </label>
                    <label>
-                      <input type="radio" name ="estado" ng-model="registro.estado" value="1" >{{form_estado51}}
+                      <input type="radio" name ="estado" ng-model="registro.estado" value="W" >{{form_estado51}}
                    </label>
                     </div>
                 </div> 
@@ -74,7 +74,7 @@
                      </div>  
                 </div>       
                 <div style='display: none'>
-                <input type="text" ng-model="registro.id" id ='id'  name ='id' value="{{registro.id}}"/>
+                <input type="text"	 ng-model="registro.id" id ='id'  name ='id' value="{{registro.id}}"/>
 
    
                 </div>

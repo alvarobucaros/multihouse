@@ -82,6 +82,7 @@ border-bottom-left-radius: 6px;
         solid #C0C0C0; }
 
 #pie p {color:#598975;font-size: 8px;padding-top: 20px;}
+.sombra{background-color:#008cab; }
 .botones{text-align:center;background-color:#008cab; height: 12px; width: 20px}
 
 .button {

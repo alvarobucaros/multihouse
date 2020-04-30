@@ -5,23 +5,18 @@
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
                  ng-submit="insertInfo(registro);" >
-                <div class="form-group">
-                   <label class="milabel col-md-3" for="fechaDesde">{{form_fechaDesde}}</label>
-                   <div class="col-md-6">
-                    <input type="date" width="12" class="form-control mitexto fa fa-calendar fa-lg" id="fechaDesde"                            
-                        name="fechaDesde"
-                        ng-model="registro.fechaDesde" value="{{fechaDesde}}"   />
-                    </div>
-                </div> 
 
                 <div class="form-group">
-                   <label class="milabel col-md-3" for="fechaHasta">{{form_fechaHasta}}</label>
+                   <label class="milabel col-md-8" for="fechaHasta">{{nota}}</label>
+
+                </div>
+                <div class="form-group">
+                   <label class="milabel col-md-3" for="fechaCorte">{{form_fechaCorte}}</label>
                    <div class="col-md-6">
-                    <input type="date" width="12" class="form-control mitexto fa fa-calendar fa-lg" id="fechaHasta" name="fechaHasta"
-                         ng-model="registro.fechaHasta" value="{{fechaHasta}}"   />
+                    <input type="date" width="12" class="form-control mitexto fa fa-calendar fa-lg" id="fechaCorte" name="fechaCorte"
+                         ng-model="fechaCorte"  />
                     </div>
-                </div> 
-     
+                </div>
                 <div class="form-group" ng-show="boton">
                     <div class="form-group">
                         <div class="col-md-2">
@@ -31,19 +26,18 @@
 
                     </div>
                 </div> 
-                <div class="col-md-8" ng-show="verContabiliza">
-                    <input type="text"  id="nota" ng-model="nota" width="2000" />
-                </div>
+                    <div id="divRuedita" ng-show="ruedita">
+                        <img src="img/progress.gif" alt=""/>                   
+                    </div>
                 <div class="form-group" style='display: none'>                   
-                    <input type="text"  id="control" ng-model="control" value="C" />
+                    <input type="text"  id="control" ng-model="control" value="CN" />
                     <input type="text"  id="valUltiperfac" ng-model="valUltiperfac" value="" />
                     <input type="text"  id="valPreriFact" ng-model="valPreriFact" value="" />
                 </div> 
                 
             </form>
 	</div>
-
-     
+ 
    </div>
 
 <script src="js/ui-bootstrap-tpls-0.11.0.js" type="text/javascript"></script>

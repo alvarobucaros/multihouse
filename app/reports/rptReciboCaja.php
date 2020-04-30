@@ -66,7 +66,7 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
       
         $titulo="RECIBO DE CAJA " . $recibo . ' De ' . $pagosfecha;
-        $this->Image($logo,$der+5,14,20,10);
+ //       $this->Image($logo,$der+5,14,20,10);
 
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -161,7 +161,7 @@ require_once ('fpdf.php');
         $pdf->SetXY($izq+20,$y);
         $pdf->Cell(60,4, $ref,0, 0 , 'L' );
         $pdf->SetXY($izq+115,$y);
-        $pdf->Cell(20,4,number_format($pago, 2, '.', ','),0,0,R);
+        $pdf->Cell(20,4,number_format($pago, 2, '.', ','),0,0,'R');
         $saldo += $pago; 
         $y +=4;
         $ln+=1;
@@ -179,7 +179,7 @@ require_once ('fpdf.php');
     $pdf->Cell(60,4,  'TOTAL PAGADO' ,0, 0 , 'L' );
     $pdf->SetFont('Arial','B',6);
     $pdf->SetXY($izq+115,$y);
-    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,R);
+    $pdf->Cell(20,4,number_format($saldo, 2, '.', ','),0,0,'R');
     $resultado = $obj->num2letras($saldo, false, true);
     $y +=7;
     $pdf->SetXY($izq+7,$y);

@@ -293,19 +293,21 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaMensaje1">{{form_empresaMensaje1}}</label>
                    <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="empresaMensaje1" name="empresaMensaje1"
-                         ng-model="registro.empresaMensaje1" required Placeholder="{{form_PhempresaMensaje1}}" 
-                         value="{{registro.empresaMensaje1}}" />
+                    <textarea rows="3" cols="50" class="form-control mitexto" 
+                        id="empresaMensaje1" name="empresaMensaje1" 
+                        ng-app=""ng-model="registro.empresaMensaje1" value="{{registro.empresaMensaje1}}">                           
+                    </textarea>
                     </div>
                 </div> 
 
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaMensaje2">{{form_empresaMensaje2}}</label>
                    <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="empresaMensaje2" name="empresaMensaje2"
-                         ng-model="registro.empresaMensaje2" required Placeholder="{{form_PhempresaMensaje2}}" 
-                         value="{{registro.empresaMensaje2}}" />
-                    </div>
+                    <textarea rows="3" cols="50" class="form-control mitexto" 
+                        id="empresaMensaje2" name="empresaMensaje2" 
+                        ng-app=""ng-model="registro.empresaMensaje2" value="{{registro.empresaMensaje2}}">                           
+                    </textarea>
+                    </div>                    
                 </div> 
 
                 <div class="form-group">
@@ -476,7 +478,7 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaFactorRedondeo">{{form_empresaFactorRedondeo}}</label>
                     <div class="btn-group  col-md-6"  data-toggle="buttons">
-                    <select id='redondeo' name='redondeo' ng-model='registro.ServicioPrioridad' >
+                    <select id='redondeo' name='redondeo' ng-model='registro.empresaFactorRedondeo' >
                      <option ng-repeat='redondeo in redondeo.availableOptions' value = " {{redondeo.tipo}}">{{redondeo.detalle}}</option>
                     </select>                        
                     </div>
@@ -515,6 +517,29 @@
                     </div>
                 </div> 
 
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaRegimen">{{form_empresaProformaFac}}</label>
+                    <div class="btn-group  col-md-4"  data-toggle="buttons">
+                   <label>
+                      <input type="radio" name ="empresaProformaFac" ng-model="registro.empresaProformaFac" value="C" >{{form_empresaProformaFac0}}
+                   </label>
+                   <label>
+                      <input type="radio" name ="empresaProformaFac" ng-model="registro.empresaProformaFac" value="S" >{{form_empresaProformaFac1}}
+                   </label>
+                    </div>
+                </div> 
+
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaRegimen">{{empresaProformaLimite}}</label>
+                    <div class="btn-group  col-md-8"  data-toggle="buttons">
+                   <label>{{empresaProformaLimiteSup}}
+                       <input type="text"  class="form-control mitexto" ng-model="registro.empresaProformaLimSup" id ='empresaProformaLimSup'  name ='empresaProformaLimSup' />
+                   </label>
+                   <label>{{empresaProformaLimiteInf}} 
+                       <input type="text"  class="form-control mitexto" ng-model="registro.empresaProformaLimInf" id ='empresaProformaLimInf'  name ='empresaProformaLimInf' />
+                   </label>
+                    </div>
+                </div>                  
                 <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaNroInmuebles">{{form_empresaNroInmuebles}}</label>
                    <div class="col-md-6">

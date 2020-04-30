@@ -2,6 +2,7 @@ var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_titleGen = 'Parámetros Generales';
     $scope.form_titleFac = 'Parámetros Facturación';
+    $scope.form_titleCont = 'Parámetros Contabilidad';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
@@ -10,7 +11,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_btnActualiza = 'Actualizar';
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
- 
+    $scope.form_empresatercero = 'TERCERO CONTABLE';
     $scope.form_empresaActiva160 = 'Inactiva';
     $scope.form_empresaActiva161 = 'Activa';
     $scope.form_empresaPagosParciales500 = 'NO';
@@ -45,36 +46,36 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresaFchCreacion = 'FCH CREACION';
     $scope.form_empresaFchModificacion = 'FCH MODIFICA';
     $scope.form_empresaFchVigencia = 'FCH VIGENCIA';
-    $scope.form_empresaPeriodoActual = 'PERIODO';
+    $scope.form_empresaPeriodoActual = 'PERIODO CONTABLE';
     $scope.form_empresaTwiter = 'CUENTA TWITER';
     $scope.form_empresaFacebook = 'CUENTA FACEBOOK';
     $scope.form_empresaWeb = 'PAGINA WEB';
     $scope.form_empresaEmail = 'CUENTA CORREO';
     $scope.form_empresaActiva = 'ACTIVA';
     $scope.form_empresaPuertoCorreo = 'PRTO_EMAIL';
-    $scope.form_empresaRepresentante = 'REPREENTANTE LEGAL';
-    $scope.form_empresaIdentifRepresentante = 'CEDULA REPREENTANTE';
+    $scope.form_empresaRepresentante = 'REPRESENTANTE LEGAL';
+    $scope.form_empresaIdentifRepresentante = 'CEDULA REPRESENTANTE';
     $scope.form_empresaContador = 'CONTADOR';
     $scope.form_empresaMatriculaContador = 'MATRICULA CONTADOR';
     $scope.form_empresaIdentifContador = 'CEDULA CONTADOR';
     $scope.form_empresaRevisor = 'REVISOR FISCAL';
     $scope.form_empresaMatriculaRevisor = 'MATRICULA REVISOR';
     $scope.form_empresaIdentifRevisor = 'CEDULA REVISOR';
-    $scope.form_empresaAnoFiscal = 'ANO FISCAL';
-    $scope.form_empresaEstructura = 'ESTRUCTURA';
     $scope.form_empresaAdministrador = 'ADMINISTRADOR';
     $scope.form_empresaAdministradorCed = 'CEDULA ADMON';
     $scope.form_empresaSecretaria = 'SECRETARIA';
     $scope.form_empresaSecretariaCedula = 'CEDULA SECRETARIA';
     $scope.form_empresaMensaje1 = 'MENSAJE FACTURA 1';
-    $scope.form_empresaMensaje2 = 'MENSAJE TACTURA 2';
+    $scope.form_empresaMensaje2 = 'MENSAJE FACTURA 2';
     $scope.form_empresaPeriodoFactura = 'PERIODO FACTURA';
     $scope.form_empresaPeriCierreFactura = 'PERIODO CERRADO';
     $scope.form_empresaCompFra = 'COMPROBANTE FACTURA';
     $scope.form_empresaCompRcaja = 'COMPROBANTE RCAJA';
     $scope.form_empresaCompAjustes = 'COMPR AJUSTES';
     $scope.form_empresaCompEgreso = 'COM. EGRESO';
-    $scope.form_empresaCompCierreMes = 'COMPCIERREMES';
+    $scope.form_empresaAnoFiscal = 'ANO FISCAL';
+    $scope.form_empresaEstructura = 'ESTRUCTURA';
+    $scope.form_empresaCompCierreMes = 'COMP. CIERRE MES';
     $scope.form_empresaCompApertura = 'COMP. APERTURA';
     $scope.form_empresaCuentaCierre = 'CUENTA CIERRE';
     $scope.form_empresaCuentaCaja = 'CUENTA CAJA';
@@ -105,7 +106,17 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresafacturactaiva = 'FACTURA CUENTA IVA';
     $scope.form_empresaRegimen = 'REGIMEN';
     $scope.form_empresaporcentajeiva = 'PORCENTAJE IVA';
-    
+    $scope.form_empresaporcentajeiva = 'PORCENTAJE IVA';
+    $scope.form_empresaProformaCon = 'PROFORMA CONTABLE';
+    $scope.form_empresaProformaFac = 'PROFORMA FACTURA';
+    $scope.form_empresaProformaCon0 = 'NO';
+    $scope.form_empresaProformaCon1 = 'SI';
+    $scope.form_empresaProformaFac0 = 'NO';
+    $scope.form_empresaProformaFac1 = 'SI';
+
+    $scope.empresaProformaLimite = "LIMITES PROFORMA";
+    $scope.empresaProformaLimiteSup = "SUPERIOR";
+    $scope.empresaProformaLimiteInf = "INFERIOR";
     $scope.form_PhempresaId = 'Digite id';
     $scope.form_PhempresaClave = 'Digite clave';
     $scope.form_PhempresaNombre = 'Digite nombre';
@@ -177,7 +188,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_Phempresafacturactaiva = 'Digite facturactaiva';
     $scope.form_PhempresaRegimen = 'Digite regimen';
     $scope.form_Phempresaporcentajeiva = 'Digite porcentajeiva';
-   
+    $scope.id=0;
     $scope.currentPage = 0;
     $scope.pageSize = 10;
     $scope.pages = [];
@@ -188,6 +199,10 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     getInfo($scope.empresa);
     
     function getInfo(empresa){
+        $http.post('modulos/mod_containformes.php?op=4',{'op':'4','empresa':empresa}).success(function(data){
+        $scope.operators0 = data;
+        }); 
+        
         $http.post('modulos/mod_contaempresas.php?op=r',{'op':'r', 'empresa':empresa}).success(function(data){
         $scope.registro = data.split('||');
         $scope.registro.empresaId = $scope.registro[0]; 
@@ -261,7 +276,21 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.registro.empresafacturactaiva = $scope.registro[68]; 
         $scope.registro.empresaRegimen = $scope.registro[69]; 
         $scope.registro.empresaporcentajeiva = $scope.registro[70]; 
-        });       
+        $scope.registro.empresatercero = $scope.registro[71]; 
+        $scope.registro.empresaProformaCon = $scope.registro[72]; 
+        $scope.registro.empresaProformaFac = $scope.registro[73]; 
+        $scope.registro.empresaProformaLimSup = $scope.registro[74]; 
+        $scope.registro.empresaProformaLimInf = $scope.registro[75]; 
+        $scope.id=$scope.registro.empresatercero;
+        $("#empresatercero").find($scope.id);
+        $("#empresatercero option[value="+$scope.id+"]").attr('selected','selected');
+        $("#redondeo option[value="+$scope.registro.empresaFactorRedondeo+"]").attr('selected','selected');
+       // $scope.operators0.terceroId =  $scope.registro[71];  $scope.registro.empresaFactorRedondeo  redondeo
+        });  
+
+    id=962;
+     $("#empresatercero option[value="+$scope.id+"]").attr('selected','selected');
+
     }
 
 // Function to add toggle behaviour to form
@@ -292,9 +321,9 @@ $('#idForm').slideToggle();
 
     $scope.updateInfo =function(info)
     {
-        er='';
-      
+        er='';      
         empresa = $('#e').val(); 
+      
         if($('#empresaId').val()===''){er+='falta id\n';}
         if($('#empresaClave').val()===''){er+='falta clave\n';}
         if($('#empresaNombre').val()===''){er+='falta nombre\n';}
@@ -306,15 +335,8 @@ $('#idForm').slideToggle();
         if($('#empresaFchCreacion').val()===''){er+='falta fch creacion\n';}
         if($('#empresaFchModificacion').val()===''){er+='falta fch modifica\n';}
         if($('#empresaFchVigencia').val()===''){er+='falta fch vigencia\n';}
-        if($('#empresaPeriodoActual').val()===''){er+='falta periodo\n';}
-       
+        if($('#empresaPeriodoActual').val()===''){er+='falta periodo\n';}       
         if($('#empresaActiva').val()===''){er+='falta activa\n';}
-        if($('#empresaAdministrador').val()===''){er+='falta administrador\n';}
-        if($('#empresaAdministradorCed').val()===''){er+='falta cedula admon\n';}
-        if($('#empresaSecretaria').val()===''){er+='falta secretaria\n';}
-        if($('#empresaSecretariaCedula').val()===''){er+='falta cedula secretaria\n';}
-        if($('#empresaPeriodoFactura').val()===''){er+='falta periodo factura\n';}
-        if($('#empresaPeriCierreFactura').val()===''){er+='falta periodo cerrado\n';}
         if($('#empresaCompFra').val()===''){er+='falta compr factura\n';}
         if($('#empresaCompRcaja').val()===''){er+='falta compr rcaja\n';}
         if($('#empresaCuentaCaja').val()===''){er+='falta cuenta caja\n';}
@@ -375,8 +397,12 @@ $('#idForm').slideToggle();
             'empresafacturanotaiva':info.empresafacturanotaiva, 'empresafacturanotaica':info.empresafacturanotaica, 
             'empresafacturactacxc':info.empresafacturactacxc, 'empresafacturactaivta':info.empresafacturactaivta, 
             'empresafacturactaica':info.empresafacturactaica, 'empresafacturactaiva':info.empresafacturactaiva, 
-            'empresaRegimen':info.empresaRegimen, 
-            'empresaporcentajeiva':info.empresaporcentajeiva}).success(function(data){
+            'empresaRegimen':info.empresaRegimen,'empresaporcentajeiva':info.empresaporcentajeiva, 
+            'empresaProformaLimSup':info.empresaProformaLimSup,'empresaProformaLimInf':info.empresaProformaLimInf,
+            'empresaProformaCon':info.empresaProformaCon,'empresaProformaFac':info.empresaProformaFac,
+            'empresaProformaLimSup':info.empresaProformaLimSup,'empresaProformaLimInf':info.empresaProformaLimInf,
+            'empresatercero':info.empresatercero}).success(function(data){
+ 
         if (data === 'Ok') {
            // getInfo(empresa);
             alert ('Registro Actualizado ');

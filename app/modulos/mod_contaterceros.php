@@ -1,6 +1,7 @@
 <?php
 include_once("../bin/cls/clsConection.php");
-$objClase = new DBconexion('atominge_ncr','127,0,0,1','root','');
+//$objClase = new DBconexion();
+$objClase = new DBconexion();
 $con = $objClase->conectar();
 $data = json_decode(file_get_contents("php://input")); 
 $op = mysqli_real_escape_string($con, $data->op);
@@ -28,7 +29,6 @@ switch ($op)
 }
   
 
- 
     function  leeRegistros($data) 
     { 
         global $objClase;
@@ -121,8 +121,9 @@ switch ($op)
         $expo .=  '          <th>GRAN CONTRIBUYENTE</th>';
             $query = "SELECT  terceroId, terceroEmpresaId, terceroNombre, terceroIdenTipo, terceroIdenNumero, ".
                     " terceroDireccion, terceroTelefonos, terceroCorreo, terceroTwiter, terceroFacebook, ".
-                    " terceroComentario, tercero_codigo, terceroActivo, terceroRegimen, terceroContribuyente" 
-                    . " FROM contaterceros ORDER BY terceroNombre ";             
+                    " terceroComentario, tercero_codigo, terceroActivo, terceroRegimen, terceroContribuyente" .
+                    " FROM contaterceros WHERE terceroEmpresaId = " . $empresa .  
+                    " ORDER BY terceroNombre ";             
             $result = mysqli_query($con, $query); 
             if(mysqli_num_rows($result) != 0)  
                 { 

@@ -14,7 +14,7 @@
         <div>
             <div class="col-md-6">
                 <ul>        
-                    <a href="../documentation/Instalación.pdf" class="external"> 
+                    <a href="../documentation/instalacion.pdf " target="_blank">
                     <img src="img/pdf-dist.png" alt="Instalación del producto"/> Instalación</a>
                 </ul>
             </div> 

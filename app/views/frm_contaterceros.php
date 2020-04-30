@@ -19,9 +19,7 @@
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
-                  ng-submit="insertInfo(registro);" hidden="">
-
-   
+                ng-submit="insertInfo(registro);" hidden="">
 
                 <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="terceroEmpresaId">{{form_terceroEmpresaId}}</label>
@@ -100,25 +98,25 @@
                          value="{{registro.terceroCorreo}}" />
                     </div>
                 </div> 
-        <div  style='display: none'>
-                <div class="form-group">
-                    <label class="control-label milabel col-md-4" for="terceroTwiter">{{form_terceroTwiter}}</label>
-                   <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="terceroTwiter" name="terceroTwiter"
-                         ng-model="registro.terceroTwiter" required Placeholder="{{form_PhterceroTwiter}}" 
-                         value="{{registro.terceroTwiter}}" />
-                    </div>
-                </div> 
+                <div  style='display: none'>
+                        <div class="form-group">
+                            <label class="control-label milabel col-md-4" for="terceroTwiter">{{form_terceroTwiter}}</label>
+                           <div class="col-md-6">
+                            <input type="text" class="form-control mitexto" id="terceroTwiter" name="terceroTwiter"
+                                 ng-model="registro.terceroTwiter" required Placeholder="{{form_PhterceroTwiter}}" 
+                                 value="{{registro.terceroTwiter}}" />
+                            </div>
+                        </div> 
 
-                <div class="form-group">
-                    <label class="control-label milabel col-md-4" for="terceroFacebook">{{form_terceroFacebook}}</label>
-                   <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="terceroFacebook" name="terceroFacebook"
-                         ng-model="registro.terceroFacebook" required Placeholder="{{form_PhterceroFacebook}}" 
-                         value="{{registro.terceroFacebook}}" />
-                    </div>
-                </div> 
-        </div>
+                        <div class="form-group">
+                            <label class="control-label milabel col-md-4" for="terceroFacebook">{{form_terceroFacebook}}</label>
+                           <div class="col-md-6">
+                            <input type="text" class="form-control mitexto" id="terceroFacebook" name="terceroFacebook"
+                                 ng-model="registro.terceroFacebook" required Placeholder="{{form_PhterceroFacebook}}" 
+                                 value="{{registro.terceroFacebook}}" />
+                            </div>
+                        </div> 
+                </div>
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="terceroComentario">{{form_terceroComentario}}</label>
                    <div class="col-md-6">
@@ -199,13 +197,13 @@
                         <th>Nr.Doc</th>
                         <th>DIRECCION</th>
                         <th>TELEFONOS</th>
-                        <th>E-MAIL</th>
+                        <!--th>E-MAIL</th>
                         <th>CTA TWITER</th>
-                        <th>CTA FACEBOOK</th>
+                        <th>CTA FACEBOOK</th-->
                         <th>COMENTARIOS</th>                        
-                        <th>ACTIVO</th>
-                        <th>REGIMEN</th>
-                        <th>CONTRIBUYENTE</th>
+                        <th>Activo</th>
+                        <th>RGMEN</th>
+                        <th>CONTRI BUYENTE</th>
                     </tr>
                    
                     <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
@@ -217,9 +215,9 @@
                     <td>{{detail.terceroIdenNumero}}</td>
                     <td>{{detail.terceroDireccion}}</td>
                     <td>{{detail.terceroTelefonos}}</td>
-                    <td>{{detail.terceroCorreo}}</td>
+                    <!--td>{{detail.terceroCorreo}}</td>
                     <td>{{detail.terceroTwiter}}</td>
-                    <td>{{detail.terceroFacebook}}</td>
+                    <td>{{detail.terceroFacebook}}</td-->
                     <td>{{detail.terceroComentario}}</td>                    
                     <td>{{detail.terceroActivo}}</td>
                     <td>{{detail.terceroRegimen}}</td>

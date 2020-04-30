@@ -79,7 +79,15 @@
                          value="{{registro.compConsecutivo}}" />
                     </div>
                 </div> 
-                <div ng-show="movto">
+                <div ng-show="movto" class="sombra">
+                    <div class="form-group">
+                        <label class="milabel col-md-4" for="compcpbnte">{{form_compcpbnte}}</label>
+                        <div class="col-md-6">
+                        <select id='compcpbnte' name='compcpbnte' ng-model='registro.compcpbnte'>
+                         <option ng-repeat='operator0 in operators5' value = " {{operator0.compCodigo}}">{{operator0.compNombre}}</option>
+                        </select>
+                        </div>
+                    </div> 
                     <div class="form-group" ng-show="cualCta">
                         <label class="milabel col-md-3" for="moviConCuenta">{{form_moviConCuenta}}</label>
                         <div class="col-md-7">
@@ -212,7 +220,7 @@
                 <div style='display: none'>
                 <input type="text" ng-model="registro.compId" id ='compId'  name ='compId' value="{{registro.compId}}"/>
                 <input type="text" ng-model="buscaCta" id ='buscaCta'  name ='buscaCta' />
-   
+                <input type="text" ng-model="control" id ='control'  name ='control'  value ="C1"/>
                 </div>
                 <div id='miExcel' style='display: none'>
                 </div> 

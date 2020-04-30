@@ -14,7 +14,7 @@ h1{
 .green {background-color: #00a65a;}
 
 .mitexto{
-    font-size: 14px;  height: 22px; padding-top: 2px; 
+    font-size: 12px;   padding-top: 2px; 
 }
 .mitexto2{
     font-size: 14px; width: 5px;  height: 2em; padding-top: 2px; 
@@ -34,7 +34,9 @@ h1{
 .warning {
   border-color: yellow;
 }
-
+.milabel2{
+    font-size: 12px;  height: 22px; padding-top: 5px;  color: #000 ; border-color: #008cab; 
+}
 .milabel{
     font-size: 14px; font-weight:  bold; height: 22px; padding-top: 5px;  
 }
