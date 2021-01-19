@@ -7,6 +7,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_titleRev = 'Reversa Comprobantes Contables';
     $scope.form_titleDupl = 'Duplica comprobante existente';
     $scope.form_titleTrasf = 'Transfiere saldos desde un periodo'
+    $scope.form_titleBorra = 'Borra Saldos y activa comprobantes'
     $scope.form_btnNuevo = 'Nuevo registro';
     
     $scope.form_btnEdita = 'Edita';
@@ -18,7 +19,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_btnReversa = 'Reversa';
     $scope.form_btnMovi='Ver movimiento';
     $scope.form_btnDupli='Duplica este comprobante';
-    $scope.form_btnConti='Continua';
+    $scope.form_btnConti='Trae lista';
+    $scope.form_btnProcesa='Procesar';
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
  
@@ -67,6 +69,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.pageSize = 10;
     $scope.cabeza=0;
     $scope.periodo='';
+    $scope.fecha='';
     $scope.pages = [];
     $scope.registro = [];
     $scope.empresa = $('#e').val();
@@ -74,7 +77,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.registro.movicaEmpresaId = $scope.empresa;
 
     var f = new Date();  
-   // var fecha=f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()+ ' 00:00:0000';
+    var fecha= ediFecha(f)
     var periodo = f.getFullYear();
     if (f.getMonth() +1 < 10){periodo+='0'}
     periodo += (f.getMonth() +1);
@@ -89,7 +92,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         movicaTerceroId:0,
         movicaDetalle:'',
         movicaProcesado:'N',
-        movicaFecha:'',
+        movicaFecha:fecha,
         movicaPeriodo:$scope.periodoCtble,
         movicaDocumPpal:'',
         movicaDocumSec:''
@@ -101,23 +104,19 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         control = $scope.control;
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
         rec=data.split('||');
+            $scope.fecha = '01/'+rec[15].substring(4, 6)+'/'+rec[15].substring(0, 4);
+            $scope.movicaFecha=$scope.fecha;
+            defaultForm.movicaFecha = $scope.fecha;
             $scope.periodoCtble =rec[15]; 
             $scope.movicaFecha = rec[2];
-            defaultForm.movicaFecha= rec[2];
+            
             $scope.registro.movicaPeriodo = rec[1];
-            $scope.registro.movicaFecha = rec[2];
+         
             $scope.periodo = rec[1];
         if(control === '2'){
             $scope.periodoIni = rec[15]; 
             $scope.periodoCont = rec[15];
             $scope.ruedita = true;
-//            a=parseInt(rec[15].substring(0, 4));
-//            m=parseInt(rec[15].substring(4, 6));
-//            m +=1;
-//            if (m>12){a +=1;m=1}
-//            periodo =  String(a);
-//            if (m<10){periodo +='0';}
-//            periodo += String(m)
             $scope.periodoFin = $scope.periodoCont;
         }
         if(control === 'Z'){
@@ -130,7 +129,15 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });
     }
 
-    
+    function ediFecha(f){
+        var fecha='';
+        if (f.getDate() < 10){fecha='0'}
+        fecha += f.getDate() + "/";
+        if (f.getMonth() +1<10){fecha +='0'}
+        fecha +=  (f.getMonth() +1) + "/" + f.getFullYear()+ ' 00:00:0000';
+        return fecha;
+    }
+        
     if ($scope.control === 'A') // actualiza comprobantes 
     {
         empresa = $('#e').val();
@@ -154,6 +161,22 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         //reversaMvtoPeriodo('rc');
      }
      
+    $scope.continuaBorrado = function(){
+        $scope.ruedita = false;
+        empresa = $('#e').val();
+        periodo = $scope.periodoCtble;
+        $http.post('modulos/mod_contamovicabeza.php?op=bs',{'op':'bs', 'empresa':empresa,'periodo': periodo}).success(function(data){
+        if (data === 'Ok'){
+            alert ("Saldos del periodo " + periodo + " borrados y sus comprobantes habilitados " 
+                    + 'Actualice el priodo en Parámetros contabilidad y ' + 'Ejecute cierre mensual para iniciar de nuevo este periodo');
+        }else{
+            alert('Error: '+ data);
+        };
+        $scope.ruedita = true;
+        });  
+    };
+     
+     
      function reversaMvtoPeriodo(ope){
         empresa = $('#e').val();
         periodo = $scope.periodoCtble;
@@ -168,7 +191,6 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         empresa = $('#e').val();
         periodo = $scope.periodoCtble;
         $http.post('modulos/mod_contamovicabeza.php?op=tc',{'op':'tc', 'empresa':empresa,'periodo': periodo,'ope':ope}).success(function(data){
-//alert(data);
         $scope.detailsActualizar = data;
  //       $scope.periodoCtble = periodo;
         $scope.configPages();   
@@ -223,13 +245,15 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         if(perFin>periodo){
             er="El periodo final es mayor al último cierre \n";
         }
-
+        if(perIni.substring(0, 4) !== perFin.substring(0, 4)){
+              er="El periodo inicial es diferente al final. sugerencia: trasfiera hasta el periodo 23 y haga el cierre del ejercicio para pasar al siguiente periodo \n";
+        }
         if(er==='')
         { if (confirm('Transfiere saldos desde el periodo : '+perIni+ ' hasta el periodo ' +perFin+' ?')) { 
             $scope.ruedita = false;
             empresa = $('#e').val();
             $http.post('modulos/mod_contamovicabeza.php?op=ts',{'op':'ts', 'empresa':empresa,'perIni': perIni,'perFin': perFin}).success(function(data){
-            $scope.detailsActualizar = data;
+            alert(data);
             $scope.ruedita = true;
             }); 
         }
@@ -264,7 +288,10 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         cp= info.movicaComprId;
         empresa = $('#e').val();
         $http.post('modulos/mod_contamovicabeza.php?op=cp',{'op':'cp','empresa':empresa,'cp':cp}).success(function(data){
-        info.movicaCompNro=data;
+        rec=data.split(',');
+            info.movicaCompNro=rec[0];
+            info.compNombre=rec[1];
+            
     }); 
     };
  
@@ -345,7 +372,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.ventanaSgnda=false;
         $scope.form_title = 'Digita Comprobantes de contabilidad, periodo : ' + $scope.periodoCtble;
         defaultForm.movicaPeriodo = $scope.periodoCtble;
-        defaultForm.movicaFecha = $scope.periodoCtble.substring(0, 4)+'/'+$scope.periodoCtble.substring(4, 6)+'/01';
+        defaultForm.movicaFecha = '01/'+$scope.periodoCtble.substring(4, 6)+'/'+$scope.periodoCtble.substring(0, 4);
         $scope.registro.movicaPeriodo = $scope.periodoCtble;
         getInfo();
     };
@@ -363,9 +390,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.currentPageMv = 0;
         $scope.pageSizeMv = 10;
         $scope.pagesMv = [];
+
         $http.post('modulos/mod_contamovicabeza.php?op=tn',{'op':'tn','empresa':empresa,'cmpbnte':cp}).success(function(data){
             $scope.NrCompro = data; 
-            info.nrCpbnte = data;
         });
         cabeza = info.movicaId;
         $scope.cabeza=cabeza;
@@ -391,17 +418,22 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.form_movicaTerceroId = 'Tercero:';
         $scope.form_empresaFchecha = 'Fecha:';
         $scope.comprobante = info.movicaComprId;
+        $scope.registroDup=[];
 
         traeNroComp(empresa,info.movicaComprId);
         muestraMvto(empresa,cabeza);
-        
+        $scope.registroDup.nrCpbnte = $scope.NrCompro
+        $scope.registroDup.detCpbnte = info.movicaDetalle;
+        $scope.registroDup.movicaTerceroId = $scope.movicaTerceroId;
+        $scope.registroDup.empresaFchecha = info.movicaFecha;
+
         function traeNroComp(empresa,cmpbnte){ 
         $http.post('modulos/mod_contamovicabeza.php?op=tn',{'op':'tn','empresa':empresa,'cmpbnte':cmpbnte}).success(function(data){
             $scope.NrCompro = data; 
-            $scope.nrCpbnte = data;
+            $scope.registroDup.nrCpbnte = data;
         });
-        };       
-       
+        };   
+        
         function muestraMvto(empresa,cabeza){
             $http.post('modulos/mod_contamovicabeza.php?op=rm',{'op':'rm','empresa':empresa,'cabeza':cabeza}).success(function(data){
                 $scope.detailsMv = data;
@@ -409,24 +441,29 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             });
         }
 
-        $scope.duplicaComprobante = function(detailsMv){
-//            empresa = $('#e').val();
+        $scope.duplicaComprobante = function(registroDup){
+        er='';
+        if($scope.registroDup.empresaFchecha===''){er+='falta fecha\n';}
+        if($scope.registroDup.detCpbnte===''){er+='falta Detalle\n';}
+         if($scope.registroDup.movicaTerceroId==='' || $scope.registroDup.movicaTerceroId === undefined){er+='falta Tercero\n';}
+        if(er===''){
             id=info.movicaId;
             cpr=$scope.comprobante ;
-            ter=detailsMv.movicaTerceroId;
-            det=detailsMv.detCpbnte;
+            ter=registroDup.movicaTerceroId;//operator1.terceroId
+            det=registroDup.detCpbnte;
             nro=$scope.NrCompro;
-            fch=detailsMv.empresaFchecha;
+            fch=registroDup.empresaFchecha;
             em = $('#e').val().trim();
             dato = ter+ '||' + det+ '||'+cpr+'||' + nro+ '||' + fch+ '||' + em+ '||' + id;
-//            $http.post('modulos/mod_contamovicabeza.php?op=tn',{'op':'tn','empresa':empresa,'cmpbnte':cpr}).success(function(data){
-//            detail.detCpbnte = data;
-//            });
             $http.post('modulos/mod_contamovicabeza.php?op=dp',{'op':'dp','dato':dato}).success(function(data){
             alert(data);
             $('#idFormDup').slideToggle();
             $('#idFormDup').css('display', 'none');
             });
+        }
+        else{
+            alert(er);
+        }
 
         } ;
     
@@ -435,6 +472,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             $('#idFormDup').css('display', 'none');
         };
         $scope.formToggleDup = function(){
+            $scope.registro.movicaFecha = $scope.fecha;
             $('#idFormDup').slideToggle(); 
             $('#idFormDup').css('display', 'none');
         };
@@ -444,7 +482,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });
          
         $scope.movicaTerceroId =  info.movicaTerceroId;
-
+        //$scope.registroDup.movicaTerceroId = $scope.movicaTerceroId;
         },
         size: size,
         resolve: {
@@ -490,8 +528,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.form_moviConIdTercero = 'Tercero:';
         $scope.form_btnAnula = 'Cerrar';
         $scope.form_btnActualiza = 'Actualizar';
-        $scope.form_vrlDeb = 'Tot débitos';
-        $scope.form_vrlCre = 'Tot créditos';
+        $scope.form_vrlDeb = 'Débitos';
+        $scope.form_vrlCre = 'Créditos';
         $scope.form_vrlTot = 'Diferencia';
         $scope.form_comprobante = 'Nro comprobante';
         $scope.form_detalle = 'Detalle';
@@ -503,6 +541,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         sumaSaldos(empresa,cabeza);
         muestraMvto(empresa,cabeza);
         
+  
         function sumaSaldos(empresa,cabeza){        
         $http.post('modulos/mod_contamovicabeza.php?op=sm',{'op':'sm','empresa':empresa,'cabeza':cabeza}).success(function(data){
             rec=data.split('||');
@@ -532,7 +571,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $http.post('modulos/mod_contamovicabeza.php?op=1',{'op':'1','empresa':empresa}).success(function(data){
         $scope.operators3 = data;
         });
-        $http.post('modulos/mod_contamovicabeza.php?op=2',{'op':'2','empresa':empresa}).success(function(data){
+        $http.post('modulos/mod_contamovicabeza.php?op=2',{'op':'2','empresa':empresa, 'control':'C'}).success(function(data){
         $scope.operators2 = data;
         });
 
@@ -550,7 +589,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             er='';
             empresa = $('#e').val();
             cabeza = info.movicaId;
-          //  $scope.registroMov.moviConCabezaId = $scope.cabeza;
+          //  $scope.registroMov.movicaTerceroId = $scope.cabeza;
           //  if($scope.registroMov.moviConId===''){er+='falta id\n';}
             if($scope.registroMov.moviConCabezaId===''){er+='falta cabeza\n';}
             if($scope.registroMov.moviConDetalle===''){er+='falta detalle\n';}
@@ -561,13 +600,15 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             if(($scope.registroMov.moviConImpPorc > 0 || $scope.registroMov.moviConImpValor > 0)
                 && $scope.registroMov.moviConImpTipo===''){er+='falta tipo impuesto o retención\n';}
             if ($scope.registroMov.moviConImpTipo !== '' && 
-                    ($scope.registroMov.moviConImpPorc === 0 && $scope.registroMov.moviConImpValor === 0)){
-                        er+='falta porcentaje o valor de imp o retención\n';
-                    }
+                ($scope.registroMov.moviConImpPorc === 0 && $scope.registroMov.moviConImpValor === 0)){
+                    er+='falta porcentaje o valor de imp o retención\n';
+                }
+            db=parseInt($scope.registroMov.moviConDebito);
+            cr=parseInt($scope.registroMov.moviConCredito);
             if($scope.registroMov.moviConImpPorc===''){er+='falta impuesto %\n';}
             if($scope.registroMov.moviConImpValor===''){er+='falta impuesto valor\n';}
-            if($scope.registroMov.moviConDebito === 0 && $scope.registroMov.moviConCredito === 0 ){er+='El valor Cr y el valor Db es cero\n';}
-            if($scope.registroMov.moviConDebito !== 0 && $scope.registroMov.moviConCredito !== 0 ){er+='El valor Cr o el valor Db debe ser mayor a cero\n';}
+            if(db === 0 && cr === 0 ){er+='El valor Cr y el valor Db es cero\n';}
+            if(db !== 0 && cr !== 0 ){er+='El valor Cr o el valor Db debe ser mayor a cero\n';}
             if($scope.vlrTotal !== 0){er+='El neto total debe ser cero\n';}
             if (er===''){
                $scope.registroMov.moviTipoCta = 'C';
@@ -584,7 +625,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
                     sumaSaldos(empresa,cabeza);
                     $('#idFormMov').slideToggle();
                     muestraMvto(empresa,cabeza);
-                    alert('Registro actualizado');}
+                    alert('Registro Mvto Actualizado');}
                 else{
                     alert(data);
                 }    
@@ -699,8 +740,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.form_moviConIdTercero = 'Tercero:';
         $scope.form_btnAnula = 'Cerrar';
         $scope.form_btnActualiza = 'Actualizar';
-        $scope.form_vrlDeb = 'Tot débitos';
-        $scope.form_vrlCre = 'Tot créditos';
+        $scope.form_vrlDeb = 'Débitos';
+        $scope.form_vrlCre = 'Créditos';
         $scope.form_vrlTot = 'Diferencia';
         $scope.vrlDeb = 0;
         $scope.vrlCre = 0;
@@ -726,14 +767,15 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         }
 
         $scope.sumaDbCr = function(){
-//            alert('HOLA');
             $script.vlrTotal = $scope.vlrDb1 + $scope.vlrDb2 + $scope.vlrDb3 + $scope.vlrDb4 + $scope.vlrDb5 + $scope.vlrDb6;
             $script.vlrTotal -= ($scope.vlrCr1 + $scope.vlrCr2 + $scope.vlrCr3 + $scope.vlrCr4 + $scope.vlrCr5 + $scope.vlrCr6);
-        }    
+        };   
+        
         $http.post('modulos/mod_contamovicabeza.php?op=1',{'op':'1','empresa':empresa}).success(function(data){
         $scope.operators3 = data;
         });
-        $http.post('modulos/mod_contamovicabeza.php?op=2',{'op':'2','empresa':empresa}).success(function(data){
+        
+        $http.post('modulos/mod_contamovicabeza.php?op=2',{'op':'2','empresa':empresa, 'control':'C'}).success(function(data){
         $scope.operators2 = data;
         });
 
@@ -745,6 +787,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
 
         $scope.ok = function () {
           $modalInstance.close($scope.selected.item);
+           $('#idForm').slideToggle(); 
         };
           
     
@@ -756,23 +799,23 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             if($scope.registroMov.moviConCabezaId===''){er+='falta cabeza\n';}
             if($scope.registroMov.moviConDetalle===''){er+='falta detalle\n';}
             if($scope.registroMov.moviConCuenta===''){er+='falta cuenta\n';}
-            if($scope.registroMov.moviConDebito===''){$scope.registroMov.moviConDebito=0;}
-            if($scope.registroMov.moviConCredito===''){$scope.registroMov.moviConCredito=0;}
+            if($scope.registroMov.moviConDebito===''){$scope.registroMov.moviConDebito='0';}
+            if($scope.registroMov.moviConCredito===''){$scope.registroMov.moviConCredito='0';}
             if($scope.registroMov.moviConBase===''){er+='falta base\n';}
             if(($scope.registroMov.moviConImpPorc > 0 || $scope.registroMov.moviConImpValor > 0)
                 && $scope.registroMov.moviConImpTipo===''){er+='falta tipo impuesto o retención\n';}
-            if ($scope.registroMov.moviConImpTipo != '' && 
+            if ($scope.registroMov.moviConImpTipo !== '' && 
                     ($scope.registroMov.moviConImpPorc === 0 && $scope.registroMov.moviConImpValor === 0)){
                         er+='falta porcentaje o valor de imp o retención\n';
                     }
             if($scope.registroMov.moviConImpPorc===''){er+='falta impuesto %\n';}
             if($scope.registroMov.moviConImpValor===''){er+='falta impuesto valor\n';}
             if($scope.registroMov.moviConDebito === 0 && $scope.registroMov.moviConCredito === 0 ){er+='El valor Cr y el valor Db es cero\n';}
-            if($scope.registroMov.moviConDebito != 0 && $scope.registroMov.moviConCredito != 0 ){er+='El valor Cr o el valor Db debe ser mayor a cero\n';}
-            if($scope.vlrTotal != 0){er+='El neto total debe ser cero\n';}
+            if($scope.registroMov.moviConDebito !== '0' && $scope.registroMov.moviConCredito !== '0' ){er+='El valor Cr o el valor Db debe ser mayor a cero\n';}
+            if($scope.vlrTotal !== 0){er+='El neto total debe ser cero\n';}
             if (er===''){
                $scope.registroMov.moviTipoCta = 'C';
-               if($scope.registroMov.moviConDebito != 0 ){$scope.registroMov.moviTipoCta = 'D';}
+               if($scope.registroMov.moviConDebito !== 0 ){$scope.registroMov.moviTipoCta = 'D';}
                 dato=$scope.registroMov.moviConId+'||'+$scope.registroMov.moviConCabezaId+'||'+$scope.registroMov.moviConDetalle+'||'
                 dato+=$scope.registroMov.moviConCuenta+'||'+$scope.registroMov.moviConDebito+'||'+$scope.registroMov.moviConCredito+'||'
                 dato+=$scope.registroMov.moviConBase+'||'+$scope.registroMov.moviConImpTipo+'||'+$scope.registroMov.moviConImpPorc+'||'
@@ -785,7 +828,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
                     sumaSaldos(empresa,cabeza);
                     $('#idFormMov').slideToggle();
                     muestraMvto(empresa,cabeza);
-                    alert('Registro actualizado');}
+                    alert('Registro Actualizado');}
                 else{
                     alert(data);
                 }    
@@ -794,7 +837,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             }else{
                 alert(er);
             }
-        }
+        };
 
         $scope.editInfoMv =function(info)
         {  
@@ -805,7 +848,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         
         $scope.clearInfoMov = function(){
             $('#idFormMov').slideToggle();
-        }
+        };
         
         $scope.deleteInfoMv =function(info)
         { 
@@ -907,7 +950,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });
         ln = selected.length;
         if(ln===0){
-            alert('Debe marcar al menos un comprobante');
+            alert('Debe marcar al menos un comprobante, Botón Continuar');
             return;
         }
         selected = selected.substr(0,ln-1);
@@ -963,6 +1006,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $('#idForm').slideToggle();
         $scope.formato.$setPristine();
         $scope.registro = angular.copy(defaultForm);
+        $('#movicaFecha').val($scope.fecha);
     };
 
     
@@ -975,7 +1019,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
 
     $scope.exporta = function(){
     valor = confirm('Exporta la tabla de inmuebles y propietarios a Excel, continua?');
-    if (valor == true) {
+    if (valor === true) {
         empresa = $('#e').val();
         periodo = $scope.periodoCtble;
         $http.post('modulos/mod_contamovicabeza.php?op=exp',{'op':'exp','empresa':empresa,'periodo':periodo}).success(function(data){
@@ -984,7 +1028,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
     }); 
    }  
-}
+};
+
     $scope.deleteInfo =function(info)
     { 
         empresa = $('#e').val(); 
@@ -1002,6 +1047,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     {
         er='';
         empresa = $('#e').val(); 
+        periodo = $scope.periodoCtble;
+        fecha=$scope.movicaFecha;
        // if($('#movicaId').val()===''){er+='falta id\n';}
         if($('#movicaEmpresaId').val()===''){er+='falta empresa\n';}
         if($('#movicaComprId').val()===''){er+='falta comprobante\n';}
@@ -1011,7 +1058,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         if($('#movicaProcesado').val()===''){er+='falta procesado\n';}
         if($('#movicaFecha').val()===''){er+='falta fecha\n';}
         if($('#movicaPeriodo').val()===''){er+='falta periodo\n';}
-        if($scope.vlrTotal !="$ 0,00"){er+='El neto total debe ser cero\n';}
+        if($scope.vlrTotal !=="$ 0,00"){er+='El neto total debe ser cero\n';}
         if($scope.vlrTotal === undefined){er+='No hay valores registrados\n';}
         if($scope.registro.movicaTerceroId === undefined){er+='falta tercero\n';}
         if(info.movicaTerceroId === 0){er+='falta tercero\n';}
@@ -1020,9 +1067,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             parseFloat($scope.vlrCr1.replace('',0)) + parseFloat($scope.vlrCr2.replace('',0)) + parseFloat($scope.vlrCr3.replace('',0)) +
             parseFloat($scope.vlrCr4.replace('',0)) + parseFloat($scope.vlrCr5.replace('',0)) + parseFloat($scope.vlrCr6.replace('',0));       
         if(vlrTotal === 0){er+='No hay valores registrados\n';}
-        if (er==''){
+        if (er===''){
         dto = info.movicaCompNro.split("||");
-        dato = info.movicaOperaId + '||' + info.movicaEmpresaId.trim() + '||' + info.movicaPeriodo+ '||' + $scope.movicaFecha + '||' + 
+        dato = info.movicaOperaId + '||' + info.movicaEmpresaId.trim() + '||' + periodo+ '||' + $scope.movicaFecha + '||' + 
                info.movicaTerceroId + '||' + $scope.detalleComp1 + '||' + info.movicaFecha+ '||' + 
                info.movicaPeriodo + '||' + info.movicaDocumPpal+ '||' + info.movicaDocumSec+ '||' + 
                $scope.comprobante + '||' +  $scope.secuencia  + '||' + dto[0]  + '||' + 
@@ -1033,6 +1080,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
                Cta($scope.nomCuenta4) + '||' + Cta($scope.nomCuenta5) + '||' + Cta($scope.nomCuenta6) ;
    
         $http.post('modulos/mod_contamovicabeza.php?op=ao',{'op':'ao', 'dato':dato}).success(function(data){
+//alert(data);
         if (data === 'Ok') {
             $scope.vlrDb1 =''; 
             $scope.vlrCr1 =''; 
@@ -1067,9 +1115,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         empresa = $('#e').val(); 
         if($('#movicaId').val()===''){er+='falta id\n';}
         if($('#movicaEmpresaId').val()===''){er+='falta empresa\n';}
-        if($('#movicaComprId').val()===''){er+='falta comprobante\n';}
-        if($('#movicaCompNro').val()===''){er+='falta numero\n';}
-        if($('#movicaTerceroId').val()===''){er+='falta tercero\n';}
+        if(info.movicaComprId===''){er+='falta comprobante\n';}
+        if(info.movicaCompNro===0){er+='falta numero de comprobante\n';}
+        if(info.movicaTerceroId===0){er+='falta tercero\n';}
         if($('#movicaDetalle').val()===''){er+='falta detalle\n';}
         if($('#movicaProcesado').val()===''){er+='falta procesado\n';}
         if($('#movicaFecha').val()===''){er+='falta fecha\n';}
@@ -1078,11 +1126,12 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
 //        if($('#movicaDocumSec').val()===''){er+='falta documsec\n';}
         if (er===''){
         $http.post('modulos/mod_contamovicabeza.php?op=a',{'op':'a', 'movicaId':info.movicaId, 'movicaEmpresaId':info.movicaEmpresaId, 'movicaComprId':info.movicaComprId, 'movicaCompNro':info.movicaCompNro, 'movicaTerceroId':info.movicaTerceroId, 'movicaDetalle':info.movicaDetalle, 'movicaProcesado':info.movicaProcesado, 'movicaFecha':info.movicaFecha, 'movicaPeriodo':info.movicaPeriodo, 'movicaDocumPpal':info.movicaDocumPpal, 'movicaDocumSec':info.movicaDocumSec}).success(function(data){
-        if (data === 'Ok') {
-            getInfo();
-            alert ('Registro Actualizado ');
- //           $('#idFormMv').slideToggle();
-        $scope.movimiento(info); 
+            rec=data.split(',');
+            if (rec[0] === 'Ok') {
+                $scope.registro.movicaId  = rec[1];
+                getInfo();
+                alert ('Registro Actualizado ');
+                $scope.movimiento(info); 
         }
         });
    }else{alert (er);}  

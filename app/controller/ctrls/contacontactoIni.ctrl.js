@@ -7,7 +7,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_mnu1 = 'Otros Productos';
     $scope.form_mnu0='MutiHouse';
     
-    $scope.tit01='Administración de conjuntos residenciales, comerciales o de oficinas';
+    $scope.tit01='Administración de Copropiedades Conjuntos residenciales, comerciales o de oficinas';
     $scope.tit02='Para ingresar y probar la aplicación emplee';
     $scope.tit03='Usuario : admin@com.co Contraseña: Admin123';
     $scope.tit04='Sistema para la administración de conjuntos residenciales como una herramienta de apoyo en su gestión administrativa, es aplicable a conjuntos residenciales, centros comerciales o unidades empresariales de oficinas. ';

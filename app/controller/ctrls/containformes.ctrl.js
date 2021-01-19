@@ -1,16 +1,17 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Lista de containformes';
+    $scope.form_title = 'Estructura de Informes';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';
     $scope.form_btnAnula = 'Cerrar';
     $scope.form_btnExcel = 'Exporta Excel';
     $scope.form_btnActualiza = 'Actualizar';
+    $scope.form_btnContinua = 'Continuar';
     $scope.form_btnRenumera = 'Renumera';
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
- 
+    $scope.form_periodo ='Ultimo período';
     $scope.form_intoTipo40 = 'Título';
     $scope.form_intoTipo41 = 'Cuenta Contable';
     $scope.form_intoTipo42 = 'Resumen';
@@ -55,7 +56,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_PhinfoIndenta = 'Digite indenta';
     $scope.form_PhinfoNuevaPagina = 'Digite nuevapagina';
     $scope.form_PhinfoMultiplicador = 'Digite multiplicador';
-   
+
      $scope.currentPage = 0;
      $scope.pageSize = 10;
      $scope.pages = [];
@@ -193,6 +194,7 @@ $scope.registro.infoReporte = $scope.lista
        }  
     };
     
+
     $scope.deleteInfo =function(info)
     { 
         empresa = $('\#e').val(); 

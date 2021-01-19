@@ -40,6 +40,12 @@ h1{
 .milabel{
     font-size: 14px; font-weight:  bold; height: 22px; padding-top: 5px;  
 }
+.milabelp{
+    font-size: 14px; font-weight:  bold; height: 22px; padding-top: 5px;  color: #0073b7;
+}
+.milabelp p{ padding-top: 0px; 
+}
+
 .tablex{margin-left: 10px; width: 100%; border-color: #008cab; border-width: 1px;  font-size: 12px;}
 .tablex tr{ border-color: #008cab; border-width: 2px;  color: #000}
 

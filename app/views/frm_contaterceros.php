@@ -19,7 +19,7 @@
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
-                ng-submit="insertInfo(registro);" hidden="">
+                ng-submit="insertInfo(registro);" hidden="false">
 
                 <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="terceroEmpresaId">{{form_terceroEmpresaId}}</label>

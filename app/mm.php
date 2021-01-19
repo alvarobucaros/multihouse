@@ -220,7 +220,7 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
                     <li><a href="mm.php?op=rStado"><i class=""></i>Estado de cuenta Inmueble</a></li>
                     <li><a href="mm.php?op=rMora"><i class=""></i>Informe Cuentas por cobrar</a></li>
                 </ul>
-        </li>
+            </li>
             <li class="treeview">
                 <a href="#">
                   <i class="fa fa-clipboard"></i>
@@ -237,12 +237,7 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
             echo  '        
             <li class="treeview">
                 <a href="#">
-                  <i class="fa fa-calculator"></i>
-                  <span>Informes Contabilidad</span>
-                  <i class="fa fa-angle-left pull-right"></i>
-                </a> 
-                <ul class="treeview-menu">  
-                    <li><a href="mm.php?op=rCompr"><i class=""></i>Comprobantes por periodo</a></li>
+                     <li><a href="mm.php?op=rCompr"><i class=""></i>Comprobantes por periodo</a></li>
                     <li><a href="mm.php?op=rBalpr"><i class=""></i>Estados Financieros</a></li>
                     <li><a href="mm.php?op=rLibDia"><i class=""></i>Libro Diario</a></li>
                     <li><a href="mm.php?op=rLibMa"><i class=""></i>Libro Mayor</a></li>
@@ -250,7 +245,12 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
                     <li><a href="mm.php?op=rCtaMov"><i class=""></i>Cuentas y su movimiento</a></li>
                     <li><a href="mm.php?op=rMovTer"><i class=""></i>Movimiento por terceros</a></li>                                
                     <li><a href="mm.php?op=rSal2"><i class=""></i>Saldos contables</a></li> 
+                    <li><a href="mm.php?op=rXls"><i class=""></i>Consultas a Excel</a></li>
                     </li-->
+                  <i class="fa fa-angle-left pull-right"></i>
+                </a> 
+                <ul class="treeview-menu">  
+
                 </ul>
             </li>
 
@@ -280,7 +280,8 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         if ($pf == 'K'){   
            echo ' <li><a href="mm.php?op=parCont"><i class=""></i> <span>Parámetros Contabilidad</span></a></li>
                   <li><a href="mm.php?op=logo"><i class=""></i> <span> Logo Avatar</span></a></li>
-                  <li><a href="mm.php?op=imppucc"><i class=""></i> <span>Importa plan contable</span></a></li>';
+                  <li><a href="mm.php?op=imppucc"><i class=""></i> <span>Importa plan contable</span></a></li>
+                  <li><a href="mm.php?op=borsl2"><i class=""></i> <span>Borra Saldos,habilita Cbntes</span></a></li>';
            }
         if ($pf=='XXXX'){            
            echo '<li><a href="mm.php?op=empr"><i class=""></i> <span>La empresa</span></a></li>  
@@ -436,6 +437,9 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         if ($op ==  'parCont'){
             include_once 'views/frm_contaParamConta.php';
         }  
+        if ($op ==  'borsl2'){
+            include_once 'views/frm_contaBorraSaldos.php';
+        }      
         if ($op ==  'proInm'){
             include_once 'views/frm_containmueblepropietario.php';
         }        
@@ -538,6 +542,10 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         if ($op ==  'rCompr'){
             include_once 'views/frm_contaImpCmpbntes.php';
         }
+        if ($op ==  'rXls'){
+            include_once 'views/frm_contaImpExcel.php';
+        }      
+        
         if ($op ==  'rCtaMov'){
             include_once 'views/frmRepMayorMvts.php';
         }

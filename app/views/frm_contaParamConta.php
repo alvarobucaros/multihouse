@@ -58,20 +58,20 @@
                 </div> 
 
                 <div class="form-group">
-                    <label class="control-label milabel col-md-4" for="empresaAdministrador">{{form_empresaAdministrador}}</label>
+                    <label class="control-label milabel col-md-4" for="empresaRepresentante">{{form_empresaRepresentante}}</label>
                    <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="empresaAdministrador" name="empresaAdministrador"
-                         ng-model="registro.empresaAdministrador" required Placeholder="{{form_PhempresaAdministrador}}" 
-                         value="{{registro.empresaAdministrador}}" />
+                    <input type="text" class="form-control mitexto" id="empresaRepresentante" name="empresaRepresentante"
+                         ng-model="registro.empresaRepresentante" required Placeholder="{{form_PhempresaRepresentante}}" 
+                         value="{{registro.empresaRepresentante}}" />
                     </div>
                 </div> 
-
+                
                 <div class="form-group">
-                    <label class="control-label milabel col-md-4" for="empresaAdministradorCed">{{form_empresaAdministradorCed}}</label>
+                    <label class="control-label milabel col-md-4" for="empresaIdentifRepresentante">{{form_empresaIdentifRepresentante}}</label>
                    <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="empresaAdministradorCed" name="empresaAdministradorCed"
-                         ng-model="registro.empresaAdministradorCed" required Placeholder="{{form_PhempresaAdministradorCed}}" 
-                         value="{{registro.empresaAdministradorCed}}" />
+                    <input type="text" class="form-control mitexto" id="empresaIdentifRepresentante" name="empresaIdentifRepresentante"
+                         ng-model="registro.empresaIdentifRepresentante" required Placeholder="{{form_PhempresaIdentifRepresentante}}" 
+                         value="{{registro.empresaIdentifRepresentante}}" />
                     </div>
                 </div> 
 

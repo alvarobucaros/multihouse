@@ -142,6 +142,7 @@
                 </div>       
                 <div style='display: none'>
                 <input type="text"	 ng-model="registro.movicaId" id ='movicaId'  name ='movicaId' value="{{registro.movicaId}}"/>
+                <input type="text"	 ng-model="registro.compNombre" id ='compNombre'  name ='compNombre' value="{{registro.compNombre}}"/>
 
    
                 </div>
@@ -357,21 +358,17 @@
         <div class="col-md-12">
             <!-- Table to show employee detalis -->
             <div class="table-responsive">
-                <div class="form-group"> 
+                <div class="form-group milabelp"> 
                     <label class="milabel col-md-2" for="vrlDeb">{{form_vrlDeb}}</label>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control mitexto" id="vrlDeb" name="vrlDeb"
-                             ng-model="vrlDeb" value="vrlDeb" />
+                    <div class="col-md-2"><p >{{vrlDeb | currency:'$' : 'symbol' : '1.0-0'}}</p>
                     </div>
+                    
                     <label class="milabel col-md-2" for="vrlCre">{{form_vrlCre}}</label>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control mitexto" id="vrlCre" name="vrlCre"
-                             ng-model="vrlCre" value="vrlCre" />
+                    <div class="col-md-2"><p>{{vrlCre | currency}}</p>                    
                     </div>
+                    
                     <label class="milabel col-md-2" for="vrlTot">{{form_vrlTot}}</label>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control mitexto" id="vrlTot" name="vrlTot"
-                             ng-model="vrlTot" value="vrlTot" />
+                    <div class="col-md-2"><p>{{vrlTot | currency}}</p> 
                     </div>
                 </div>
                 <table class="table table-hover tablex" id="tabMvto">
@@ -398,13 +395,13 @@
                     <td>{{detailMv.moviConCabezaId}}</td-->                   
                     <td>{{detailMv.moviConCuenta}}</td>
                     <td>{{detailMv.pucNombre}}</td>
-                    <td>{{detailMv.moviConDebito}}</td>
-                    <td>{{detailMv.moviConCredito}}</td>
-                    <td>{{detailMv.moviConDetalle}}</td>
+                    <td style="text-align:right;">{{detailMv.moviConDebito|currency:'$' : 'symbol' : '1.0-0'}}</td>
+                    <td style="text-align:right;">{{detailMv.moviConCredito|currency:'$' : 'symbol' : '1.0-0'}}</td>
+                    <td >{{detailMv.moviConDetalle}}</td>
                     <!--td>{{detailMv.moviConBase}}</td-->
                     <td>{{detailMv.moviConImpTipo}}</td>
-                    <td>{{detailMv.moviConImpPorc}}</td>
-                    <td>{{detailMv.moviConImpValor}}</td>
+                    <td style="text-align:right;">{{detailMv.moviConImpPorc}}</td>
+                    <td style="text-align:right;">{{detailMv.moviConImpValor}}</td>
                     <!--td>{{detailMv.moviConIdTercero}}</td>
                     <td>{{detailMv.moviDocum1}}</td>
                     <td>{{detailMv.moviDocum2}}</td-->

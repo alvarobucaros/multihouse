@@ -9,7 +9,7 @@ require_once ('fpdf.php');
         public $codTercero;
     
 
-    function Header()
+        public function Header()
     { 
         $dt =  explode(',',$_GET['dt']);  
         $empresa =  $dt[0];        
@@ -17,14 +17,16 @@ require_once ('fpdf.php');
         $periodoFin =  $dt[2];
         $fchIni  =  $dt[3];
         $fchFin  =  $dt[4];
+   
         $comprob =  $dt[5];
         $orden   =  $dt[6];      
-  // 
+
         $subtitulo = "Periodo del " . $fchIni . ' al ' . $fchFin;
         include_once("../modulos/mod_contaReportContable.php");
         $obj = new  reportesContCls();
         $resultado = $obj->cargaEmpresa($empresa);
-        $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC);
+
+        $empre = mysqli_fetch_assoc($resultado);
         $nomEmpre = $empre['empresaNombre']; 
         $this->codTercero = $empre['empresatercero'];
 
@@ -34,7 +36,7 @@ require_once ('fpdf.php');
         $tel = 'TELEFONO  : '.$empre['empresaTelefonos'];      
         $logo = "logos/".$logo;
         
-//        $this->Image( $logo ,25,15,20,10);
+        $this->Image( $logo ,25,15,20,10,'png');
  
         $miTitulo = "Informe de comprobantes del mes";
         $this->SetFont('Arial','B',12);
@@ -115,6 +117,7 @@ require_once ('fpdf.php');
     $fecha='';
 //$pdf->MultiCell(120,6,$resultado,0,'L');$pdf->SetXY(105,$ln);
 //return;    
+    $ln+=4;
     while($reg = mysqli_fetch_assoc($resultado) )
     {
         if($orden==='CF' and $comprobante <> $reg['movicaComprId'] ){

@@ -4,13 +4,7 @@
     <div class="container "  ng-controller="mainController">
         <h3 class="text-left">{{form_title1}}<strong>{{form_title2}}</strong></h3>
         <h4 class="text-left">{{form_subTitle}}</h4>
-        <nav class="navbar navbar-default navbar-mm col-md-8 col-md-offset-1">
-            <div class="navbar-header">
-                <div class="alert alert-default navbar-brand search-box">
-                    {{form_version}}
-                 </div>
-            </div>
-        </nav>
+
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="nameForm" id="idForm">
@@ -48,29 +42,38 @@
 
             </form>
         </div>
-        <div class="clearfix"></div>
-        <div class="col-md-6 col-md-offset-2">
-            <!-- Table to show employee detalis -->
-            <div class="table-responsive">
-                <table class="table table-hover">
-
-                    <tr ng-repeat="detail in details| filter:search_query">
-                    <td>{{detail.grupo_id}}</td>                   
-                    <td>{{detail.empresa_nombre}}</td>
-                    <td>{{detail.empresa_clave}}</td>
-                    <td>{{detail.grupo_comite}}</td>
-                    <td>{{detail.grupo_activo}}</td>
-                    <td>
-                    <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
-                    </td>
-                    <td>
-                    <button class="btn btn-danger btn-xs" ng-click="deleteInfo(detail)" 
-                            confirm="Está seguro ?, {{form_btnElimina}}?" title="{{form_btnElimina}}"><span class="glyphicon glyphicon-trash"></span></button>
-                    </td>
-                    </tr>
-                </table>
+        <div ng-show="noticias">
+            <div class="col-md-12 col-md-offset-1">
+                <div class="navbar-header">
+                    <div class="alert alert-default navbar-brand search-box">
+                        {{form_version}}
+                     </div>
+                </div>
             </div>
-        </div>
+                <div id='miExcel' class="col-md-12 col-md-offset-1" style='display: none'>
+                    <input type="text" class="form-control" id="Bd" name="Bd"  ng-model="Bd"  />                    
+                </div> 
+            <div class="col-md-10">
+                <div class="table-responsive">
+                    <table class="table table-hover tablex">
+                        <tr>                           
+                            <th>DESCRIPCION</th>
+                            <th>FECHA</th>
+                        </tr>
+                    <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
+                    <td>{{detail.actu_texto}}</td>
+                    <td>{{detail.actu_fechaopera}}</td>
+                    </tr>
+                    </table>  
+                    <div class='btn-group'>
+                        <button type='button' class='btn btn-default' ng-disabled='currentPage === 0' ng-click='currentPage = currentPage - 1'>&laquo;</button>
+                        <button type='button' class='btn btn-default' ng-disabled='currentPage === page.no - 1' ng-click='setPage(page.no)' ng-repeat='page in pages'>{{page.no}}</button>
+                        <button type='button' class='btn btn-default' ng-disabled='currentPage >= details.length/pageSize - 1', ng-click='currentPage = currentPage + 1'>&raquo;</button>
+                    </div> 
+                </div>
+            </div>
+        </div>    
+
     </div>
 
 <script src="controller/ctrls/contanews.ctrl.js" type="text/javascript"></script>

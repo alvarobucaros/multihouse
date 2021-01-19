@@ -355,9 +355,9 @@ function informeaXls($data){
             // inserta los saldos finales calculados de este periodo en los iniciales del nuevo periodo
             $query = "INSERT INTO contasaldoscontables (saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
                      " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, " .
-                     " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr) " .
+                     " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr, saldconNeto) " .
                      " SELECT saldcontEmpresaid, '" . $nuevoperiodo . "', saldcontTipo, saldcontCuenta, ".
-                     " saldcontCuentaContable , saldcontFinalDb , saldconFinalCr ,0 ,0 ,0 ,0 ".
+                     " saldcontCuentaContable , saldcontFinalDb , saldconFinalCr ,0 ,0 ,0 ,0, 0 ".
                      " FROM contasaldoscontables WHERE saldcontEmpresaid = ".  $empresa .
                      " AND saldcontPeriodo = '".$periodo."'  ORDER BY  saldcontCuenta ";
             $result = mysqli_query($con, $query);
@@ -392,6 +392,14 @@ function informeaXls($data){
         $empresaNuevoAnoFiscal=$ano.'01';
         $empresaAnoFiscal =  substr($dato[4],0,4);
         
+        // Hace el cierre mensual del mes 13 
+        $query = "UPDATE contasaldoscontables SET saldcontFinalDb = saldcontInicialDb + saldcontDebitos, ".
+                " saldconFinalCr = saldcontInicialCr + saldcontCreditos,".
+                " saldconNeto = saldcontInicialDb + saldcontDebitos -  saldcontInicialCr  - saldcontCreditos ".
+                " WHERE saldcontEmpresaid = " . $empresa . 
+                " AND saldcontPeriodo = '".$periodo."' AND saldcontId > 0 ";
+        mysqli_query($con, $query); 
+        
         // trae el tercero para los comprobantes
         $query = "SELECT empresatercero FROM contaempresas WHERE empresaId = ". $empresa;
         $result = mysqli_query($con, $query);  
@@ -425,18 +433,19 @@ function informeaXls($data){
                 $empresa . " AND compCodigo = '" . $empresaCompApertura . "' ";
          $result = mysqli_query($con, $query);     
                 
-        // borra el comprobante de cierre anterior y su movimiento (si hay)
+        // borra el comprobante de cierre anterior y su movimiento (si hay) 
         
         $cond="";
+        //-- trael el id 
         $query = "SELECT movicaId FROM contamovicabeza WHERE movicaEmpresaId= " . $empresa . 
                 " AND movicaComprId = '" . $empresaCompCierreMes . 
-                "' AND movicaDocumPpal = 'cierre' AND movicaId > 0 ";
+                "' AND movicaDocumPpal = 'cierre' AND movicaId > 0 AND movicaPeriodo = '" .$periodo ."'";
         $result = mysqli_query($con, $query);
         while($row = mysqli_fetch_assoc($result))
         {
             $cond=$row['movicaId'];
         }   
-
+        // borra detalles y encabezado
         $query = "DELETE FROM contamovidetalle WHERE moviConCabezaId IN (".
                  $cond .") AND  moviConId>0 ";
         $result = mysqli_query($con, $query);
@@ -459,11 +468,11 @@ function informeaXls($data){
            $nroCabezaCierre = $row['id'];
         }
  
-    //  Crea el movimiento de cierre
+    //  Crea el movimiento de cierre y toma las cuentas 4,5,6,7 para el resultado
         $resultado =0.0;
         $query = "SELECT saldcontId, saldcontEmpresaid, saldcontPeriodo, saldcontTipo, saldcontCuenta, ".
         " saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, saldcontDebitos, ".
-        " saldcontCreditos, saldcontFinalDb, saldconFinalCr ".
+        " saldcontCreditos, saldcontFinalDb, saldconFinalCr, saldconNeto ".
         " FROM contasaldoscontables INNER JOIN contaplancontable ON saldcontCuentaContable = pucCuenta ".
         " WHERE left(saldcontCuentaContable,1) > '3'  AND left(saldcontCuentaContable,1) < '8' ".
         " AND pucTipo = 'M' AND  saldcontEmpresaid = pucEmpresaId AND saldcontTipo='cont' ".
@@ -475,24 +484,17 @@ function informeaXls($data){
         while($row = mysqli_fetch_assoc($resultSal2)) { 
             $tp='';
             $sqlValor='';
-            $multiplicador=1;
-            if(substr($row['saldcontCuentaContable'],0,1) != '4'){
-                $multiplicador=-1;
-            }
-
-            if(floatval($row['saldcontInicialDb']) > 0 )
+            $resultado += $row['saldconNeto'];   
+            
+            if(floatval($row['saldconNeto']) > 0 )
             {
-                $sqlValor .= "0.0,"."'".$row['saldcontInicialDb']."',";
-                $resultado += $row['saldcontInicialDb']*$multiplicador;
+                $sqlValor .= "0.0,"."'".abs($row['saldconNeto'])."',";
                 $tp='D';
-            }
-
-            if(floatval($row['saldcontInicialCr']) > 0 )
+            }else
             {
-                $sqlValor .= $row['saldcontInicialCr'].","."0.0,";
-                $resultado -=$row['saldcontInicialCr']*$multiplicador;
+                $sqlValor .= abs($row['saldconNeto']).","."0.0,";
                 $tp='C';
-            }                    
+            }               
 
             $sqlValor .= "0.0,'".$tp."',0,0,".$tercero.",'".$moviDocum1."','".$moviDocum2."','".$tp."')";
             $query = "INSERT INTO contamovidetalle(moviConCabezaId, moviConDetalle, moviConCuenta, moviConDebito, ".
@@ -505,22 +507,22 @@ function informeaXls($data){
         }
      
         if($resultado<0){
-             $resultado = $resultado *(-1);
-              $sqlValor = $resultado.",0.0,";
-              $tp='D';
+            $resultado = $resultado *(-1);
+            $sqlValor = "0.0,".$resultado.",";
+            $tp='C'; 
         }  
         else 
         {
-            $sqlValor = "0.0,".$resultado.",";
-            $tp='C';       
-            
+            $sqlValor = $resultado.",0.0,";
+            $tp='D';         
         }
-        $sqlValor .= "0.0,'".$tp."',0,0,".$tercero.",'','')";
+        
+        $sqlValor .= "0.0,'".$tp."',0,0,".$tercero.",'','','".$tp."')";
         
         // Registro de utilidades o perdidas
         $query = "INSERT INTO contamovidetalle(moviConCabezaId, moviConDetalle, moviConCuenta, moviConDebito, ".
               " moviConCredito,  moviConBase, moviConImpTipo, moviConImpPorc, moviConImpValor, ".
-              " moviConIdTercero, moviDocum1,moviDocum2) ".
+              " moviConIdTercero, moviDocum1, moviDocum2, moviTipoCta) ".
               " VALUES(" . $nroCabezaCierre .",'CIERRE EJERCICIO DEL " . substr($empresaAnoFiscal,0,4) .
                "','" . $empresaCuentaCierre ."',".$sqlValor;    
          $resultDet = mysqli_query($con, $query);
@@ -536,6 +538,9 @@ function informeaXls($data){
                " saldconFinalCr = saldcontInicialCr + saldcontCreditos ".
                " WHERE saldcontEmpresaid = " . $empresa . " AND saldcontPeriodo = '" .$periodo . "'";
         $result = mysqli_query($con, $query);  
+            $query=" UPDATE contasaldoscontables SET saldcontNeto = saldcontFinalDb -  saldcontDebitos ".
+               " WHERE saldcontEmpresaid = " . $empresa . " AND saldcontPeriodo = '" .$periodo . "'";
+        $result = mysqli_query($con, $query); 
         
         // crea comprobante de apertura
         $nroCabezaInicio=0;
@@ -552,31 +557,33 @@ function informeaXls($data){
            $nroCabezaInicio = $row['id'];
         }        
         // Crea detalles de la apertura
-        $query="SELECT saldcontCuentaContable,  saldcontFinalDb, saldconFinalCr ".
-               " FROM contasaldoscontables where saldcontTipo= 'cont' AND saldcontEmpresaid = ".
+        
+        $query = "SELECT saldcontCuentaContable,  saldcontFinalDb, saldconFinalCr ".
+               " FROM contasaldoscontables ".
+               " INNER JOIN contaplancontable ON saldcontCuentaContable = pucCuenta  ".
+               " AND  pucEmpresaId = saldcontEmpresaid WHERE saldcontTipo= 'cont' AND pucTipo = 'M' ".
+               " AND saldcontCuentaContable < '4' AND saldcontEmpresaid = ".
                 $empresa . " AND saldcontPeriodo = '" .$periodo . "' ORDER BY saldcontCuentaContable ";
+
         $resultac  = mysqli_query($con, $query); 
         while($rec = mysqli_fetch_assoc($resultac))
         {
             $valor = floatval($rec['saldcontFinalDb']) - floatval($rec['saldconFinalCr']);
-    //        echo $valor.'  ';
-    //        if($valor <> 0){
-                $tp='D';
-                $db=$valor;
-                $cr=0.0;
-                if($valor <0){
-                    $tp='C';
-                    $db=0.0;
-                    $cr=$valor *(-1);
-                }           
-                $query = "INSERT INTO contamovidetalle(moviConCabezaId, moviConDetalle, moviConCuenta, moviConDebito, ".
-                " moviConCredito,  moviConBase, moviConImpTipo, moviConImpPorc, moviConImpValor, ".
-                " moviConIdTercero, moviDocum1,moviDocum2,moviTipoCta) ".
-                " VALUES(" . $nroCabezaInicio .",'INICIO EJERCICIO DEL " . substr($empresaNuevoAnoFiscal,0,4) .
-                "','" . $rec['saldcontCuentaContable'] ."',".$db.",".$cr.",0.0,'".$tp."',0,0,".$tercero.",'','','".$tp."')";    
-                $resultDet = mysqli_query($con, $query); 
+            $tp='D';
+            $db=$valor;
+            $cr=0.0;
+            if($valor <0){
+                $tp='C';
+                $db=0.0;
+                $cr=$valor *(-1);
+            }           
+            $query = "INSERT INTO contamovidetalle(moviConCabezaId, moviConDetalle, moviConCuenta, moviConDebito, ".
+            " moviConCredito,  moviConBase, moviConImpTipo, moviConImpPorc, moviConImpValor, ".
+            " moviConIdTercero, moviDocum1,moviDocum2,moviTipoCta) ".
+            " VALUES(" . $nroCabezaInicio .",'INICIO EJERCICIO DEL " . substr($empresaNuevoAnoFiscal,0,4) .
+            "','" . $rec['saldcontCuentaContable'] ."',".$db.",".$cr.",0.0,'".$tp."',0,0,".$tercero.",'','','".$tp."')";    
+            $resultDet = mysqli_query($con, $query); 
         }
-
         
         // inserta los saldos finales calculados de este periodo en los iniciales del nuevo periodo
         
@@ -595,19 +602,22 @@ function informeaXls($data){
                  " WHERE saldcontEmpresaid = ". $empresa . " AND saldcontPeriodo = '" .$ano . "00' " .
                  " AND saldcontCuentaContable > '3999%'  AND saldcontId > 0";
         $resultDet = mysqli_query($con, $query); 
-//echo $query.'  ';   
+        // saldos finales  
         $query = "UPDATE contasaldoscontables SET saldcontFinalDb = saldcontInicialDb + saldcontDebitos, ".
                  " saldconFinalCr = saldcontInicialCr + saldcontCreditos ".
                  " WHERE saldcontEmpresaid = ". $empresa . " AND saldcontPeriodo = '" .$ano . "00' " .
                  " AND saldcontId > 0";
         $resultDet = mysqli_query($con, $query); 
-
-//echo $query.'  ';   
+        //  saldos netos
+        $query = "UPDATE contasaldoscontables SET saldconNeto = saldcontFinalDb - saldconFinalCr  ".
+                 " WHERE saldcontEmpresaid = ". $empresa . " AND saldcontPeriodo = '" .$ano . "00' " .
+                 " AND saldcontId > 0";
+        $resultDet = mysqli_query($con, $query);         
+        //  saldos iniciales del nuevo ejercicio  
         $query = "DELETE FROM contasaldoscontables WHERE saldcontEmpresaid = ". $empresa . 
                 " AND saldcontPeriodo = '".$empresaNuevoAnoFiscal."' AND saldcontId>0;";
                 $resultDet = mysqli_query($con, $query); 
-        
-//echo $query.'  ';   
+          
         $query = "INSERT INTO contasaldoscontables (saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
                  " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, ".
                  " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr, saldconNeto) ".
@@ -615,9 +625,8 @@ function informeaXls($data){
                  " saldcontCuentaContable , saldcontFinalDb , saldconFinalCr ,0 ,0 ,0 ,0 , 0 ".
                  " FROM contasaldoscontables WHERE saldcontEmpresaid = ". $empresa . 
                  " AND saldcontPeriodo = '" .$ano ."00' ORDER BY  saldcontCuentaContable  ";       
-        $resultDet = mysqli_query($con, $query);     
+                 $resultDet = mysqli_query($con, $query);     
         
-         $result = mysqli_query($con, $query);
         
     //  Actualiza la empresa cambiando el año fiscal y el periodo del nuevo año    
         $periodo = $dato[4];

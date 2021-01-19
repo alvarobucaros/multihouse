@@ -8,6 +8,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_imprimeLibDiario = 'Libro Diario';
     $scope.form_imprimelibAux = 'Libro Auxiliar';
     $scope.form_imprimeMovTer = 'Movimiento por terceros';
+    $scope.form_tituloExcel = 'Consultas a Excel';
     $scope.form_infoReporte = "Reporte";
     $scope.form_imprimeCmpbnte = 'Comprobantes del mes';
     $scope.form_cierreMensual = 'Cierre mensual';
@@ -51,6 +52,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_ctaCompro = 'Fecha Comprobante';
     $scope.form_ComproCta = 'Comprobante Fecha';
     $scope.form_variaciones = 'Incluye variaciones';
+    $scope.form_nota1Xls='Consulta de movimiento por periodo y conceptos ...';
+    $scope.form_nota2Xls='Conceptos a incluir ...';
+ 
     $scope.variacionesS = 'Si';
     $scope.variacionesN = 'No';
     $scope.form_notas = 'Incluye Notas';
@@ -87,20 +91,40 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
         rec=data.split('||');
         control = $scope.control;
-
+   
+        $scope.factura = true; 
+        $scope.imprime = false; 
+      
         $scope.ultimoPeriodo = rec[15];
         if(control==='SF' || control === 'ER'){
             $scope.ultimoVsPeriodo = rec[15];
-            $scope.notas='S';     
-            $scope.variaciones='S'; 
+            $scope.notas='N';     
+            $scope.variaciones='N'; 
+            $scope.prepara = false;
+            $scope.imprime  = true;
+            $scope.imprimeXls = true;
+            $scope.form_btnPrepara = 'Prepara información';
+            $scope.form_btnImprime = 'Imprime informe';
+            $scope.form_btnExporta = 'Exporta a Excel';
         }
-        if(control==='TRC'){
+        if(control==='TRC' || control === 'XLS'){
             meses=[31,28,31,30,31,30,31,31,30,31,30,31];
-
             $scope.fchDesde = rec[15].substr(0,4)+'-'+rec[15].substr(4,6)+'-01';
-            $scope.fchHasta = rec[15].substr(0,4)+'-'+rec[15].substr(4,6)+'-'+meses[rec[15].substr(4,6)-1];     
-          
-        }  //fchDesde  fchHasta imprimeMovTerc() 0.tercero
+            $scope.fchHasta = rec[15].substr(0,4)+'-'+rec[15].substr(4,6)+'-'+meses[rec[15].substr(4,6)-1]; 
+            if(control === 'XLS'){
+                $scope.registro.ultimoPeriodo = rec[15];
+                $scope.registro.fechaDesde = $scope.fchDesde;
+                $scope.registro.fechaHasta = $scope.fchHasta;
+                $scope.registro.g1 = false; 
+                $scope.registro.g2 = false;
+                $scope.registro.g3 = false;
+                $scope.registro.g4 = false;
+                $scope.registro.g5 = false;
+                $scope.registro.g6 = false;
+                $scope.registro.g7 = false;
+                $scope.registro.g8 = false;
+            }
+        }  
 
         if(control==='CEJ'){
             $scope.form_anoFiscal = rec[16];
@@ -151,10 +175,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         if (control=== 'LAX'){
             $scope.desdePeriodo = rec[15];
         }
- //201801||201801||2018-01-31||01||FACTURACION (INGRESOS)||10||494||82||2.00||0.00||12||C||201712     
-        $scope.factura = true; 
-        $scope.imprime = false; 
-      
+
         });           
      }
      
@@ -190,6 +211,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             $scope.operators1 = data;
             n=data.length;
             $scope.hastaCuenta = data[n-1].pucCuenta; 
+            $scope.ultimoPeriodo = rec[15];
+            $scope.primerPeriodo = rec[15];
              });            
         }
         else{
@@ -235,6 +258,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     }
     
     $scope.imprimeComprobantes = function(){
+        periodoI=$scope.primerPeriodo;
         periodo=$scope.ultimoPeriodo;
         meses=[31,28,31,30,31,30,31,31,30,31,30,31];
         ano=periodo.substring(0, 4);
@@ -247,7 +271,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         empresa=$scope.empresa.trim();
         er='';
         if($scope.orden===''){
-            er+='Falta definir el orden del informe \n';
+           $scope.orden = 'FC';
         }
         if(!$scope.aplicados && !$scope.xAplicar){
             er+='Falta definir comprobantes \n';
@@ -259,7 +283,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             if($scope.aplicados && $scope.xAplicar){
                 proc = '';
             }
-            dato=empresa+','+periodo+','+fchini+','+fchfin+','+proc+','+$scope.orden;
+            dato=empresa+','+periodoI+','+periodo+','+fchini+','+fchfin+','+proc+','+$scope.orden;
             location.href="reports/rptComprobantesDelMes.php?dt="+dato;  
         }else{
             alert(er);
@@ -277,6 +301,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         if(informe === undefined){
             er += 'Debe definir el informe \n';
         }
+        er += valiPeriodo(ultimoPeriodo);
+        er += valiPeriodo(ultimoVsPeriodo);
         control = $scope.control;
        
         if(ultimoPeriodo.substr(4,2)==='13' || ultimoVsPeriodo.substr(4,2)==='13' ){
@@ -297,18 +323,28 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             fc=fechar(ultimoVsPeriodo,'F');
             fcFin= fc.split(",");
             dato=empresa+','+ultimoPeriodo+','+ultimoVsPeriodo+','+variaciones+','+notas+','+fcIni+','+fcFin+','+control+','+informe;
-   //       alert(dato);
             $http.post('modulos/mod_contaplancontable.php?op=ni',{'op':'ni','dato':dato}).success(function(data){
-            alert(data);
+ alert(dato);                
             $scope.ruedita = true;
             }); 
-          
-   //         location.href="reports/rptInformesNif.php?dt="+dato;  
+           location.href="reports/rptInformesNif.php?dt="+dato;  
         }else{
             alert(er);
         }
     };
     
+    function valiPeriodo(per){
+        er='';
+        a = per.substr(0,2);
+        m = per.substr(4,6);
+        if (m <= '00'|| m>'13'){
+            er += per+' mes errado \n';
+        }
+        if (a !== '20'){
+            er += per+' fecha errada \n';
+        }
+        return er;
+    }
     
     $scope.imprimeEdoReul = function(){  
         empresa=$scope.empresa;
@@ -436,17 +472,27 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         });       
     };
 
+$scope.preparaInfoNif = function(){
+    alert ('Va apreparar info');
+}
 
-//    function fechar(periodo,pos){
-//        ano = periodo.substr(0,4);
-//        mes = periodo.substr(4,2);
-//        meses=[31,28,31,30,31,30,31,31,30,31,30,31];
-//        if ((ano % 4 === 0) && ((ano % 100 !== 0) || (ano % 400 === 0)))
-//            {meses[1]=29;}  
-//        dia = meses[mes -1];
-//        if (pos===0){fchini = ano + '-' +  mes +'-01';}
-//        if (pos===1){fchfin = ano + '-' +  mes +'-'+dia ;}
-//    }
+
+    $scope.vaAexcel = function(info){
+        valor = confirm('Exporta la información a Excel, continua?');
+        if (valor === true) {
+            empresa = $('#e').val();
+            dato= info.ultimoPeriodo+'||'+info.fechaDesde+'||'+info.fechaHasta+'||'+info.g1+
+                    '||'+info.g2+'||'+info.g3+'||'+info.g4+'||'+info.g5+'||'+info.g6+'||'+info.g7+'||'+info.g8
+   //         alert(dato);
+            $http.post('modulos/mod_containformes.php?op=exl',{'op':'exl','empresa':empresa,'dato':dato}).success(function(data){
+   //        alert(data);
+            $('#miExcel').html(data); 
+            alert('exporta a Excel. Cargue y renombre el documento... ');
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent($('#miExcel').html()));
+        }); 
+       } 
+    };
+    
     
     function formatMoney(number, decPlaces, decSep, thouSep) {
     decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,

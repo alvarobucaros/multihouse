@@ -21,8 +21,6 @@
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
                   ng-submit="insertInfo(registro);" hidden="">
 
-   
-
                 <div class="form-group" style='display: none'>
                     <label class="milabel col-md-3" for="compEmpresaId">{{form_compEmpresaId}}</label>
                    <div class="col-md-7">
@@ -35,7 +33,7 @@
                 <div class="form-group">
                     <label class="milabel col-md-3" for="compCodigo">{{form_compCodigo}}</label>
                    <div class="col-md-7">
-                    <input type="text" class="form-control mitexto" id="compCodigo" name="compCodigo"
+                       <input type="text" class="form-control mitexto" id="compCodigo" name="compCodigo" maxlength="10"
                          ng-model="registro.compCodigo" required Placeholder="{{form_PhcompCodigo}}" 
                          value="{{registro.compCodigo}}" />
                     </div>

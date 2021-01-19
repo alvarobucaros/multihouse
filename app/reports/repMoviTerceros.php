@@ -19,7 +19,7 @@ require_once ('fpdf.php');
         include_once("../modulos/mod_contaReportContable.php");
         $obj = new  reportesContCls();
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while( $empre =  mysqli_fetch_assoc($resultado) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -41,7 +41,7 @@ require_once ('fpdf.php');
         $yeyo=$periodo .'  '. $empresa  .'  ';
         $titulo="MOVIMIENTOS POR TERCERO";
         $subtitulo=" ";
- //       $this->Image($logo,$der+5,14,20,10);    
+        $this->Image($logo,$der+5,14,20,10,'png');    
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);

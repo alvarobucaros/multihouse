@@ -30,6 +30,9 @@ switch ($op)
     case 'exp':
         exportaXls($data);
         break; 
+    case 'exl':
+        exportaContaXls($data);
+        break;     
     case '0':
         lista0($data);
         break;
@@ -137,6 +140,95 @@ switch ($op)
     function valida($info){
 
     }
+  
+function exportaContaXls($data){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa; 
+        $dato = $data->dato;
+        $rec = explode('||',$dato);
+        $fchIni = $rec[1];
+        $fchFin = $rec[2];
+        $expo=''; 
+        $expo .= '<table border=1 class="table2Excel"> '; 
+        $expo .=  '<tr> '; 
+        $expo .=  '          <th>COMPROBANTE</th>';
+        $expo .=  '          <th>NUMERO</th>';    
+        $expo .=  '          <th>PERIODO</th>';
+        $expo .=  '          <th>FECHA</th>';  
+        $expo .=  '          <th>CUENTA</th>';
+        $expo .=  '          <th>NOMBRE</th>';        
+        $expo .=  '          <th>DEBITO</th>';
+        $expo .=  '          <th>CREDITO</th>';
+        if($rec[4]){
+            $expo .=  '          <th>TERCERO</th>';  
+        }
+        if($rec[5]){
+            $expo .=  '          <th>TIPO ID</th>';  
+            $expo .=  '          <th>NRO ID</th>';  
+        }
+        if($rec[6]){
+            $expo .=  '          <th>DETALLE</th>';  
+        }
+        if($rec[8]){
+            $expo .=  '          <th>DOCUMENTO</th>';  
+        }    
+        if($rec[9]){
+            $expo .=  '          <th>BASE</th>';  
+        }   
+        if($rec[10]){
+            $expo .=  '          <th>PORCENTAJE</th>';  
+        }   
+        $expo .=  '</tr> ';        
+        $query = "SELECT movicaId, movicaComprId, compNombre, movicaCompNro,  movicaPeriodo, movicaFecha, " .
+                 " movicaDetalle, movicaTerceroId , movicaDocumPpal , movicaDocumSec, terceroIdenTipo," .
+                 " terceroIdenNumero,terceroNombre, moviConCuenta, pucNombre, moviConDebito, moviConCredito, " .
+                 " moviConImpTipo, moviConImpPorc, moviConImpValor " .
+                 " FROM contamovicabeza" .
+                 " INNER JOIN  contamovidetalle ON movicaId = moviConCabezaId " .
+                 " INNER JOIN contaplancontable ON pucCuenta = moviConCuenta  AND pucEmpresaId = movicaEmpresaId " .
+                 " INNER JOIN contacomprobantes ON movicaComprId = compCodigo  AND compEmpresaId = movicaEmpresaId " .
+                 " INNER JOIN contaterceros ON  terceroId = movicaTerceroId AND terceroEmpresaId = movicaEmpresaId " .
+                 " WHERE  movicaEmpresaId = " . $empresa .
+                "  AND movicaFecha >= '". $fchIni . "' AND movicaFecha <= '".$fchFin."'".
+                 " ORDER BY movicaPeriodo, movicaCompNro, moviConDebito DESC";
+  
+            $result = mysqli_query($con, $query); 
+            while($row = mysqli_fetch_assoc($result)) { 
+                $expo .=  '<tr> '; 
+                $expo .=  	'<td>' .$row['compNombre']. '</td> ';
+                $expo .=  	'<td>' .$row['movicaCompNro']. '</td> ';
+                $expo .=  	'<td>' .$row['movicaPeriodo']. '</td> ';
+                $expo .=  	'<td>' .$row['movicaFecha']. '</td> ';
+                $expo .=  	'<td>' .$row['moviConCuenta']. '</td> ';
+                $expo .=  	'<td>' .utf8_decode($row['pucNombre']). '</td> ';
+                $expo .=  	'<td>' .$row['moviConDebito']. '</td> ';
+                $expo .=  	'<td>' .$row['moviConCredito']. '</td> ';   
+                if($rec[4]){
+                    $expo .=  '<td>'.utf8_decode($row['terceroNombre']).'</td>'; 
+                }
+                if($rec[5]){
+                    $expo .=  '<td>'.$row['terceroIdenTipo'].'</td>'; 
+                    $expo .=  '<td>'.$row['terceroIdenNumero'].'</td>';
+                }
+                if($rec[6]){
+                    $expo .=  '<td>'.utf8_decode($row['movicaDetalle']).'</td>'; 
+                }
+                if($rec[8]){
+                    $expo .=  '<td>'.utf8_decode($row['movicaDocumPpal']. ' - ' . $row['movicaDocumSec']).'</td>'; 
+                }
+                if($rec[9]){
+                    $expo .=  '<td>'.$row['moviConImpValor'].'</td>'; 
+                }  
+                if($rec[10]){
+                    $expo .=  '<td>'.$row['moviConImpPorc'].'</td>'; 
+                }                
+                $expo .=  '</tr> ';                   
+            }
+        $expo .=  '</table> ';  
+        echo $expo; 
+    return $expo; 
+}
     
  function exportaXls($data){ 
        global $objClase;
@@ -387,4 +479,9 @@ switch ($op)
          } 
       echo $json_info = json_encode($arr); 
     }  
+    
+
+    
 // >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Mar 09, 2020 8:33:07   <<<<<<< 
+
+    

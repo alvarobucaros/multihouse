@@ -11,15 +11,10 @@ switch ($op)
     case 'r':
         leeRegistros($data);
         break;
-    case 'b':
-        borra($data);
+    case 'n':
+        leeNoticias($data);
         break;
-    case 'a':
-        actualiza($data);
-        break; 
-    case 'u':
-        unRegistro($data);
-        break;
+
 }
 
 function  leeRegistros($data){
@@ -72,3 +67,42 @@ function  leeRegistros($data){
         }
         return $ret;
     }
+
+    function  leeNoticias($data){
+        $empresa = $data->empresa;
+
+        $fd = fopen('../bin/cls/atm.ctl', 'r');
+        $datos=fread($fd,filesize('../bin/cls/atm.ctl')); 
+        $data =explode('~',$datos);
+        fclose($fd);
+
+        $servidor = funde($data[0]);
+        $baseDatos = funde($data[1]);
+        $usuario = funde($data[2]);
+        $clave = funde($data[3]); 
+        $version = $data[4]; 
+
+        $con = new mysqli($servidor,$usuario,$clave, $baseDatos);
+
+        if (mysqli_connect_errno()) {
+            printf("Conexión fallida: %s\n", mysqli_connect_error());
+            return false;
+            }  
+        else { 
+            mysqli_set_charset($con,"utf8"); 
+        }
+ 
+        $query = "SELECT  actu_id, actu_empresa, actu_tipo, actu_texto, actu_fechacrea, actu_fechaopera, actu_fechavence, actu_estado, actu_app" 
+                . " FROM actualizaciones ORDER BY actu_empresa ";             
+        $result = mysqli_query($con, $query); 
+        $arr = array(); 
+        if(mysqli_num_rows($result) != 0)  
+            { 
+                while($row = mysqli_fetch_assoc($result)) { 
+                    $arr[] = $row; 
+                } 
+            } 
+        echo $json_info = json_encode($arr);
+
+    }
+    

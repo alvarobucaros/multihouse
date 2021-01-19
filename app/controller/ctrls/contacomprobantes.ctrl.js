@@ -260,7 +260,13 @@ $scope.exporta = function(){
        }
         if($('#compActivo').val()===''){er+='falta activo\n';}
         if (er==''){
-        $http.post('modulos/mod_contacomprobantes.php?op=a',{'op':'a', 'compId':info.compId, 'compEmpresaId':info.compEmpresaId, 'compCodigo':info.compCodigo, 'compTipo':info.compTipo, 'compNombre':info.compNombre, 'compDetalle':info.compDetalle, 'compConsecutivo':info.compConsecutivo, 'compctadb0':info.compctadb0, 'compctadb1':info.compctadb1, 'compctadb2':info.compctadb2, 'compctacr0':info.compctacr0, 'compctacr1':info.compctacr1, 'compctacr2':info.compctacr2, 'compActivo':info.compActivo, 'compcpbnte': info.compcpbnte}).success(function(data){
+        $http.post('modulos/mod_contacomprobantes.php?op=a',{'op':'a', 'compId':info.compId, 
+            'compEmpresaId':info.compEmpresaId, 'compCodigo':info.compCodigo, 'compTipo':info.compTipo, 
+            'compNombre':info.compNombre, 'compDetalle':info.compDetalle, 'compConsecutivo':info.compConsecutivo, 
+            'compctadb0':info.compctadb0, 'compctadb1':info.compctadb1, 'compctadb2':info.compctadb2, 
+            'compctacr0':info.compctacr0, 'compctacr1':info.compctacr1, 'compctacr2':info.compctacr2, 
+            'compActivo':info.compActivo, 'compcpbnte': info.compcpbnte}).success(function(data){
+
         if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');

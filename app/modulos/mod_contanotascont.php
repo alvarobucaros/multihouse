@@ -35,10 +35,11 @@ switch ($op)
     function  leeRegistros($data) 
     { 
        global $objClase;
+       $empresa = $data->empresa; 
       $con = $objClase->conectar(); 
        { 
-            $query = "SELECT  notaid, notaempresa, notareporte, notacodigo, notadetalle" 
-                    . " FROM contanotascont ORDER BY notacodigo ";             
+            $query = "SELECT  notaid, notaempresa, notareporte, notacodigo, notadetalle" .
+                     " FROM contanotascont WHERE notaempresa = '".$empresa."' ORDER BY notareporte ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  
@@ -100,7 +101,7 @@ switch ($op)
       $expo .=  '          <th>CODIGO</th>';
       $expo .=  '          <th>DETALLE</th>';
             $query = "SELECT  notaid, notaempresa, notareporte, notacodigo, notadetalle" 
-                    . " FROM contanotascont ORDER BY notacodigo ";             
+                    . " FROM contanotascont ORDER BY notareporte ";             
             $result = mysqli_query($con, $query); 
             if(mysqli_num_rows($result) != 0)  
                 { 
@@ -141,7 +142,7 @@ switch ($op)
         $notaid = $data->notaid;      
         $query = "SELECT  notaid, notaempresa, notareporte, notacodigo, notadetalle  " . 
                     " FROM contanotascont  WHERE notaid = " . $notaid  . 
-                    " ORDER BY notacodigo "; 
+                    " ORDER BY notareporte "; 
         $result = mysqli_query($con, $query); 
         $arr = array(); 
         if(mysqli_num_rows($result) != 0)  
@@ -155,13 +156,11 @@ switch ($op)
     } 
  
 	 
-    function lista0($data) 
+    function lista0() 
     { 
-        global $objClase;
-        $con = $objClase->conectar();	
-        $empresa = $data->empresa; 
-        $query = "SELECT tipoCodigo, tipoDetalle FROM contatipoinforme WHERE tipoEmpresa = " . $empresa .
-                  " ORDER BY tipoDetalle";
+       global $objClase;
+        $con = $objClase->conectar();	 
+         $query = "SELECT tipoCodigo,  tipoDetalle FROM contatipoinforme ORDER BY  tipoDetalle";
          $result = mysqli_query($con, $query); 
          $arr = array(); 
          if(mysqli_num_rows($result) != 0)
@@ -174,4 +173,4 @@ switch ($op)
     } 
  
  
-// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Apr 13, 2020 4:54:45   <<<<<<< 
+// >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Jan 05, 2021 12:29:20   <<<<<<< 

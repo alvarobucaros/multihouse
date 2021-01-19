@@ -32,6 +32,9 @@ switch ($op)
     case 'bo':
         buscaComprobante($data);
         break;    
+    case 'bs':
+        borraSaldos($data);
+        break;       
     case 'cp':
         comprobante($data);
         break;
@@ -259,6 +262,31 @@ switch ($op)
         echo 'Ok'; 
     }
     
+    function borraSaldos($data)
+    { 
+        global $objClase;
+        $con = $objClase->conectar();
+        $periodo = $data->periodo;
+        $empresa = $data->empresa; 
+        
+        $query = "SELECT empresaPeriodoActual FROM contaempresas WHERE empresaId = " .$empresa ;
+
+        $resulta = mysqli_query($con, $query);
+        while($row = mysqli_fetch_assoc($resulta)) { 
+            if($row['empresaPeriodoActual'] <> $periodo){
+               echo 'El periodo '.$periodo . ' No es el último, verifique en parámetros contabilidad'; 
+            }
+            else{
+                $query = "DELETE FROM contasaldoscontables WHERE saldcontEmpresaid = " .
+                       $empresa . " AND saldcontPeriodo = '". $periodo ."' AND saldcontId > 0 " ;
+                $result = mysqli_query($con, $query);
+                $query = " UPDATE  contamovicabeza SET movicaProcesado = 'N' " .
+                      " WHERE movicaEmpresaId = " . $empresa . " AND movicaPeriodo = '". $periodo ."' AND movicaId > 0 ";
+                $result = mysqli_query($con, $query);
+                echo 'Ok';                
+            }
+        }
+    }
     
      function borraComprobante($data)
     { 
@@ -266,6 +294,7 @@ switch ($op)
         $con = $objClase->conectar();
         $movicaId = $data->movicaId;
         $empresa = $data->empresa; 
+        
         $query = "DELETE FROM contamovidetalle WHERE moviConCabezaId = ".$movicaId ;
         $result = mysqli_query($con, $query);
  
@@ -274,6 +303,7 @@ switch ($op)
         $result = mysqli_query($con, $query);   
         echo 'Ok'; 
     }
+    
     function duplicaComprobante($data)
        { 
        global $objClase;
@@ -304,9 +334,9 @@ switch ($op)
          "  moviTipoCta FROM contamovidetalle where moviConCabezaId = " . $id;
         mysqli_query($con, $query);
         $query="UPDATE contacomprobantes set compConsecutivo = compConsecutivo + 1 ".
-        " WHERE compId = ".$cpr." AND compEmpresaId = " . $empresa;
+        " WHERE compCodigo = '".$cpr."' AND compEmpresaId = " . $empresa . "  AND compId > 0";
         mysqli_query($con, $query);
-        echo 'Ok Creado el comprobante '. $cpr."  Nro:  ".$nro.' en el periodo '. $per;
+        echo 'Ok Creado el comprobante '. $cpr."  Nro:  ".$nro.' en el periodo '. $per ; 
 
     }
     
@@ -317,11 +347,12 @@ switch ($op)
         $empresa =  $data->empresa;
         $cpbnte = $data->cp;
         $consec = 0;
-        $query = "SELECT compConsecutivo FROM contacomprobantes WHERE compCodigo = '" . $cpbnte .
+        $query = "SELECT compConsecutivo, compNombre FROM contacomprobantes WHERE compCodigo = '" . $cpbnte .
                 "' AND compEmpresaId = " .$empresa; 
         $result = mysqli_query($con, $query); 
         while($row = mysqli_fetch_assoc($result)) { 
             $consec = $row['compConsecutivo']+1;
+            $consec .=','.$row['compNombre'];
         }
         echo $consec; 
     }
@@ -412,13 +443,17 @@ switch ($op)
     } 
  
     function actualizaComprobantes($data){
-        global $objClase;
-        $con = $objClase->conectar(); 
         $empresa = $data->empresa;
         $periodo = $data->periodo;
         $ids =  $data->ids;
         $op = $data->op;
         $multiplicador = $data->multi;
+        actualizaCp($empresa, $periodo, $ids, $op, $multiplicador );
+    }
+    
+    function actualizaCp($empresa, $periodo, $ids, $op, $multiplicador ){
+        global $objClase;
+        $con = $objClase->conectar(); 
         $tit='Reversados';
         if($multiplicador===1){
            $tit='Actualizados';
@@ -428,47 +463,48 @@ switch ($op)
         $errados=0;
         for ($i=0; $i < count($id) ;$i++){
             $er='';
+            // valida que este cuadrado y que sus cuentas existan
             $er .= validaComp($empresa, $id[$i]);
 
             if ($er === ''){
-            $query = " SELECT moviConCuenta, moviConDebito, moviConCredito FROM contamovidetalle ".
-                     " WHERE moviConCabezaId = ".$id[$i];
-            $result = mysqli_query($con, $query); 
+                $query = " SELECT moviConCuenta, moviConDebito, moviConCredito FROM contamovidetalle ".
+                         " WHERE moviConCabezaId = ".$id[$i];
+                $result = mysqli_query($con, $query); 
             
-            while($row = mysqli_fetch_assoc($result)) { 
-                $cuenta=$row['moviConCuenta'];
-                $debito=$row['moviConDebito'];
-                $credito=$row['moviConCredito'];           
-                $ok=true;
-                while($ok) {                
-                    $query="SELECT count(*) AS nrec FROM contasaldoscontables WHERE saldcontEmpresaid = " . $empresa .
-                        " AND saldcontPeriodo = '".  $periodo .  "' AND saldcontTipo = 'cont' " .
-                        " AND saldcontCuentaContable = '" .$cuenta ."' ";           
-                    $resultac  = mysqli_query($con, $query); 
-                    while($fila = mysqli_fetch_assoc($resultac))
-                    {
-                        $nr = $fila['nrec'];
-                        if ($nr == 0)
-                        {                
-                            $query = "INSERT INTO contasaldoscontables(saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
-                                " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, ".
-                                " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr) VALUES ( ". 
-                            $empresa .", '" . $periodo . "','cont', '', '" .$cuenta. "',0,0," . $debito . ",".$credito .",0,0)" ;
-                            $resultag =  mysqli_query($con, $query);        
-                        }
-                        else
+                while($row = mysqli_fetch_assoc($result)) { 
+                    $cuenta=$row['moviConCuenta'];
+                    $debito=$row['moviConDebito'];
+                    $credito=$row['moviConCredito'];           
+                    $ok=true;
+                    while($ok) {                
+                        $query="SELECT count(*) AS nrec FROM contasaldoscontables WHERE saldcontEmpresaid = " . $empresa .
+                            " AND saldcontPeriodo = '".  $periodo .  "' AND saldcontTipo = 'cont' " .
+                            " AND saldcontCuentaContable = '" .$cuenta ."' ";           
+                        $resultac  = mysqli_query($con, $query); 
+                        while($fila = mysqli_fetch_assoc($resultac))
                         {
-                            $query = "UPDATE contasaldoscontables SET saldcontDebitos =  saldcontDebitos + " . 
-                                    $debito * $multiplicador .
-                                    ", saldcontCreditos = saldcontCreditos + " . $credito * $multiplicador . 
-                                    " WHERE saldcontEmpresaid = " . $empresa .
-                                    " AND saldcontPeriodo = '".  $periodo . 
-                                    "' AND saldcontTipo = 'cont'   AND saldcontCuentaContable = '" .$cuenta .
-                                    "'  AND saldcontId > 0 ";                        
-                            $resultag =  mysqli_query($con, $query);
-                        }
-                    }               
-                        $query = " SELECT pucMayor FROM contaplancontable " .
+                            $nr = $fila['nrec'];
+                            if ($nr == 0)
+                            {                
+                                $query = "INSERT INTO contasaldoscontables(saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
+                                    " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, ".
+                                    " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr) VALUES ( ". 
+                                $empresa .", '" . $periodo . "','cont', '', '" .$cuenta. "',0,0," . $debito . ",".$credito .",0,0)" ;
+                                $resultag =  mysqli_query($con, $query);        
+                            }
+                            else
+                            {
+                                $query = "UPDATE contasaldoscontables SET saldcontDebitos =  saldcontDebitos + " . 
+                                        $debito * $multiplicador .
+                                        ", saldcontCreditos = saldcontCreditos + " . $credito * $multiplicador . 
+                                        " WHERE saldcontEmpresaid = " . $empresa .
+                                        " AND saldcontPeriodo = '".  $periodo . 
+                                        "' AND saldcontTipo = 'cont'   AND saldcontCuentaContable = '" .$cuenta .
+                                        "'  AND saldcontId > 0 ";                        
+                                $resultag =  mysqli_query($con, $query);
+                            }
+                        }               
+                            $query = " SELECT pucMayor FROM contaplancontable " .
                                  " WHERE pucEmpresaId=" .$empresa." AND pucCuenta = '".$cuenta."'";
                 
                     $resultag = mysqli_query($con, $query); 
@@ -481,12 +517,12 @@ switch ($op)
                 }
             }
             
-            if($multiplicador===1){
-                $query = "UPDATE contamovicabeza SET movicaProcesado = 'S' WHERE movicaId = ".$id[$i];
-            }else{
-                $query = "UPDATE contamovicabeza SET movicaProcesado = 'N' WHERE movicaId = ".$id[$i];
-            }
-            $resultag =  mysqli_query($con, $query);
+                if($multiplicador===1){
+                    $query = "UPDATE contamovicabeza SET movicaProcesado = 'S' WHERE movicaId = ".$id[$i];
+                }else{
+                    $query = "UPDATE contamovicabeza SET movicaProcesado = 'N' WHERE movicaId = ".$id[$i];
+                }
+                $resultag =  mysqli_query($con, $query);
             }
             else{
                 $errados += 1;
@@ -509,15 +545,39 @@ switch ($op)
             $sl2 = $row['sl2'];
         } 
         if($sl2 != 0){
-            $query = "SELECT concat(movicaComprId,'-', movicaCompNro) comp FROM contamovicabeza ".
+            $comp = xErr($id,$empresa);
+            $er .= $comp . " descuadrado en ". $sl2 ."\n";
+        }
+        $query = "SELECT moviConCuenta FROM contamovidetalle where moviConCabezaId = " . $id;
+        $result = mysqli_query($con, $query);             
+        while($row = mysqli_fetch_assoc($result)) {
+            $query = "SELECT COUNT(*) Nr FROM contaplancontable WHERE pucEmpresaId = " . $empresa .
+                     " AND pucCuenta = '" . $row['moviConCuenta'] ."' ";
+         
+            $resultado = mysqli_query($con, $query);
+            while($rec = mysqli_fetch_assoc($resultado)) {
+               
+                if($rec['Nr'] === '0'){
+                    $comp = xErr($id, $empresa);
+                    $er .= ' comprobante '.$comp . ' No existe la cuenta '. $row['moviConCuenta']. ' Revise el PUC ';
+                }
+            }
+        } 
+        return $er;
+    }
+    
+    function xErr($id,$empresa){
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $comp='';
+        $query = "SELECT concat(movicaComprId,'-', movicaCompNro) comp FROM contamovicabeza ".
                     " WHERE movicaId = ".$id ." AND movicaEmpresaId = " . $empresa ;
-            $result = mysqli_query($con, $query);             
+            $result = mysqli_query($con, $query); 
+          
             while($row = mysqli_fetch_assoc($result)) {
                 $comp = $row['comp'];
             }
-            $er .= $comp . " descuadrado en ". $sl2 ."\n";
-        }
-        return $er;
+            return $comp;
     }
     
     function actualizaMoviContamovidetalle($empresa,$periodo,$tipo,$cuenta,$cuentaContable,$multiplicador, $ValorDb, $valorCr)
@@ -595,8 +655,7 @@ switch ($op)
                     " WHERE moviConId = " .$rec[0];
             mysqli_query($con, $query);                
             echo 'Ok';            
-        } // "0||753||Ingresos||111005||13000000||0||0||||0||0||1010||||||D"
-// echo '  '.$query;
+        }
     }
        
     function transfiereSaldos($data)
@@ -606,37 +665,155 @@ switch ($op)
         $empresa =  $data->empresa;
         $perIni =  $data->perIni;
         $perFin =  $data->perFin;
-
-        $mesini=  substr($perIni, 4, 2);
-        $mesfin=  substr($perFin, 4, 2);
         $respuesta='';
-        for ($i=$mesini; $i<$mesfin; $i++){
-            $perini = (int)substr($perIni, 0, 4);
-            $perfin = substr($perIni, 0, 4);
-            if($i<10){$perini.='0';}
-            $perini.=(int)$i;
-            $j=$i+1;
-            if($j<10){$perfin.='0';}
-            $perfin.=(int)$j;
-            
+        set_time_limit(500);
+        while ($perIni < $perFin ){
+            $mesini=  (int)substr($perIni, 4, 2);            
+            $anofin = (int)substr($perIni, 0, 4);
+            $mesfin = $mesini + 1;
+            if ($mesfin > 13){
+                $mesfin=0;
+                $anofin += 1;       
+            }
+            $periodoIni= $perIni;
+            $periodoFin = (string)$anofin;
+            if($mesfin <10){$periodoFin .= '0';}
+            $periodoFin .= (string)$mesfin;
+
             $query="UPDATE contasaldoscontables SET saldcontFinalDb = saldcontInicialDb + saldcontDebitos, ".
-                 " saldconFinalCr=saldcontInicialCr+saldcontCreditos ".
-                 " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $perini . "' ";
+                 " saldconFinalCr=saldcontInicialCr + saldcontCreditos ".
+                 " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $periodoIni . "' ";
             mysqli_query($con, $query);
-            $query="SET SQL_SAFE_UPDATES = 0; UPDATE contasaldoscontables s1, contasaldoscontables s2 " .
-                 " SET s1.saldcontInicialDb = s2.saldcontFinalDb, s1.saldcontInicialCr = s2.saldconFinalCr " .
-                 " WHERE s1.saldcontEmpresaid = s2.saldcontEmpresaid AND  " .
-                 " s1.saldcontTipo = s2.saldcontTipo AND  " .
-                 " s1.saldcontCuentaContable = s2.saldcontCuentaContable AND " .
-                 " s1.saldcontPeriodo = '". $perini . "'  AND s2.saldcontPeriodo = '" . $perfin .
-                 "' AND s1.saldcontEmpresaid=". $empresa ;
-             mysqli_query($con, $query);
-            $respuesta .= " Del " . $perini .' Al '.$perfin .' ';
+            
+            $query="UPDATE contasaldoscontables SET saldconNeto = saldcontFinalDb - saldconFinalCr ".
+                 " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $periodoIni . "' ";
+            mysqli_query($con, $query); 
+                
+            $query="INSERT INTO contasaldoscontables (saldcontEmpresaid, saldcontPeriodo, saldcontTipo,  ".
+                    " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr,  ".
+                    " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr,saldconNeto)  ".
+                    " SELECT " . $empresa . ", '" . $periodoFin . "', 'cont', ' ', saldcontCuentaContable, ".
+                    " saldcontFinalDb, saldconFinalCr, 0, 0, 0, 0, 0 FROM contasaldoscontables  ".
+                    " WHERE saldcontCuentaContable NOT IN (SELECT saldcontCuentaContable FROM contasaldoscontables  ".
+                    " WHERE saldcontEmpresaid = " . $empresa . " AND saldcontPeriodo =  '" . $periodoFin . 
+                    "') AND saldcontEmpresaid = " . $empresa . " AND saldcontPeriodo =  '" . $periodoIni . 
+                    "' ORDER BY saldcontCuentaContable";
+                    mysqli_query($con, $query); 
+                                 
+            $query="UPDATE contasaldoscontables SET  saldcontDebitos = 0, saldcontCreditos = 0 ".
+                 " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $periodoFin . "' ";
+            mysqli_query($con, $query); 
+                
+            $query= " UPDATE contasaldoscontables sFin, contasaldoscontables sIni ".
+                   " SET sFin.saldcontInicialDb = sIni.saldcontFinalDb, sFin.saldcontInicialCr = sIni.saldconFinalCr ".
+                   " WHERE sFin.saldcontEmpresaid = sIni.saldcontEmpresaid ".
+                   " AND sFin.saldcontTipo = sIni.saldcontTipo ".
+                   " AND sFin.saldcontCuentaContable = sIni.saldcontCuentaContable ".
+                   " AND sIni.saldcontPeriodo = '" . $periodoIni . "'  AND sFin.saldcontPeriodo =  '" . $periodoFin . 
+                   "' AND sFin.saldcontEmpresaid = ". $empresa ;
+            mysqli_query($con, $query);
+            if($mesfin===0){
+                $query = "SELECT empresaCuentaCierre FROM contaempresas WHERE empresaId = " . $empresa;
+                $result = mysqli_query($con, $query);
+                while($row = mysqli_fetch_assoc($result)) 
+                {
+                    $cierre .= $row['empresaCuentaCierre'].',';
+                }
+                $salIng=0;
+                $salGas=0;
+                $query = "SELECT saldconNeto FROM contasaldoscontables WHERE saldcontCuentaContable = '4' " .
+                         " AND saldcontEmpresaid = " . $empresa . " AND saldcontPeriodo = '" . $periodoIni . "'";
+                $result = mysqli_query($con, $query);
+                while($row = mysqli_fetch_assoc($result)) 
+                {
+                    $salIng .= $row['saldconNeto'].',';
+                }  
+                $query = "SELECT saldconNeto FROM contasaldoscontables WHERE saldcontCuentaContable = '5' " .
+                         " AND saldcontEmpresaid = " . $empresa . " AND saldcontPeriodo = '" . $periodoIni . "'";
+                $result = mysqli_query($con, $query);
+                while($row = mysqli_fetch_assoc($result)) 
+                {
+                    $salGas .= $row['saldconNeto'].',';
+                }  
+                
+            }
+            else{
+                $selected='';
+                $query = "SELECT movicaId FROM contamovicabeza WHERE movicaEmpresaId  = " . $empresa . 
+                        " AND movicaPeriodo = '" . $periodoFin . "' ";
+                $result = mysqli_query($con, $query); 
+
+                while($row = mysqli_fetch_assoc($result)) 
+                {
+                    $selected .= $row['movicaId'].',';
+                }
+                $n=strlen($selected);
+                $selected= substr($selected, 0, $n-1);
+
+                actualizaCp($empresa, $periodoFin, $selected, '', '1' );
+
+                $respuesta .= " Del " . $periodoFin .' Al '.$periodoFin;
+                $perIni=$periodoFin;
+                if($mesfin===13){
+                    $query="UPDATE contasaldoscontables SET saldcontFinalDb = saldcontInicialDb + saldcontDebitos, ".
+                     " saldconFinalCr=saldcontInicialCr + saldcontCreditos ".
+                     " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $periodoFin . "' ";
+                    mysqli_query($con, $query); 
+                    $query="UPDATE contasaldoscontables SET saldconNeto = saldcontFinalDb - saldconFinalCr ".
+                     " WHERE saldcontEmpresaid= " . $empresa . " AND saldcontPeriodo = '" . $periodoFin . "' ";
+                mysqli_query($con, $query); 
+                }
+            }
         }
         $respuesta = "Saldos trasferidos ". $respuesta;
         echo $respuesta;
         return $respuesta;        
     }   
+    
+    function creaCuentas($empresa, $periodo, $cuenta, $debito, $credito){
+        global $objClase;
+        $con = $objClase->conectar();  
+        $ok = true;
+        while ($ok ){   
+            $query="SELECT count(*) AS nrec FROM contasaldoscontables WHERE saldcontEmpresaid = " . $empresa .
+                " AND saldcontPeriodo = '".  $periodo .  "' AND saldcontTipo = 'cont' " .
+                " AND saldcontCuentaContable = '" .$cuenta ."' ";           
+            $result  = mysqli_query($con, $query); 
+            while($fila = mysqli_fetch_assoc($result))
+            {
+                $nr = $fila['nrec'];
+                if ($nr == 0)
+                {                
+                    $query = "INSERT INTO contasaldoscontables(saldcontEmpresaid, saldcontPeriodo, saldcontTipo, ".
+                        " saldcontCuenta, saldcontCuentaContable, saldcontInicialDb, saldcontInicialCr, ".
+                        " saldcontDebitos, saldcontCreditos, saldcontFinalDb, saldconFinalCr, saldconNeto) VALUES ( ". 
+                    $empresa .", '" . $periodo . "','cont', '', '" .$cuenta. "'," . $debito . ",".$credito ."0,0,,0,0,0)" ;
+                    $resultag =  mysqli_query($con, $query);        
+                }
+                else
+                {
+                    $query = "UPDATE contasaldoscontables " .
+                            " SET saldcontInicialDb  =  saldcontInicialDb + " . $debito .
+                            " , saldcontInicialCr  =  saldcontInicialCr + " . $credito .
+                            " WHERE saldcontEmpresaid = " . $empresa .
+                            " AND saldcontPeriodo = '".  $periodo . 
+                            "' AND saldcontTipo = 'cont'   AND saldcontCuentaContable = '" .$cuenta .
+                            "'  AND saldcontId > 0 ";                        
+                    $resultag =  mysqli_query($con, $query);
+                }
+
+                $query = "SELECT pucMayor FROM contaplancontable WHERE pucEmpresaId = " . $empresa . 
+                         "  AND pucCuenta = '".$cuenta."' ";
+                $resultag =  mysqli_query($con, $query);
+                while($row = mysqli_fetch_assoc($resultag)) {
+                    $mayor = $row['pucMayor'];
+                }
+                if ($mayor === 0){
+                    $ok = false;
+                }
+            }
+        }
+    }
     
     function actualizaOper($data)
     {     
@@ -650,7 +827,8 @@ switch ($op)
                  $rec[5] . "','N','".$rec[3] . "','".$rec[2] . "','0','".$rec[0] . "')";
         mysqli_query($con, $query);
         $nroCabeza = mysqli_insert_id($con);
-
+//"MEC||5||--||2018-01-17||922||Arriendo Local 26 mes de||--31|| ||undefined||undefined||06||83||06|| 
+//13-> 3599375|| || || || || ||683881|| || ||4283256|| || ||111005|| || ||415505||236705||"
         $an[0][0] = 13;
         $an[0][1] = 14;
         $an[1][0] = 15;
@@ -663,19 +841,23 @@ switch ($op)
         $an[4][1] = 22;
         $an[5][0] = 23;
         $an[5][1] = 24;
-
+       
         for($i=25;$i<31;$i++){
+//echo '('.$i.')  db ' .$an[$i-25][0] .' cr '.   $an[$i-25][1];        
             if($rec[$i] != ''){
                 $db=$an[$i-25][0];
                 $cr=$an[$i-25][1];
                 $tpCta='D';
                 if($rec[$cr] !=''){ $tpCta='C';}
+                if($rec[$cr] === ''){$rec[$cr]='0';}
+                if($rec[$db] === ''){$rec[$db]='0';}
                 $query = "INSERT INTO contamovidetalle (moviConCabezaId ,moviConDetalle, moviConCuenta, ".
                 " moviConDebito, moviConCredito, moviConBase, moviConImpTipo, moviConImpPorc, ".
                 " moviConImpValor, moviConIdTercero, moviDocum1, moviDocum2, moviTipoCta) VALUES (".
                 $nroCabeza.",'".$rec[5]."','".$rec[$i]."','".$rec[$db]."','".$rec[$cr]."','0','','0','0','".
                         $rec[4]."','','". $rec[0]."','".$tpCta."')";
                 mysqli_query($con, $query);
+//echo $query;                
             }
         }
         $query=" UPDATE contacomprobantes SET compConsecutivo = compConsecutivo + 1 ".
@@ -683,9 +865,7 @@ switch ($op)
          mysqli_query($con, $query);
          echo 'Ok';
     }
- 
-                 //"OLD||5||201703||2017-03-29||973||Ingresos por Old Mutual marzo||--31||||undefined||undefined||06||27||06||3600000||||3600000||||||||||3600000||||3600000||||||122510||111005||||311505||122510||"
-   
+  
     function exportaXls($data){ 
         global $objClase;
         $con = $objClase->conectar(); 
@@ -694,8 +874,7 @@ switch ($op)
         $expo=''; 
         $expo .= '<table border=1 class="table2Excel"> '; 
         $expo .=  '<tr> '; 
-//        $expo .=  '          <th>ID</th>';
-//        $expo .=  '          <th>EMPRESA</th>';
+
         $expo .=  '          <th>COMPROBANTE</th>';
         $expo .=  '          <th>NOM COMPROBANTE</th>';
         $expo .=  '          <th>NUMERO</th>';
@@ -706,9 +885,7 @@ switch ($op)
         $expo .=  '          <th>PERIODO</th>';
         $expo .=  '          <th>DOCUMPPAL</th>';
         $expo .=  '          <th>DOCUMSEC</th>';
-//            $query = "SELECT  movicaId, movicaEmpresaId, movicaComprId, movicaCompNro, movicaTerceroId, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec" 
-//                    . " FROM contamovicabeza ORDER BY movicaPeriodo ";  
-//            
+          
             $query = "SELECT  movicaId, movicaEmpresaId, movicaComprId, compNombre,  movicaCompNro, movicaTerceroId, ".
                     " terceroNombre, movicaDetalle, movicaProcesado, movicaFecha, movicaPeriodo, movicaDocumPpal, movicaDocumSec" .
                     " FROM contamovicabeza  ".

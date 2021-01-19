@@ -5,6 +5,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_titleRCaja = 'Recibos de Caja (Abonos)';
     $scope.form_titleOtroIngreso = 'Otros Ingresos';
     $scope.form_anulaRCaja = 'Anula recibo de caja';
+  
     $scope.form_contabiliza='Contabiliza movimiento de Ingresos y Egresos';
     $scope.form_consultasCtaCobro='Consulta de cuentas de cobro';
     $scope.form_impromeCtasCobro = 'Reimprime cuentas de cobro';
@@ -21,8 +22,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_detalle='Detalle anticipo';
     $scope.form_acuerdoValor='Valor acuerdo';
     $scope.form_fechaAbono = "Fecha Abono";
-    $scope.form_fechaDesde="Fecha Desde"
-    $scope.form_fechaHasta="Fecha Hasta"
+    $scope.form_fechaDesde="Fecha Desde";
+    $scope.form_fechaHasta="Fecha Hasta";
     $scope.form_fechaCorte='Fecha de corte';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
@@ -37,8 +38,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_btnAplicar = 'Aplicar';  
     $scope.form_btnBuscar = 'Buscar';  
     $scope.Mensaje='El periodo ya se facturó';
-    $scope.form_imprimeTodos='Imprime todas o una sola:'
-    
+    $scope.form_imprimeTodos='Imprime todas o una sola:';
+
     $scope.ultiperfac = 'Ultimo perído facturado: ';
     $scope.periFact = 'Perído a Facturar:';
     $scope.form_periodo ='Ultimo período';
@@ -151,7 +152,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
      function getInfoFac(empresa){
        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
 
-        rec=data.split('||');
+        var rec=data.split('||');
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];
         $scope.valFchCorte = rec[2];
@@ -164,7 +165,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.recargoDias  = rec[10];
         $scope.factorRedondeo = rec[11];
         $scope.periCierreFactura = rec[12];
- //201801||201801||2018-01-31||01||FACTURACION (INGRESOS)||10||494||82||2.00||0.00||12||C||201712     
+   
         $scope.factura = true; 
         $scope.imprime = false; 
         if (rec[7] > 0){
@@ -181,7 +182,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     function getInfoRcaja(empresa, procesa){
         mes = ['31', '28', '31','30','31','30','31','31','30','31','30','31' ];
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
-        rec=data.split('||');
+        var rec=data.split('||');
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];
         $scope.valFchCorte = rec[2];
@@ -340,8 +341,9 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     }else{
         alert(err);
     }
-    }
-     
+    };
+    
+
     $scope.aplicar = function(){
         empresa=$scope.empresa;
         prop=$scope.registro.propietario;

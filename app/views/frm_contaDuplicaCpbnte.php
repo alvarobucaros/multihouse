@@ -15,12 +15,7 @@
                     <button class="btn btn-default btn-primary" ng-click="continuaLista('dp')" 
                      title="{{form_btnConti}}">{{form_btnConti}}</button>                   
                     </div>
-                    <!--div class="col-md-2">
-                    <button class="btn btn-default btn-primary" ng-click="actualizaLista(detailDp)" 
-                     title="{{form_btnActualiza}}">{{form_btnActualiza}}</button>                   
-                    </div -->                    
-
-
+                   
                 </div> 
             <div id='miExcel' style='display: none'>
                 <input type="text"  id="control" ng-model="control" value="D"/>
@@ -45,7 +40,8 @@
                 </tr>
 
                 <tr ng-repeat="detailActualizar in detailsActualizar | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-                    <!--td>{{detailActualizar.movicaId}}</td-->
+                    <!--td>{{detailActualizar.movicaId}}</td>
+                    <td>{{detailActualizar.movicaTerceroId}}</td-->
                     <td>{{detailActualizar.movicaComprId}}</td>
                     <td>{{detailActualizar.compNombre}}</td>
                     <td>{{detailActualizar.movicaCompNro}}</td>
@@ -85,7 +81,7 @@
                     <label class="control-label milabel col-md-3" for="nrCpbnte">{{form_comprobante}}</label>
                     <div class="col-md-3">
                         <input type="text" class="form-control mitexto" id="nrCpbnte" name="nrCpbnte"
-                          readonly="yes"  ng-model="nrCpbnte" />
+                          readonly="yes"  ng-model="registroDup.nrCpbnte" />
                     </div>
                 </div>
         
@@ -93,7 +89,7 @@
                     <label class="control-label milabel col-md-3" for="detCpbnte">{{form_detalle}}</label>
                     <div class="col-md-6">
                         <textarea rows="3" cols="50" class="form-control mitexto" 
-                        id="detCpbnte" name="detCpbnte"  ng-model="detCpbnte" >                           
+                        id="detCpbnte" name="detCpbnte"  ng-model="registroDup.detCpbnte" >                           
                     </textarea>
                     </div>
             
@@ -101,7 +97,7 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-3" for="movicaTerceroId">{{form_movicaTerceroId}}</label>
                     <div class="col-md-6">
-                    <select id='movicaTerceroId' name='movicaTerceroId' ng-model='movicaTerceroId' >
+                    <select id='movicaTerceroId' name='movicaTerceroId' ng-model='registroDup.movicaTerceroId' >
                      <option ng-repeat='operator1 in operators1' value = " {{operator1.terceroId}}">{{operator1.terceroNombre}}</option>
                     </select>
                     </div>
@@ -110,11 +106,11 @@
                     <label class="control-label milabel col-md-3" for="empresaFchecha">{{form_empresaFchecha}}</label>
                    <div class="col-md-3">
                     <input type="date" width="12" class="form-control mitexto fa fa-calendar fa-lg" id="empresaFchecha" name="empresaFchecha"
-                         ng-model="detailDp.empresaFchecha" value="{{empresaFchecha}}"   />
+                         ng-model="registroDup.empresaFchecha" value="{{empresaFchecha}}"   />
                     </div>
                 </div>         
                 <div class="col-md-2">
-                    <button class="btn btn-default btn-primary" ng-click="duplicaComprobante(detail)" 
+                    <button class="btn btn-default btn-primary" ng-click="duplicaComprobante(registroDup)" 
                      title="{{form_btnDuplica}}">{{form_btnDuplica}}</button>                   
                 </div>
       

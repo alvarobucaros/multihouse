@@ -1,3 +1,14 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Admin contanotascont</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+ <!-- <link href="../css/atom.css" rel="stylesheet" type="text/css"/> -->
+</head>
+<body class="hold-transition skin-blue sidebar-mini"   ng-app="app" >
 
     <div class="container "  ng-controller="mainController">
         <h3 class="text-left">{{form_title}}</h3>
@@ -19,9 +30,11 @@
         <div class="col-md-8 col-md-offset-1">
 
             <form class="form-horizontal alert alert-mm color-palette-set" name="formato" id="idForm"
-                  ng-submit="insertInfo(registro);" hidden=""> 
+                  ng-submit="insertInfo(registro);" hidden="">
 
-                <div class="form-group" style='display: none'>
+   
+
+                <div style='display: none'>
                     <label class="control-label milabel col-md-4" for="notaempresa">{{form_notaempresa}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="notaempresa" name="notaempresa"
@@ -51,7 +64,7 @@
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="notadetalle">{{form_notadetalle}}</label>
                    <div class="col-md-6">
-                    <textarea  class="form-control mitexto"  cols="60" rows="4" id="notadetalle" name="notadetalle"
+                    <textarea  class="form-control mitexto"  cols="80" rows="6" id="notadetalle" name="notadetalle"
                          ng-model="registro.notadetalle" required Placeholder="{{form_Phnotadetalle}}" 
                          value="{{registro.notadetalle}}">
                     </textarea>
@@ -84,16 +97,16 @@
             <div class="table-responsive">
                 <table class="table table-hover tablex">
                     <tr>
-                        <!--th>ID</th>
-                        <th>EMPRESA</th-->
+<!--                        <th>ID</th>
+                        <th>EMPRESA</th>-->
                         <th>REPORTE</th>
                         <th>CODIGO</th>
                         <th>DETALLE</th>
                     </tr>
                    
                     <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-                    <!--td>{{detail.notaid}}</td>
-                    <td>{{detail.notaempresa}}</td-->
+<!--                    <td>{{detail.notaid}}</td>
+                    <td>{{detail.notaempresa}}</td>-->
                     <td>{{detail.notareporte}}</td>
                     <td>{{detail.notacodigo}}</td>
                     <td>{{detail.notadetalle}}</td>
@@ -115,6 +128,10 @@
         </div>
 </div>
 
+</body>
+
 <script src="controller/ctrls/contanotascont.ctrl.js" type="text/javascript"></script>
 	 
-<!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Apr 13, 2020 4:54:45   <<<<<<< -->
+
+</html>
+<!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Tuesday,Jan 05, 2021 12:29:20   <<<<<<< -->

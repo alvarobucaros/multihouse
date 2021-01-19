@@ -49,26 +49,27 @@
                    </label>
                     </div>
                 </div> 
-                <div ng-hide="ruedita">
-                    <img src="img/progress.gif" alt=""/>
-                </div>
+
                 <div class="form-group">
-                    <div class="btn-group  col-md-8">
-                        <div class="col-md-2" ></div>
-                        <div class="col-md-2" ng-show="prepara">
-                            <button type="button" value="continua" class="btn btn-custom pull-right btn-xs" 
-                            ng-click="preparaInfoNif()" id="continua">{{form_btnPretara}}</button>
+                    <div class="btn-group  col-md-10">
+                        <div class="col-md-1" ></div>
+                        <div class="col-md-3" ng-show="prepara">
+                            <button type="button"  class="btn btn-custom pull-right btn-xs" 
+                            ng-click="preparaInfoNif()" >{{form_btnPrepara}}</button>
                         </div>  
                    
                         <div class="col-md-3" ng-show="imprime">  
-                            <button type="button" value="continua" class="btn btn-custom pull-right btn-xs" 
-                            ng-click="imprimeInfoNif()" id="continua">{{form_btnImprime}}</button>
+                            <button type="button" class="btn btn-custom pull-right btn-xs" 
+                            ng-click="imprimeInfoNif()" >{{form_btnImprime}}</button>
                         </div>  
-                        <div class="col-md-3" ng-show="imprime">  
-                            <button type="button" value="continua" class="btn btn-custom pull-right btn-xs" 
-                            ng-click="exportaNif()" id="continua">{{form_btnExporta}}</button>
+                        <div class="col-md-3" ng-show="imprimeXls">  
+                            <button type="button"  class="btn btn-custom pull-right btn-xs" 
+                            ng-click="exportaNif()">{{form_btnExporta}}</button>
                         </div>                         
-                    </div>
+                    </div> 
+                </div>
+                <div ng-hide="ruedita"> 
+                    <img src="img/progress.gif" alt=""/>
                 </div>
                 <div id='miExcel' style='display: none'>
                 </div> 
@@ -85,7 +86,7 @@
 
 <script src="js/ui-bootstrap-tpls-0.11.0.js" type="text/javascript"></script>
 <script src="controller/ctrls/contaInfoCont.js" type="text/javascript"></script>
-<script src="controller/script.js" type="text/javascript"></script>
+<!--<script src="controller/script.js" type="text/javascript"></script>-->
 
 
 

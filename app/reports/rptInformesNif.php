@@ -16,9 +16,10 @@ require_once ('fpdf.php');
         $PeriodoIzq =  $dt[2];    
         $variaciones =  $dt[3];    
         $notas =  $dt[4];  
-        $control = $dt[5];
-        $informe = $dt[6];
+        $control = $dt[7];
+        $informe = $dt[8];
         $hoy= date("d-m-Y");
+        //"5,201412,201412,N,S,2014/12/31,2014/12/31,SF,SITFIN"
         $ms = array(31,28,31,30,31,30,31,31,30,31,30,31);
         $d=$ms[substr($PeriodoDer,4, 2) - 1];
         $fchini = substr($PeriodoDer,0, 4).'/'.substr($PeriodoDer,4, 2).'/'.$d;
@@ -28,7 +29,7 @@ require_once ('fpdf.php');
         $obj = new  reportesContCls();
         $nombre = $obj->nombreLista($empresa, $informe );
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while( $empre = mysqli_fetch_assoc($resultado) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -41,12 +42,13 @@ require_once ('fpdf.php');
 
         $this->pieTexto = $nomEmpre . '   '. trim($nit) . '   '. trim($dir) . '   '. trim($tel);
         $der=0;
-        if($control === 'SF'){           
-            $this->tit='EtdoSitFin';
-        }
-        if($control === 'ER'){
-            $this->tit='EtdoResul';
-        }  
+//        if($control === 'SF'){           
+//            $this->tit='EtdoSitFin';
+//        }
+//        if($control === 'ER'){
+//            $this->tit='EtdoResul';
+//        }  
+        $this->tit = strtolower($informe);
         $this->tit = $this->tit.$PeriodoDer;
         $logo = "logos/".$this->logo;
         $titulo=strtoupper($nombre) .' Al '. $fchini;
@@ -56,7 +58,7 @@ require_once ('fpdf.php');
             $this->tit = $this->tit.'-'.$PeriodoIzq;
         }
         
-//        $this->Image($logo,$der+5,14,20,10);    
+        $this->Image($logo,$der+5,14,20,10,'png');    
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);
@@ -78,7 +80,7 @@ require_once ('fpdf.php');
         $this->Cell(48,4, utf8_decode($tel),0, 1 , 'L' );
         $this->SetXY($der+155,20);
         $this->Cell(48,4, utf8_decode($mail),0, 1 , 'L' );
-        $this->Line($der+6, 30, 200, 30); 
+        $this->Line($der+26, 30, 180, 30); 
         $this->SetFont('Arial','',7); 
         if ($this->aviso){
             if($PeriodoDer===$PeriodoIzq){
@@ -140,8 +142,8 @@ require_once ('fpdf.php');
     $PeriodoIzq =  $dt[2];    
     $variaciones =  $dt[3];    
     $notas =  $dt[4];  
-    $control = $dt[5];
-    $informe = $dt[6];
+    $control = $dt[7];
+    $informe = $dt[8];
     $notes = array();  
     $yin=5;
     if($PeriodoDer === $PeriodoIzq){$yin=15;}
@@ -240,73 +242,86 @@ require_once ('fpdf.php');
     $resultado = $obj->  traeContador($empresa);
     while($row = mysqli_fetch_assoc($resultado) )
     {
-         if($row['empresaContador'] === ''){
-            $y+=8; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Line(48, $y, 70, $y); 
-            $y+=2; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Cell(80,4,utf8_decode($row['empresaRepresentante']).' CC.'. $row['empresaIdentifRepresentante'],0,1);
-            $y+=4; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Cell(80,4, 'REPRESENTANTE LEGAL' ,0,1);
-         }else{
-            $y1=$pdf->GetY();
-            $y+=12; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Line(48, $y, 90, $y); 
-            $y+=1; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Cell(80,4, 'CONTADOR' ,0,1);    
-            $y+=3; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Cell(80,4,utf8_decode($row['empresaContador']).' CC.'. $row['empresaIdentifContador'],0,1);
-            $y+=4; 
-            $pdf->SetXY(48,$y);  
-            $pdf->Cell(80,4, utf8_decode('Matrícula ').$row['empresaMatriculaContador'],0,1); 
-              
-            if($row['empresaRevisor'] !== ''){ 
-                $y=$y1;
-                $y+=16; 
-                $pdf->SetXY(118,$y);  
-                $pdf->Line(118, $y, 160, $y); 
-                $y+=1; 
-                $pdf->SetXY(118,$y);  
-                $pdf->Cell(80,4, 'REVISOR FISCAL' ,0,1);    
-                $y+=3; 
-                $pdf->SetXY(118,$y);  
-                $pdf->Cell(80,4,utf8_decode($row['empresaRevisor']).' CC.'. $row['empresaIdentifRevisor'],0,1);
-                $y+=4; 
-                $pdf->SetXY(118,$y);  
-                $pdf->Cell(80,4, utf8_decode('Matrícula ').$row['empresaMatriculaRevisor'],0,1);                  
-             } 
-         }   
+        $lin1r='';
+        $lin2r='';
+        $lin3r='';
+        $lin1c='';
+        $lin2c='';
+        $lin3c='';
+        $lin1f='';
+        $lin2f='';
+        $lin3f='';
+        if($row['empresaRepresentante'] != ''){
+            $lin1r = "REPRESENTANTE LEGAL";
+            $lin2r = utf8_decode($row['empresaRepresentante']);
+            $lin3r = ' CC.'. $row['empresaIdentifRepresentante'];
+     
+        } 
+        if($row['empresaContador'] != ''){
+             $lin1c = "CONTADOR";
+             $lin2c = utf8_decode($row['empresaContador']);
+             $lin3c =' CC.'. $row['empresaIdentifContador']. ' Mat. '.$row['empresaMatriculaContador'];
+      
+        }      
+        if($row['empresaRevisor'] !== ''){ 
+            $lin1f = "REVISOR FISCAL";
+            $lin2f = utf8_decode($row['empresaRevisor']);
+            $lin3f =' CC.'. $row['empresaIdentifRevisor']. ' Mat. '.$row['empresaMatriculaRevisor'];
+         }
+     
+        $y=$pdf->GetY()+12; 
+        $pdf->SetXY(10,$y);   
+        $pdf->Line($der+26, $y, 180, $y);  
+  
+        $y += 2; 
+        $y=$pdf->GetY()+10; 
+        $pdf->SetXY(40,$y);   
+        $pdf->Cell(20,4, $lin1r ,0,1);
+        $pdf->SetXY(100,$y);   
+        $pdf->Cell(20,4, $lin1c ,0,1);
+        $pdf->SetXY(160,$y);   
+        $pdf->Cell(20,4,$lin1f ,0,1);
+        $y += 4; 
+        $pdf->SetXY(40,$y);   
+        $pdf->Cell(20,4, $lin2r ,0,1);  
+        $pdf->SetXY(100,$y);  
+        $pdf->Cell(20,4, $lin2r ,0,1); 
+        $pdf->SetXY(160,$y); 
+        $pdf->Cell(20,4, $lin2f ,0,1); 
+        $y += 4; 
+        $pdf->SetXY(40,$y);   
+        $pdf->Cell(20,4, $lin3r ,0,1); 
+         $pdf->SetXY(100,$y);  
+        $pdf->Cell(20,4, $lin3c ,0,1); 
+        $pdf->SetXY(160,$y); 
+        $pdf->Cell(20,4, $lin3f ,0,1);  
     }
-   
-    $ptos='';
-    $pdf->aviso=false;       
-    $pdf->AliasNbPages();
-    $pdf->AddPage();
-    $y=$ynew;        
-    $pdf->SetFont('Arial','',8);
-    for ($i=0; $i<count($notes);$i++){
-        $ptos.=$notes[$i].','; 
-    }
-    $ptos=  substr($ptos, 0, strlen($ptos)-1);
-    $resultado = $obj->traeNotas($empresa, $informe, $ptos);
-    while($row = mysqli_fetch_assoc($resultado) )
-    { 
-        $y+=6;
-        if($y > 250){
-            $pdf->AliasNbPages();
-            $pdf->AddPage();
-            $y=$ynew;              
+    if ($notas==='S'){
+        $ptos='';
+        $pdf->aviso=false;       
+        $pdf->AliasNbPages();
+        $pdf->AddPage();
+        $y=$ynew;        
+        $pdf->SetFont('Arial','',8);
+        for ($i=0; $i<count($notes);$i++){
+            $ptos.=$notes[$i].','; 
         }
-        $pdf->SetXY(10,$y);
-        $pdf->Cell(10,5, 'Nota '.$row['notacodigo'] ,0,1);
-        $pdf->SetXY(24,$y);
-        $pdf->MultiCell(160,5,  utf8_decode($row['notadetalle']),0,'L');
-        $y=$pdf->GetY();
+        $ptos=  substr($ptos, 0, strlen($ptos)-1);
+        $resultado = $obj->traeNotas($empresa, $informe, $ptos);
+        while($row = mysqli_fetch_assoc($resultado) )
+        { 
+            $y+=6;
+            if($y > 250){
+                $pdf->AliasNbPages();
+                $pdf->AddPage();
+                $y=$ynew;              
+            }
+            $pdf->SetXY(10,$y);
+            $pdf->Cell(10,5, 'Nota '.$row['notacodigo'] ,0,1);
+            $pdf->SetXY(24,$y);
+            $pdf->MultiCell(160,5,  utf8_decode($row['notadetalle']),0,'L');
+            $y=$pdf->GetY();
+        }
     }
     $pdf->SetFont('Arial','',6);
     $y+=8; 

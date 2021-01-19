@@ -108,18 +108,20 @@ class reportesContCls{
         $result="";
         $query=" SELECT movicaId, movicafecha, movicaComprId, compNombre, movicaCompNro, terceroNombre, ".
                 " movicaProcesado , movicaDetalle, movicaPeriodo, movicaDocumPpal, movicaDocumSec, terceroId ".
-		" FROM contamovicabeza INNER JOIN contacomprobantes ON movicaComprId  = compCodigo".
-		" INNER JOIN contaterceros ON   movicaTerceroId =  terceroId ".
+		" FROM contamovicabeza ".
+                " INNER JOIN contacomprobantes ON movicaComprId  = compCodigo AND compEmpresaId = movicaEmpresaId ".
+		" INNER JOIN contaterceros ON   movicaTerceroId =  terceroId AND terceroEmpresaId = movicaEmpresaId ".
 		" WHERE movicaEmpresaId = compEmpresaId   and movicaEmpresaId = terceroEmpresaId  AND ".
 		" movicaPeriodo BETWEEN '".$periodoIni. "' AND '" . $periodoFin . 
                 "' AND movicaEmpresaId = " . $empresa . " AND " . $cond .
-            " UNION  " .
-            " SELECT movicaId, movicafecha, movicaComprId, compNombre, movicaCompNro, '' AS terceroNombre, ".
-                " movicaProcesado , movicaDetalle, movicaPeriodo , movicaDocumPpal, movicaDocumSec, -1 AS terceroId ".
-                " FROM contamovicabeza  INNER JOIN contacomprobantes ON movicaComprId  = compCodigo ".
-                " WHERE " . $ter . " AND movicaEmpresaId = compEmpresaId AND ".
-                " movicaPeriodo BETWEEN '".$periodoIni. "' AND '" . $periodoFin . 
-                "' AND movicaEmpresaId = " . $empresa . " AND " . $cond .
+//            " UNION  " .
+//            " SELECT movicaId, movicafecha, movicaComprId, compNombre, movicaCompNro, '' AS terceroNombre, ".
+//                " movicaProcesado , movicaDetalle, movicaPeriodo , movicaDocumPpal, movicaDocumSec, -1 AS terceroId ".
+//                " FROM contamovicabeza  ".
+//                " INNER JOIN contacomprobantes ON movicaComprId  = compCodigo  AND compEmpresaId = movicaEmpresaId ".
+//                " WHERE " . $ter . " AND movicaEmpresaId = compEmpresaId AND ".
+//                " movicaPeriodo BETWEEN '".$periodoIni. "' AND '" . $periodoFin . 
+//                "' AND movicaEmpresaId = " . $empresa . " AND " . $cond .
             "  ORDER BY ";
             if($orden == 'FC'){
                 $orden =   "movicafecha , movicaComprId, movicaCompNro ";                      
@@ -139,13 +141,14 @@ class reportesContCls{
         include_once("../bin/cls/clsConection.php");
         $objClase = new DBconexion();
         $con = $objClase->conectar();
-        $query = "SELECT moviConCuenta, pucNombre, moviConDetalle ,moviConDebito, moviConCredito, 
-        CASE moviConIdTercero WHEN -1 THEN ''  ELSE (select terceroNombre from contaterceros where 
-        terceroId = moviConIdTercero  ) END AS moviConTercero, 
-        CASE moviConIdTercero WHEN -1 THEN ''  ELSE (select concat(terceroIdenTipo,'-' ,terceroIdenNumero) from contaterceros where 
-        terceroId = moviConIdTercero  ) END AS moviConTerceroId,
-        moviDocum1, moviDocum2 FROM contamovidetalle INNER JOIN contaplancontable ON pucCuenta = moviConCuenta 
-        WHERE pucEmpresaId = ". $empresa ." AND moviConCabezaId = " . $comprobante;
+        $query = " SELECT moviConCuenta, pucNombre, moviConDetalle ,moviConDebito, moviConCredito,  ".
+                 " CASE moviConIdTercero WHEN -1 THEN ''  ELSE (select terceroNombre  ".
+                 " FROM contaterceros WHERE terceroId = moviConIdTercero  ) END AS moviConTercero,  ".
+                 " CASE moviConIdTercero WHEN -1 THEN ''  ELSE (select concat(terceroIdenTipo,'-' ,terceroIdenNumero) ".
+                 " FROM contaterceros WHERE terceroId = moviConIdTercero  ) END AS moviConTerceroId,  ".
+                 " moviDocum1, moviDocum2 FROM contamovidetalle  ".
+                 " INNER JOIN contaplancontable ON pucCuenta = moviConCuenta  ".
+                 " WHERE pucEmpresaId = ". $empresa ." AND moviConCabezaId = " . $comprobante;
         $result = mysqli_query($con, $query); 
         return $result;
     }
@@ -162,12 +165,13 @@ class reportesContCls{
         $objClase = new DBconexion();
         $con = $objClase->conectar();
         $query = "SELECT tipoDetalle FROM contatipoinforme WHERE tipoEmpresa = " .
-             $empresa . " AND tipoCodigo = '".$informe . "'"; 
+                 $empresa . " AND tipoCodigo = '".$informe . "'"; 
+
         $result = mysqli_query($con, $query); 
-            while($row = mysqli_fetch_assoc($result)) { 
-                $tipoDetalle = $row['tipoDetalle'];
-           } 
-        echo $tipoDetalle; 
+        while($row = mysqli_fetch_assoc($result)) { 
+            $tipoDetalle = $row['tipoDetalle'];
+        } 
+ //       echo $tipoDetalle; 
         return $tipoDetalle;              
     }
     
@@ -189,7 +193,7 @@ class reportesContCls{
                  " AND pucCuenta BETWEEN  '".$ctaIni."' AND '".$ctaFin."' AND pucTipo='M'  ) " .
                  " AND movicaPeriodo = '".$periodo."' ORDER BY  moviConCuenta, movicaFecha "; 
         $result = mysqli_query($con, $query); 
- echo $query;
+ // echo $query;
  return $query;
  //      return $result;
 }
@@ -264,7 +268,7 @@ class reportesContCls{
         while($row = mysqli_fetch_assoc($result)) { 
             $pucNombre=$row['pucNombre']; 
         }
-        echo $pucNombre;
+//        echo $pucNombre;
         return $pucNombre;
  }
  
@@ -328,9 +332,10 @@ public function reportesNifObj($data){
     while($row = mysqli_fetch_assoc($result) )
     {
         $query = $this->grabatmp($row, $PeriodoDer, $PeriodoIzq);
+      
         $qry =  explode('<>', $query);
         $resultado = mysqli_query($con, $qry[0]); 
-//echo $qry[0];
+// echo ' -> '.$qry[0].' '.$qry[1].' '.$qry[2].' '.$row['infoCodigo'].' | ';
         array_push($this->vlr,$qry[1]);
         array_push($this->vlrD,$qry[2]);
         array_push($this->cod,$row['infoCodigo']); 
@@ -347,7 +352,9 @@ function grabatmp($row, $PeriodoDer, $PeriodoIzq){
     $query = "INSERT INTO contatmpbalance (tmpbalempresa, tmpbalreporte, tmpbalusuario, tmpbalcuenta, tmpbalnombre, ".
              " tmpbalvalor01, tmpbalvalor02, tmpbalvalor03, tmptipo, tmpbalIndenta, ".
              " tmpbalNuevaPagina, tmpbalcodigo,  tmpbalnotas)VALUES(".$row['infoEmpresa'].",'".
-            $row['infoReporte']."','".$row['infoLinea']."','";;
+            $row['infoReporte']."','".$row['infoLinea']."','";
+    
+// echo ' tp='.$row['intoTipo'].' ';    
     if ($row['intoTipo']=='T' || $row['intoTipo']=='S'){
         $query .= "','".$row['infoNombre']."',0,0,0,'".$row['intoTipo']."','".$row['infoIndenta'].
                 "','".$row['infoNuevaPagina']."','".$row['infoCodigo']."','".$row['infoNotas'] ."')";
@@ -357,15 +364,15 @@ function grabatmp($row, $PeriodoDer, $PeriodoIzq){
     if ($row['intoTipo']=='C'){
 
         if ($row['infoCuentasIN']!=''){
-            $valor01 = $this->suma($row['infoEmpresa'], $row['infoCuentasIN'], $PeriodoDer);
+            $valor01 = ($this->suma($row['infoEmpresa'], $row['infoCuentasIN'], $PeriodoDer));
 
             if($PeriodoDer != $PeriodoIzq){
-               $valor02 = $this->suma($row['infoEmpresa'], $row['infoCuentasIN'], $PeriodoIzq); 
+               $valor02 = ($this->suma($row['infoEmpresa'], $row['infoCuentasIN'], $PeriodoIzq)); 
             }
             if ($row['infoCuentasOUT']!=''){
-                $valor01 -= $this->suma($row['infoEmpresa'], $row['infoCuentasOUT'], $PeriodoDer);
+                $valor01 -= ($this->suma($row['infoEmpresa'], $row['infoCuentasOUT'], $PeriodoDer));
                 if($PeriodoDer != $PeriodoIzq){
-                    $valor02 -= $this->suma($row['infoEmpresa'], $row['infoCuentasOUT'], $PeriodoIzq); 
+                    $valor02 -= ($this->suma($row['infoEmpresa'], $row['infoCuentasOUT'], $PeriodoIzq)); 
                 }
             }
         }
@@ -373,18 +380,18 @@ function grabatmp($row, $PeriodoDer, $PeriodoIzq){
             $valor03 = $valor01 /  $valor02;
         }
         if($valor01 != 0 || $valor02 != 0){
-        $query .= "','".$row['infoNombre']."',".$valor01.",".$valor02.",".$valor03.
-        ",'".$row['intoTipo']."','".$row['infoIndenta'].
-        "','".$row['infoNuevaPagina']."','".$row['infoCodigo']."','".$row['infoNotas'] ."')";
+            $query .= "','".$row['infoNombre']."',".$valor01.",".$valor02.",".$valor03.
+            ",'".$row['intoTipo']."','".$row['infoIndenta'].
+            "','".$row['infoNuevaPagina']."','".$row['infoCodigo']."','".$row['infoNotas'] ."')";
         }
         return $query.'<>'.$valor01.'<>'.$valor02; 
     } 
 
     if ($row['intoTipo']==='R'){
         if ($row['infoFormula']!=''){
-            $valor01 = $this->sumaR($row['infoFormula'], $this->cod, $this->vlr);
+            $valor01 = $this->sumaR($row['infoFormula'], $this->cod, $this->vlr); //*$row['infoMultiplicador'];
             if($PeriodoDer != $PeriodoIzq){
-                $valor02 = $this->sumaR($row['infoFormula'], $this->cod, $this->vlrD);
+                $valor02 = $this->sumaR($row['infoFormula'], $this->cod, $this->vlrD); //*$row['infoMultiplicador'];
             }
         }
         $query .= "','".$row['infoNombre']."',".$valor01.",".$valor02.",".$valor03.
@@ -455,10 +462,12 @@ function sumaR($dato, $cod, $vlr){
             } 
             else{
                 $ptos = explode('..', $rmas[$i]);
+             
                 $indice1 = array_search(trim($ptos[0]),$cod,true);
                 $indice2 = array_search(trim($ptos[1]),$cod,true);               
-                for($k=$indice1;$k<$indice2; $k++){
-                   $sum += $vlr[$k];;  
+                for($k=$indice1;$k<=$indice2; $k++){
+                   $sum += $vlr[$k];
+                  
                 }
                 //$obj->traeValorPtos($empresa, trim($ptos[0]),trim($ptos[1]), $periodo);
             }
@@ -480,7 +489,7 @@ function sumaR($dato, $cod, $vlr){
             } 
         }
     }
-//       echo $sum;
+ //      echo $sum;
     return $sum;
 }
 
@@ -495,7 +504,7 @@ function traeValor($empresa, $cta, $periodo){
              $cta . "' AND saldcontEmpresaid = ". $empresa ." AND saldcontTipo ='cont' " .
              " AND saldcontPeriodo = '". $periodo . "'";
     $result = mysqli_query($con, $query); 
-    if(mysqli_num_rows($result) != 0) {
+    if(mysqli_num_rows($result) != '0') {
         while($row = mysqli_fetch_assoc($result)) { 
             $valor = $row['saldo'];
         }  
@@ -533,8 +542,8 @@ function traeValorPtos($empresa, $ctaIni, $ctaFin, $periodo){
         include_once("../bin/cls/clsConection.php");
         $objClase = new DBconexion();
         $con = $objClase->conectar();  
-        $query = " SELECT tmpbalusuario, tmpbalcodigo, tmpbalnombre, tmpbalvalor01, tmpbalvalor02, ".
-                 "  ROUND(((tmpbalvalor02 - tmpbalvalor01) / tmpbalvalor01),8) * 100 tmpbalvalor03, ".
+        $query = " SELECT tmpbalusuario, tmpbalcodigo, tmpbalnombre,  tmpbalvalor01,  tmpbalvalor02, ".
+                 " ROUND(((tmpbalvalor02 - tmpbalvalor01) / tmpbalvalor01),8) * 100 tmpbalvalor03, ".
                  " tmptipo, tmpbalIndenta, tmpbalNuevaPagina, tmpbalnotas ".
                  " FROM contatmpbalance WHERE tmpbalempresa = ". $empresa . "  AND tmpbalreporte = '".
                  $informe . "' ORDER BY  tmpbalusuario ";

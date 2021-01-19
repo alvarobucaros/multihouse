@@ -27,7 +27,7 @@ require_once ('fpdf.php');
         $der=0;
 
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while( $empre = mysqli_fetch_assoc($resultado) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -40,7 +40,7 @@ require_once ('fpdf.php');
         }
 
         $result = $obj->traeAptoPropietario($inmueble, $empresa);
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_assoc($result) )
         {
             $this->propietario =  $rec['propietarioNombre'];
             $cedula =  $rec['propietarioCedula'];
@@ -59,7 +59,7 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
         
         $titulo="PODER ";
-//        $this->Image($logo,$der+5,14,20,10);
+        $this->Image($logo,$der+5,14,20,10,'png');
 
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;

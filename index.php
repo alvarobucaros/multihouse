@@ -33,8 +33,8 @@
                             </div>
                             <div class="col-md-3">
                                 <ul class="social">
-                                    <li><a href="https://www.facebook.com/fb.me/multimeeting"><i class="icon-facebook"></i></a></li>
-                                    <li><a href="#"><i class="icon-instagram"></i></a></li>
+                                    <li><a href="https://www.facebook.com/fb.me/multimeeting" alt="facebook" title="facebook"><i class="icon-facebook"></i></a></li>
+                                    <li><a href="https://atomingenieria.blogspot.com/" alt="BlogSpot"  title="Blog"><i class="icon-bookmark"></i></a></li>
                                 </ul>
                             </div>
                         </div>

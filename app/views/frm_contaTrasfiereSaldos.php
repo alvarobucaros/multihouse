@@ -24,7 +24,7 @@
                <div class="form-group">                    
                     <div class="col-md-2">
                     <button class="btn btn-default btn-primary" ng-click="trasfiere(detail)" 
-                     title="{{form_btnConti}}">{{form_btnConti}}</button>                   
+                     title="{{form_btnProcesa}}">{{form_btnProcesa}}</button>                   
                     </div>
 
                 </div> 
