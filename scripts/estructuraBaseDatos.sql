@@ -783,74 +783,74 @@ CREATE TABLE mn_privilegios (
 
 
 
-ALTER TABLE atominge_ncr3.contaacuerdos 
+ALTER TABLE contaacuerdos 
 ADD CONSTRAINT FK_acuerdo_inmueble
   FOREIGN KEY (acuerdoinmueble)
-  REFERENCES atominge_ncr3.containmuebles (inmuebleId)
+  REFERENCES containmuebles (inmuebleId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT,
 ADD CONSTRAINT FK_acuerdo_propietario
   FOREIGN KEY (acuerdopropietario)
-  REFERENCES atominge_ncr3.contapropietarios (propietarioId)
+  REFERENCES contapropietarios (propietarioId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
   
-ALTER TABLE atominge_ncr3.contaempresas 
+ALTER TABLE contaempresas 
 ADD CONSTRAINT FK_empresa_tercero
   FOREIGN KEY (empresatercero)
-  REFERENCES atominge_ncr3.contaterceros (terceroId)
+  REFERENCES contaterceros (terceroId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT; 
 
-ALTER TABLE atominge_ncr3.contafactdef 
+ALTER TABLE contafactdef 
 ADD CONSTRAINT FK_factura_tercero
   FOREIGN KEY (factdefcliente)
-  REFERENCES atominge_ncr3.contaterceros (terceroId)
+  REFERENCES contaterceros (terceroId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;  
 
-ALTER TABLE atominge_ncr3.contafactura 
+ALTER TABLE contafactura 
 ADD CONSTRAINT FK_factura_inmueble
   FOREIGN KEY (facturaInmuebleid)
-  REFERENCES atominge_ncr3.containmuebles (inmuebleId)
+  REFERENCES containmuebles (inmuebleId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT,
 ADD CONSTRAINT FK_factura_propietario
   FOREIGN KEY (facturaPropietario)
-  REFERENCES atominge_ncr3.contapropietarios (propietarioId)
+  REFERENCES contapropietarios (propietarioId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
 
-ALTER TABLE atominge_ncr3.containgregastos 
+ALTER TABLE containgregastos 
 ADD CONSTRAINT FK_ingasto_tercero
   FOREIGN KEY (ingastotercero)
-  REFERENCES atominge_ncr3.contaterceros (terceroId)
+  REFERENCES contaterceros (terceroId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
   
-ALTER TABLE atominge_ncr3.containmueblepropietario 
+ALTER TABLE containmueblepropietario 
 ADD CONSTRAINT FK_alinmueble
   FOREIGN KEY (contaInmuPropietarioInmuebleId)
-  REFERENCES atominge_ncr3.containmuebles (inmuebleId)
+  REFERENCES containmuebles (inmuebleId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT,
 ADD CONSTRAINT FK_alpropietario
   FOREIGN KEY (contaInmuPropietarioPropietarioId)
-  REFERENCES atominge_ncr3.contapropietarios (propietarioId)
+  REFERENCES contapropietarios (propietarioId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
 
-ALTER TABLE atominge_ncr3.containmuebleservicios
+ALTER TABLE containmuebleservicios
 ADD CONSTRAINT FK_alservicio
   FOREIGN KEY (InmuebleServicioServicioId)
-  REFERENCES atominge_ncr3.contaservicios (ServicioId)
+  REFERENCES contaservicios (ServicioId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
 
-ALTER TABLE atominge_ncr3.contamovicabeza 
+ALTER TABLE contamovicabeza 
 ADD CONSTRAINT FK_cabeza_terdero
   FOREIGN KEY (movicaTerceroId)
-  REFERENCES atominge_ncr3.contaterceros (terceroId)
+  REFERENCES contaterceros (terceroId)
   ON DELETE RESTRICT
   ON UPDATE RESTRICT;
  

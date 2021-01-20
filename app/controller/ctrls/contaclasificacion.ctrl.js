@@ -118,11 +118,13 @@ $scope.exporta = function(){
     $scope.deleteInfo =function(info)
     { 
         empresa = $('#e').val();
-        if (confirm('Desea borrar el registro con nombre : '+info.clasificacionDetalle+' ?')) {  
+        if (confirm('Desea borrar el registro con detalle : '+info.clasificacionDetalle+' ?')) {  
             $http.post('modulos/mod_contaclasificacion.php?op=b',{'op':'b', 'clasificacionId':info.clasificacionId}).success(function(data){
             if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Borrado ');
+            }else{
+                alert(data);
             }
             });
          }

@@ -67,7 +67,8 @@ switch ($op)
                 return;
             }
         }
-        echo 'Ok'; 
+        echo 'Ok';
+        return'Ok';
     }
  
     function actualiza($data)

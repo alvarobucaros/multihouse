@@ -155,11 +155,13 @@ $scope.exporta = function(){
     $scope.deleteInfo =function(info)
     { 
         empresa = $('\#e').val(); 
-        if (confirm('Desea borrar el registro con nombre : '+info.inmuebleCodigo+' ?')) {  
+        if (confirm('Desea borrar el registro con código : '+info.inmuebleCodigo+' ?')) {  
             $http.post('modulos/mod_containmuebles.php?op=b',{'op':'b', 'inmuebleId':info.inmuebleId}).success(function(data){
             if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Borrado ');
+            }else{
+                alert(data);
             }
             });
          }

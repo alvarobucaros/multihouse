@@ -56,9 +56,19 @@ switch ($op)
        global $objClase;
         $con = $objClase->conectar(); 
         $query = "DELETE FROM contaterceros WHERE terceroId=$data->terceroId"; 
-        mysqli_query($con, $query); 
-        echo 'Ok'; 
+       $resul= mysqli_query($con, $query);        
+        if ($resul != 0){
+             echo mysqli_errno($con);
+        }else{
+            if(mysqli_errno($con)===1451){
+                echo 'Err. Este Tercero Tiene movimiento asociada, No se puede borrar';
+                return;
+            } 
+        }
+        echo 'Ok';
     }
+    
+
  
     function actualiza($data)
     {     
