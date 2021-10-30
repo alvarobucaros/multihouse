@@ -22,6 +22,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_factdefnro = 'NRO';
     $scope.form_factdefcliente = 'CLIENTE';
     $scope.form_factdefconcepto = 'CONCEPTO';
+    $scope.form_factdefdetalle='DETALLE';
     $scope.form_factdeffechcrea = 'FECHA CREA';
     $scope.form_factdeffechvence = 'FECHA VENCE';
     $scope.form_factdefvalor = 'VALOR';
@@ -77,8 +78,10 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         factmvtDescPorc:'', 
         factmvtDescValor:'',  
         factmvtCptoId:'',  
-        factmvtId:'',  
-        factmvtFacDef:''
+        factmvtId:'', 
+        factdefdetalle:'',
+        factmvtFacDef:'',
+        factid:'0'
    };
     
     getCombos();
@@ -163,6 +166,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     
     $scope.selConcepto = function (info){
         cp = info.factdefconcepto; 
+        let indice = $scope.operators1.findIndex(ind => ind.cptosid === cp);
+        $scope.registro.factdefdetalle = $scope.operators1[indice].cptosDetalle;
         empresa = info.factdefempresa; //scope.empresa   
         $http.post('modulos/mod_contafactdef.php?op=tc',{'op':'tc', 'empresa':empresa,'concepto':cp}).success(function(data){
         $scope.miData = data[0];
@@ -237,8 +242,14 @@ $scope.exporta = function(){
             'factdeffechvence':info.factdeffechvence, 'factdefvalor':info.factdefvalor, 
             'factdefiva':info.factdefiva, 'factdefsaldo':info.factdefsaldo, 'factdefneto':info.factdefneto, 
             'factdefcontabiliza':'N','factdefconcepto':cpto}).success(function(data){
-        if (data === 'Ok') {
-            $http.post('modulos/mod_contafactdef.php?op=am',{'op':'am', 'empresa':empresa}).success(function(data){
+            var ret = data.split('||');
+        if (ret[0] === 'Ok') {
+            $scope.factid = (ret[1])
+            $http.post('modulos/mod_contafactdef.php?op=am',{'op':'am', 'empresa':empresa, 'factmvtFacDef':ret[1],
+                'factmvtCptoId':info.factdefconcepto, 'factmvtDetalle':info.factdefdetalle, 'factmvtValor':info.factdefvalor, 
+                'factmvtIvaPorc':info.factdefiva, 'factmvtIvaValor':info.factdefsaldo, 'factmvtDescPorc':'0', 
+                'factmvtDescValor':'0', 'factmvtId':0}).success(function(data){
+                alert(data);
             }); 
             getInfo(empresa);
             alert ('Registro Actualizado ');

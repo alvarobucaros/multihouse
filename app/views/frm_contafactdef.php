@@ -61,6 +61,15 @@
                 </div> 
                 
                 <div class="form-group alto12">
+                    <label class="control-label milabel col-md-4" for="factdefdetalle">{{form_factdefdetalle}}</label>
+                   <div class="col-md-6">
+                    <textarea  class="form-control mitexto" id="factdefdetalle" name="factdefdetalle"
+                         ng-model="registro.factdefdetalle" rows="2" cols="150">
+                         value="{{registro.factdefdetalle}}" </textarea> 
+                    </div>
+                </div> 
+    
+                <div class="form-group alto12">
                     <label class="control-label milabel col-md-4" for="factdefvalor">{{form_factdefvalor}}</label>
                    <div class="col-md-5">
                     <input type="text" width="16" class="form-control mitexto mivalor" id="factdefvalor" name="factdefvalor"

@@ -16,6 +16,9 @@ switch ($op)
     case 'a':
         actualiza($data);
         break; 
+    case 'am':
+        actualizaDetalle($data);
+        break; 
     case 'u':
         unRegistro($data);
         break;
@@ -90,15 +93,16 @@ switch ($op)
         $factdefconcepto = $data->factdefconcepto;
         if($factdefid  == 0) 
         { 
-           $query = "INSERT INTO contafactdef(factdefempresa, factdefnro, factdefcliente, factdeffechcrea,  ";
+            $query = "INSERT INTO contafactdef(factdefempresa, factdefnro, factdefcliente, factdeffechcrea,  ";
             $query .= " factdeffechvence, factdefvalor, factdefiva, factdefsaldo, factdefneto, factdefcontabiliza, ";
             $query .= " factdefconcepto )";
-           $query .= "  VALUES ('" . $factdefempresa."', '".$factdefnro."', '".$factdefcliente."', '".
+            $query .= "  VALUES ('" . $factdefempresa."', '".$factdefnro."', '".$factdefcliente."', '".
                    $factdeffechcrea."', '".$factdeffechvence."', '".$factdefvalor."', '".$factdefiva."', '".
                    $factdefsaldo."', '".$factdefneto."', '".$factdefcontabiliza."', '".
                    $factdefconcepto."')";  
             mysqli_query($con, $query);
-            echo 'Ok';
+            $last = mysqli_insert_id($con);
+            echo 'Ok||'.$last;
         } 
         else 
         { 
@@ -115,6 +119,45 @@ switch ($op)
  
     } 
  
+    function actualizaDetalle($data)
+    {     
+       global $objClase;
+        $con = $objClase->conectar(); 
+        $op =  $data->op;
+        $factmvtId = $data->factmvtId;
+        $factmvtCptoId =  $data->factmvtCptoId;
+        $factmvtFacDef =  $data->factmvtFacDef; 
+        $factmvtDetalle =  $data->factmvtDetalle;
+        $factmvtValor =  $data->factmvtValor;
+        $factmvtIvaPorc =  $data->factmvtIvaPorc;
+        $factmvtIvaValor =  $data->factmvtIvaValor; 
+        $factmvtDescPorc =  $data->factmvtDescPorc; 
+        $factmvtDescValor =  $data->factmvtDescValor;            
+        if($factmvtId  == 0) 
+        { 
+           $query = "INSERT INTO contafactserviciomvt (factmvtCptoId, factmvtFacDef, factmvtDetalle,
+                    factmvtValor, factmvtIvaPorc, factmvtIvaValor, factmvtDescPorc, factmvtDescValor)";
+            $query .= "VALUES('" . $factmvtCptoId . "', '" . $factmvtFacDef  . "', '";
+            $query .= $factmvtDetalle. "', '"  .  $factmvtValor . "', '"  .$factmvtIvaPorc . "', '";
+            $query .= $factmvtIvaValor. "', '"  .  $factmvtDescPorc . "', '"  .$factmvtDescValor . "')";
+            mysqli_query($con, $query);
+            echo 'Ok';
+        } 
+        else 
+        { 
+            $query = "UPDATE contafactdef  SET factdefempresa = '".$factdefempresa."', factdefnro = '".
+                    $factdefnro."', factdefcliente = '".$factdefcliente."', factdeffechcrea = '".$factdeffechcrea.
+                    "', factdeffechvence = '".$factdeffechvence."', factdefvalor = '".$factdefvalor.
+                    "', factdefiva = '".$factdefiva."', factdefsaldo = '".$factdefsaldo."', factdefneto = '".
+                    $factdefneto."', factdefcontabiliza = '".$factdefcontabiliza. "', factdefconcepto = '".
+                    $factdefconcepto .
+                    "' WHERE factdefid = ". $factdefid;
+            mysqli_query($con, $query); 
+            echo 'Ok';
+        } 
+ 
+    }
+    
     function maxRegistroId($data) 
     { 
         global $objClase;
