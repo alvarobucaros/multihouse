@@ -119,7 +119,7 @@
                         <div class="col-md-4">  
                         <input type="text" class="form-control mitexto" id="compDetalle0" name="compDetalle0"
                         readonly="yes" ng-model="nomCuentadb0" />
-                        </div>
+                        </div>zz
                     </div> 
 
                     <div class="form-group" ng-show="tipoCO">

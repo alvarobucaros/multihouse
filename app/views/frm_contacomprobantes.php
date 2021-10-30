@@ -90,7 +90,7 @@
                         <label class="milabel col-md-3" for="moviConCuenta">{{form_moviConCuenta}}</label>
                         <div class="col-md-7">
                         <select id='moviConCuenta' name='moviConCuenta' ng-model='CuentaCtble' 
-                                ng-change="buscaCuenta()">
+                                ng-change="buscaCuenta(true)">
                          <option ng-repeat='operator2 in operators2' value = " {{operator2.pucCuenta}}">{{operator2.pucNombre}}</option>
                         </select>
                         </div>
@@ -109,6 +109,10 @@
                         <input type="text" class="form-control mitexto" id="compDetalle0" name="compDetalle0"
                         readonly="yes" ng-model="nomCuentadb0" />
                         </div>
+                        <div class="col-md-1">
+                        <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
+                                 ng-click="borraCta(1)" >{{form_btnMenos}}</button> 
+                       </div>
                     </div> 
 
                     <div class="form-group">
@@ -124,7 +128,11 @@
                         <div class="col-md-4">  
                         <input type="text" class="form-control mitexto" id="compDetalle1" name="compDetalle1"
                         readonly="yes" ng-model="nomCuentadb1" />
-                        </div>                        
+                        </div> 
+                        <div class="col-md-1">
+                        <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
+                                 ng-click="borraCta(2)" >{{form_btnMenos}}</button> 
+                       </div>
                     </div> 
 
                     <div class="form-group">
@@ -140,7 +148,11 @@
                         <div class="col-md-4">  
                         <input type="text" class="form-control mitexto" id="compDetalle2" name="compDetalle2"
                         readonly="yes" ng-model="nomCuentadb2" />
-                        </div>  
+                        </div>
+                        <div class="col-md-1">
+                        <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
+                                 ng-click="borraCta(3)" >{{form_btnMenos}}</button> 
+                       </div>                        
                     </div> 
 
                     <div class="form-group">
@@ -156,7 +168,11 @@
                         <div class="col-md-4">  
                         <input type="text" class="form-control mitexto" id="compDetalle4" name="compDetalle4"
                         readonly="yes" ng-model="nomCuentacr0" />
-                        </div>                          
+                        </div>
+                        <div class="col-md-1">
+                        <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
+                                 ng-click="borraCta(4)" >{{form_btnMenos}}</button> 
+                       </div>
                     </div> 
 
                     <div class="form-group">
@@ -173,6 +189,10 @@
                         <input type="text" class="form-control mitexto" id="compDetalle5" name="compDetalle5"
                         readonly="yes" ng-model="nomCuentacr1" />
                         </div>
+                        <div class="col-md-1">
+                        <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
+                                 ng-click="borraCta(5)" >{{form_btnMenos}}</button> 
+                       </div>
                     </div> 
 
                     <div class="form-group">
@@ -189,6 +209,10 @@
                         <input type="text" class="form-control mitexto" id="compDetalle6" name="compDetalle6"
                         readonly="yes" ng-model="nomCuentacr2" />
                         </div>
+                        <div class="col-md-1">
+                        <button type="button" value="Cerrar" class="btn btn-custom pull-right btn-xs" 
+                                 ng-click="borraCta(6)" >{{form_btnMenos}}</button> 
+                       </div>
                     </div> 
 
                 </div>

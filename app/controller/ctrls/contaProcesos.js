@@ -453,7 +453,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri; 
     };
     
-    $scope.consultaCtaCobro = function(){
+    $scope.consultaCtaCobro = function($caso){
         empresa=$scope.empresa;
         prop=$scope.registro.propietario;
         inmu=$scope.registro.Inmueble;
@@ -465,12 +465,16 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             alert('Solamente seleccione o un inmueble o un propietario no los dos');
         }
         else{
-       
-        $http.post('modulos/mod_contaprocesos.php?op=cnslta2',{'op':'cnslta2','empresa':empresa,'inmueble':inmu,
-        'propietario':prop}).success(function(data){       
-        $scope.details = data;
-         });     
-    }
+           if($caso==='C'){
+            $http.post('modulos/mod_contaprocesos.php?op=cnslta2',{'op':'cnslta2','empresa':empresa,'inmueble':inmu,
+            'propietario':prop}).success(function(data){       
+            $scope.details = data;
+             });     
+            }
+            else{
+             location.href="reports/rptCtaCobro2.php?op=A"+"&em="+empresa+"&pr="+prop+"&in="+inmu;     
+            }
+        }
     };
     
     $scope.contabilizar = function(){

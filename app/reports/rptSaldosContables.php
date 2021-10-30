@@ -14,20 +14,35 @@ require_once ('fpdf.php');
         $ctaIni = $dt[2];
         $ctaFin = $dt[3];
         $hoy= date("d-m-Y");
+//        include_once("../modulos/mod_contaReportContable.php");
+//        $obj = new  reportesContCls();
+//        $resultado = $obj->cargaEmpresa($empresa);
+//        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+//        {
+//            $nomEmpre = $empre['empresaNombre'];         
+//            $nit = 'NIT : ' .$empre['empresaNit'];
+//            $dir = 'DIRECCION : '.$empre['empresaDireccion'].' '.$empre['empresaCiudad'];   
+//            $tel = 'TELEFONO : '.$empre['empresaTelefonos']; 
+//            $mail = 'E-MAIL :' .$empre['empresaEmail'];  
+//            $this->logo = $empre['empresaLogo'];
+//            $this->ciudad = $empre['empresaCiudad'];
+//        }
+
         include_once("../modulos/mod_contaReportContable.php");
-        $obj = new  reportesContCls();
+        $obj = new  reportesContCls();   
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre =  mysqli_fetch_assoc($resultado) )
-        {  
+         while($empre = mysqli_fetch_assoc($resultado))
+         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
             $dir = 'DIRECCION : '.$empre['empresaDireccion'].' '.$empre['empresaCiudad'];   
             $tel = 'TELEFONO : '.$empre['empresaTelefonos']; 
             $mail = 'E-MAIL :' .$empre['empresaEmail'];  
             $this->logo = $empre['empresaLogo'];
-            $this->ciudad = $empre['empresaCiudad'];
-        }
-
+            $this->ciudad = $empre['empresaCiudad'];           
+        }         
+        
+        
         $this->pieTexto = $nomEmpre . '   '. trim($nit) . '   '. trim($dir) . '   '. trim($tel);
         $der=0;
 
@@ -39,7 +54,7 @@ require_once ('fpdf.php');
         $yeyo=$periodo .'  '. $empresa  .'  ';
         $titulo="SALDOS CONTABLES";
         $subtitulo="Periodo ".$periodo. " Desde cuenta: ". $ctaIni . " Hasta cuenta : " . $ctaFin ;
-        $this->Image($logo,$der+5,14,20,10,'png');    
+ //       $this->Image($logo,$der+5,14,20,10);    
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);
@@ -78,12 +93,10 @@ require_once ('fpdf.php');
     //Pie de página  
     function Footer()
         {
+        date_default_timezone_set('America/Bogota');
         $hoy= date("d-m-Y h:i a");
-        //Posición: a 1,5 cm del final
         $this->SetY(-15);
-        //Arial italic 8
         $this->SetFont('Arial','I',6);
-        //Número de página  .$this->today;
         $this->Cell(0,10,'REPORTE: Saldos contables.  Impreso en : '.$hoy,0,0,'L');
         $this->Cell(0,10,'Pag. '.$this->PageNo().'/{nb}',0,0,'R');
         }

@@ -16,13 +16,45 @@ class reportesCls{
                  " empresaDireccion ,empresaCiudad ,empresaTelefonos ,empresaLogo ," .
                  " empresaMensaje1, empresaMensaje2, empresaEmail, empresafacturaNota, " .
                  " empresaRecargoPorc, empresaRecargoPesos, empresaRecargoDias, empresaDescPorc,".
-                 " empresaDescPesos, empresaFactorRedondeo, empresaPeriCierreFactura " .
-                 " FROM contaempresas  WHERE  empresaId = ". $empresa ;
+                 " empresaDescPesos, empresaFactorRedondeo, empresaPeriCierreFactura, empresaRegimen, " .
+                 " empresaActividad, empresaObservaciones FROM contaempresas  WHERE  empresaId = ". $empresa ;
             $result =  mysqli_query($con, $sql);
         return $result;   
             }
 
  
+        public function cargaTercero($empresa, $nro) {
+            include_once("clsConection.php");
+            $objClase = new DBconexion();
+            $con = $objClase->conectar();	
+            $obj = new reportesCls();
+            $result = '';
+              $sql="SELECT terceroNombre, terceroIdenTipo, terceroIdenNumero, terceroDireccion, terceroTelefonos," .
+                 " terceroCorreo, terceroCiudad, factdeffechcrea, factdeffechvence " .
+                 " FROM contaterceros " .
+                 " INNER JOIN contafactdef ON terceroId = factdefcliente " .
+                 " WHERE  terceroEmpresaId= factdefempresa AND  factdefempresa = " . $empresa ;
+                 " AND factdefnro = " . $nro;
+            $result =  mysqli_query($con, $sql);
+            return $result;
+        }
+
+        public function cargaFactura($empresa, $nro) {
+            include_once("clsConection.php");
+            $objClase = new DBconexion();
+            $con = $objClase->conectar();	
+            $obj = new reportesCls();
+            $result = '';
+            $sql="SELECT factdefvalor, factdefiva, factdefsaldo, factdefneto, factdefconcepto, " .
+                " factdefcptodeta  " .
+                " FROM contafactdef " .
+                " WHERE factdefempresa = ".$empresa." AND factdefnro = ".$nro      .
+                " ORDER BY factdefid";
+                $result =  mysqli_query($con, $sql);
+            return $result;
+        }
+        
+            
     public function preparaImpresionFactura($periodo, $empresa, $fecCorte, $empresaRecargoPorc, 
         $empresaRecargoPesos, $empresaRecargoDias, $empresaDescPorc, 
         $empresaDescPesos, $empresaFactorRedondeo,$inmueble){
@@ -131,7 +163,8 @@ class reportesCls{
         $peri .= $mes;
         $result = $this->preparaImpresionFacturaRep($peri, $empresa,0);
         $retorno='';
-        while( $row = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        //while( $row = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while($row = mysqli_fetch_assoc($result))
         { 
             $pagoCrnte=0;
             $pago0130=0;
@@ -217,7 +250,8 @@ class reportesCls{
         $sql = "SELECT inmuebleDescripcion FROM containmuebles ".
                 " WHERE inmuebleCodigo = '". $apto . "' AND  inmuebleEmpresaId = " .$empresa;
         $result = mysqli_query($con, $sql);
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+       // while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while($rec = mysqli_fetch_assoc($result))
         {
              $nomInmueble = $rec['inmuebleDescripcion'];
         }
@@ -266,14 +300,17 @@ class reportesCls{
         $con = $objClase->conectar();	
         $sql =  "SELECT ingastoid, ingastoempresa, ingastoFecha, ingastoperiodo, ingastotipo, " .
                 " CASE ingastotipo WHEN 'I' THEN 'Ingreso' WHEN 'G' THEN 'Gasto' ELSE 'Inicial' END tipo," . 
-                " ingastocomprobante, " . 
+                " ingastocomprobante, ingastotercero , terceroNombre, terceroIdenTipo, terceroIdenNumero," . 
                 " ingastodetalle, ingastoDocumento, ingastovalor, ingastocontabiliza, 0 AS saldo" .
-                " FROM containgregastos WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa .
+                " FROM containgregastos INNER JOIN contaterceros  ON terceroId = ingastotercero " .
+                " WHERE ingastotipo NOT IN ('C') AND ingastoempresa =  " .$empresa . 
+                " AND terceroEmpresaId = ingastoempresa " .
                 " AND ( ingastoperiodo >= '" . $periIni ."' AND ingastoperiodo <= '".$periFin . "') ".
                 " ORDER BY ingastoFecha ";              
     $result = mysqli_query($con, $sql);
         return  $result;  
     }
+    
     
     function cabezaAcuerdoPago($id, $empresa){
         include_once("clsConection.php");

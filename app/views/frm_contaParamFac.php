@@ -501,7 +501,30 @@
                          value="{{registro.empresaConsecFactura}}" />
                     </div>
                 </div> 
+                
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaConsecFact">{{form_empresaConsecFact}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="empresaConsecFact" name="empresaConsecFact"
+                         ng-model="registro.empresaConsecFact" required value="{{registro.empresaConsecFact}}" />
+                    </div>
+                </div> 
 
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaConsecNDb">{{form_empresaConsecNDb}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="empresaConsecNDb" name="empresaConsecNDb"
+                         ng-model="registro.empresaConsecNDb" value="{{registro.empresaConsecNDb}}" />
+                    </div>
+                </div>                 
+                
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaConsecNCr">{{form_empresaConsecNCr}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="empresaConsecNCr" name="empresaConsecNCr"
+                         ng-model="registro.empresaConsecNCr" value="{{registro.empresaConsecNCr}}" />
+                    </div>
+                </div>                
                 <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaIdioma">{{form_empresaIdioma}}</label>
                     <div class="btn-group  col-md-6"  data-toggle="buttons">
@@ -539,7 +562,8 @@
                        <input type="text"  class="form-control mitexto" ng-model="registro.empresaProformaLimInf" id ='empresaProformaLimInf'  name ='empresaProformaLimInf' />
                    </label>
                     </div>
-                </div>                  
+                </div>              
+                
                 <div class="form-group" style='display: none'>
                     <label class="control-label milabel col-md-4" for="empresaNroInmuebles">{{form_empresaNroInmuebles}}</label>
                    <div class="col-md-6">
@@ -686,6 +710,25 @@
                     </div>
                 </div> 
 
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaActividad">{{form_empresaActividad}}</label>
+                    <div class="col-md-6">
+                    <textarea rows="2" cols="50" class="form-control mitexto" 
+                        id="empresaActividad" name="empresaActividad" 
+                        ng-app="" ng-model="registro.empresaActividad" value="{{registro.empresaActividad}}">                           
+                    </textarea> 
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaObservaciones">{{form_empresaObservaciones}}</label>
+                    <div class="col-md-6">
+                    <textarea rows="2" cols="50" class="form-control mitexto" 
+                        id="empresaObservaciones" name="empresaObservaciones" 
+                        ng-app="" ng-model="registro.empresaObservaciones" value="{{registro.empresaObservaciones}}">                           
+                    </textarea> 
+                    </div>
+                </div>                    
+                    
                 <div class="form-group">
                     <div class="col-md-5">
                         <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 

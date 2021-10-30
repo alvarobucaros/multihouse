@@ -35,7 +35,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_terceroActivo = 'ACTIVO';
     $scope.form_terceroRegimen = 'REGIMEN';
     $scope.form_terceroContribuyente = 'GRAN CONTRIBUYENTE';
-
+    $scope.form_terceroCiudad = 'CIUDAD';
+    
     $scope.form_PhterceroId = 'Digite id';
     $scope.form_PhterceroEmpresaId = 'Digite empresa';
     $scope.form_PhterceroNombre = 'Digite nombre';
@@ -51,6 +52,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_PhterceroActivo = 'Digite activo';
     $scope.form_PhterceroRegimen = 'Digite regimen';
     $scope.form_PhterceroContribuyente = 'Digite contribuyente';
+    $scope.form_PhterceroCiudad = 'Digite ciudad';
    
      $scope.currentPage = 0;
      $scope.pageSize = 10;
@@ -73,7 +75,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         tercero_codigo:'',
         terceroActivo:'A',
         terceroRegimen:'C',
-        terceroContribuyente:'N'
+        terceroContribuyente:'N',
+        terceroCiudad:''
    };
     
     
@@ -183,13 +186,21 @@ $scope.exporta = function(){
 //        if($('#terceroCorreo').val()===''){er+='falta e-mail\n';}
 //        if($('#terceroTwiter').val()===''){er+='falta cta twiter\n';}
 //        if($('#terceroFacebook').val()===''){er+='falta cta facebook\n';}
-//        if($('#terceroComentario').val()===''){er+='falta comentarios\n';}
+        if($('#terceroCiudad').val()===''){er+='falta Ciudad\n';}
         if($('#tercero_codigo').val()===''){er+='falta _codigo\n';}
         if($('#terceroActivo').val()===''){er+='falta activo\n';}
         if($('#terceroRegimen').val()===''){er+='falta regimen\n';}
         if($('#terceroContribuyente').val()===''){er+='falta contribuyente\n';}
         if (er==''){
-        $http.post('modulos/mod_contaterceros.php?op=a',{'op':'a', 'terceroId':info.terceroId, 'terceroEmpresaId':info.terceroEmpresaId, 'terceroNombre':info.terceroNombre, 'terceroIdenTipo':info.terceroIdenTipo, 'terceroIdenNumero':info.terceroIdenNumero, 'terceroDireccion':info.terceroDireccion, 'terceroTelefonos':info.terceroTelefonos, 'terceroCorreo':info.terceroCorreo, 'terceroTwiter':info.terceroTwiter, 'terceroFacebook':info.terceroFacebook, 'terceroComentario':info.terceroComentario, 'tercero_codigo':info.tercero_codigo, 'terceroActivo':info.terceroActivo, 'terceroRegimen':info.terceroRegimen, 'terceroContribuyente':info.terceroContribuyente}).success(function(data){
+        $http.post('modulos/mod_contaterceros.php?op=a',{'op':'a', 'terceroId':info.terceroId, 
+            'terceroEmpresaId':info.terceroEmpresaId, 'terceroNombre':info.terceroNombre, 
+            'terceroIdenTipo':info.terceroIdenTipo, 'terceroIdenNumero':info.terceroIdenNumero,
+            'terceroDireccion':info.terceroDireccion, 'terceroTelefonos':info.terceroTelefonos,
+            'terceroCorreo':info.terceroCorreo, 'terceroTwiter':info.terceroTwiter, 
+            'terceroFacebook':info.terceroFacebook, 'terceroComentario':info.terceroComentario, 
+            'tercero_codigo':info.tercero_codigo, 'terceroActivo':info.terceroActivo, 
+            'terceroRegimen':info.terceroRegimen, 'terceroContribuyente':info.terceroContribuyente,
+            'terceroCiudad':info.terceroCiudad}).success(function(data){
         if (data === 'Ok') {
             getInfo(empresa);
             alert ('Registro Actualizado ');

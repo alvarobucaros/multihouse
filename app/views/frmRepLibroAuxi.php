@@ -17,7 +17,7 @@
                 <div class="form-group"> 
                     <label class="milabel col-md-3" for="desdeCuenta">{{form_desdeCuenta}}</label>
                     <div class="col-md-3">
-                   <select id='propietarios' name='desdeCuenta' ng-model='desdeCuenta'>
+                   <select id='cuentasdesde' name='desdeCuenta' ng-model='desdeCuenta'>
                    <option ng-repeat='operator0 in operators0' value = " {{operator0.pucCuenta}}">{{operator0.pucNombre}}</option>
                     </select>
                    </div>
@@ -26,7 +26,7 @@
                  <div class="form-group">
                     <label class="milabel col-md-3" for="hastaCuenta">{{form_hastaCuenta}}</label>
                    <div class="col-md-3">
-                   <select id='propietarios' name='hastaCuenta' ng-model='hastaCuenta'>
+                   <select id='cuentashasta' name='hastaCuenta' ng-model='hastaCuenta'>
                    <option ng-repeat='operator1 in operators1' value = " {{operator1.pucCuenta}}">{{operator1.pucNombre}}</option>
                    </select>
                    </div>                    

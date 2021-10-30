@@ -1,6 +1,6 @@
 var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
-    $scope.form_title = 'Ingresos y Gastos';
+    $scope.form_title = 'Ingresos y Gastos (Caja Menor)';
     $scope.form_btnNuevo = 'Nuevo registro';
     $scope.form_btnEdita = 'Edita';
     $scope.form_btnElimina = 'Elimina';

@@ -4,7 +4,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_titleImportar = 'Importa Información desde CSV  Tablas iniciales';
     $scope.nota1 = 'La información debe estar en formato .CSV cada campo separado por un punto y coma (;) y en un solo documento'
     $scope.nota2 = 'El formato debe ser: '
-    $scope.nota3 = 'Codigo ; Descripcion ; Area ; Coeficiente ; tipo inmueble; Ubicacion en el conjunto ; Responsable de la cuenta ; Cedula ; Telefonos ; Direccion FÃ­sica ; Correo electrónico'
+    $scope.nota3 = 'Código ; Descripción ; Area ; Coeficiente ; tipo inmueble; P si es principal; Inmueble del que depende; Ubicacion en el conjunto ; Nombre del responsable de la cuenta ; SU cédula ; su teléfonos ; Dirección Física ; Correo electrónico'
     $scope.nota4 = 'Codigo; Detalle; FechaDesde; FechaHasta; Valor; Prioridad; Tiene Mora; Porcentaje Mora; Valor Mora; CuentaDB; CuentaCR; % pronto pago; valor pronto pago; Aplica (T todos,G un grupo); Tipo Inmueble';
 
     $scope.form_subtit1 = 'Importa servicios prestados desde CSV';

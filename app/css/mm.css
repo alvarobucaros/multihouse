@@ -9,12 +9,30 @@ h1{
     text-shadow: 0px 2px 0px #fff;
 }
 
+.logoApp {
+    text-align: center;
+    color:#125acd;
+    font-size: 1.8em;
+    padding: 20px;
+    padding-top: 20px;
+}
+
+.grupal{
+    display: flex
+}
+
 .red {background-color: #d81b60;}
 
 .green {background-color: #00a65a;}
 
+.alto12 {
+    height: 12px; 
+}
 .mitexto{
     font-size: 12px;   padding-top: 2px; 
+}
+.mivalor{
+    text-align:right;
 }
 .mitexto2{
     font-size: 14px; width: 5px;  height: 2em; padding-top: 2px; 
@@ -39,6 +57,11 @@ h1{
 }
 .milabel{
     font-size: 14px; font-weight:  bold; height: 22px; padding-top: 5px;  
+}
+.milabelu{
+    font-size: 14px; font-weight:  bold; height: 20px;
+    padding-top: 2px;  text-align: left;
+    color: #0073b7;
 }
 .milabelp{
     font-size: 14px; font-weight:  bold; height: 22px; padding-top: 5px;  color: #0073b7;
@@ -291,6 +314,5 @@ close {
 .container1 > div {
   font-size: 3vw;
   padding: .5em;
-  color: white;
   width: 60%;
 }

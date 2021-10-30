@@ -29,8 +29,12 @@
                     <div class="form-group">
                         <div class="col-md-2">
                             <button type="button" value="continua" class="btn btn-custom pull-right btn-xs" 
-                            ng-click="consultaCtaCobro()" id="continua">{{form_btnContinua}}</button>
+                            ng-click="consultaCtaCobro('C')" id="continua">{{form_btnContinua}}</button>
                         </div>  
+                        <div class="col-md-2">
+                            <button type="button" value="continua" class="btn btn-custom pull-right btn-xs" 
+                            ng-click="consultaCtaCobro('I')" id="continua">{{form_btnImpreRc}}</button>
+                        </div>                         
                     </div>
                 </div> 
                 <div class="form-group" style='display: none'>                   

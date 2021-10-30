@@ -89,7 +89,10 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresaPeriodosAnuales = 'PERIODOS ANUALES';
     $scope.form_empresaFactorRedondeo = 'FACTOR REDONDEO';
     $scope.form_empresaConsecRcaja = 'CONSEC R/CAJA';
-    $scope.form_empresaConsecFactura = 'CONSEC FACTURA';
+    $scope.form_empresaConsecFactura = 'CONSEC CTA COBRO';
+    $scope.form_empresaConsecNCr = 'CONSEC NOTA  CR';
+    $scope.form_empresaConsecNDb = 'CONSEC NOTA DB';
+    $scope.form_empresaConsecFact = 'CONSEC SERVICIO';
     $scope.form_empresaIdioma = 'IDIOMA';
     $scope.form_empresaNroInmuebles = 'NRO INMUEBLES';
     $scope.form_empresaLogo = 'LOGO';
@@ -97,13 +100,13 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresaservicios = 'CNTROS SERVICIOS';
     $scope.form_empresafacturaNota = 'FACTURA NOTA';
     $scope.form_empresafacturaresDIAN = 'FACTURA RES DIAN';
-    $scope.form_empresafacturaNumeracion = 'FACTURA NUMERACION';
+    $scope.form_empresafacturaNumeracion = 'NUMERACION FAC DIAN';
     $scope.form_empresafacturanotaiva = 'FACTURA NOTA IVA';
     $scope.form_empresafacturanotaica = 'FACTURA NOTA ICA';
-    $scope.form_empresafacturactacxc = 'FACTURA CUENTA CXC';
-    $scope.form_empresafacturactaivta = 'FACTURA CUENTA IVTA';
-    $scope.form_empresafacturactaica = 'FACTURA CUENTA ICA';
-    $scope.form_empresafacturactaiva = 'FACTURA CUENTA IVA';
+    $scope.form_empresafacturactacxc = 'CUENTA CXC';
+    $scope.form_empresafacturactaivta = 'CUENTA VENTAS';
+    $scope.form_empresafacturactaica = 'CUENTA ICA';
+    $scope.form_empresafacturactaiva = 'CUENTA IVA';
     $scope.form_empresaRegimen = 'REGIMEN';
     $scope.form_empresaporcentajeiva = 'PORCENTAJE IVA';
     $scope.form_empresaporcentajeiva = 'PORCENTAJE IVA';
@@ -113,7 +116,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresaProformaCon1 = 'SI';
     $scope.form_empresaProformaFac0 = 'NO';
     $scope.form_empresaProformaFac1 = 'SI';
-
+    $scope.form_empresaActividad = 'ACTIVIDAD ECONOMICA';
+    $scope.form_empresaObservaciones='OBSERVACIONES';
     $scope.empresaProformaLimite = "LIMITES PROFORMA";
     $scope.empresaProformaLimiteSup = "SUPERIOR";
     $scope.empresaProformaLimiteInf = "INFERIOR";
@@ -281,34 +285,32 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.registro.empresaProformaFac = registro[73]; 
         $scope.registro.empresaProformaLimSup = registro[74]; 
         $scope.registro.empresaProformaLimInf = registro[75]; 
+        $scope.registro.empresaActividad=registro[76];;
+        $scope.registro.empresaConsecFact=registro[77];
+        $scope.registro.empresaObservaciones=registro[78];
+        $scope.registro.empresaConsecNDb = registro[79]; 
+        $scope.registro.empresaConsecNCr = registro[80]; 
         $scope.id=$scope.registro.empresatercero;
         $("#empresatercero").find($scope.id);
         $("#empresatercero option[value="+$scope.id+"]").attr('selected','selected');
         $("#redondeo option[value="+$scope.registro.empresaFactorRedondeo+"]").attr('selected','selected');
-
         });  
-
-    id=962;
-     $("#empresatercero option[value="+$scope.id+"]").attr('selected','selected');
-
     }
 
 // Function to add toggle behaviour to form
-$scope.formToggle =function(){
-$('#idForm').slideToggle();
-$scope.empresaId=0;
-$('#idForm').css('display', 'none');
-
-};
+    $scope.formToggle =function(){
+        $('#idForm').slideToggle();
+        $scope.empresaId=0;
+        $('#idForm').css('display', 'none');
+    };
 
 $scope.show_form = true;
 // Function to add toggle behaviour to form
-$scope.formToggle =function(){
-$('#idForm').slideToggle();
+    $scope.formToggle =function(){
+        $('#idForm').slideToggle();
         $scope.formato.$setPristine();
         $scope.registro = angular.copy(defaultForm);
-
-};
+    };
 
     
     $scope.editInfo =function(info)
@@ -322,8 +324,7 @@ $('#idForm').slideToggle();
     $scope.updateInfo =function(info)
     {
         er='';      
-        empresa = $('#e').val(); 
-      
+        empresa = $('#e').val();       
         if($('#empresaId').val()===''){er+='falta id\n';}
         if($('#empresaClave').val()===''){er+='falta clave\n';}
         if($('#empresaNombre').val()===''){er+='falta nombre\n';}
@@ -401,14 +402,16 @@ $('#idForm').slideToggle();
             'empresaProformaLimSup':info.empresaProformaLimSup,'empresaProformaLimInf':info.empresaProformaLimInf,
             'empresaProformaCon':info.empresaProformaCon,'empresaProformaFac':info.empresaProformaFac,
             'empresaProformaLimSup':info.empresaProformaLimSup,'empresaProformaLimInf':info.empresaProformaLimInf,
-            'empresatercero':info.empresatercero}).success(function(data){
+            'empresatercero':info.empresatercero,'empresaActividad':info.empresaActividad,
+            'empresaConsecFact':info.empresaConsecFact,'empresaObservaciones':info.empresaObservaciones,
+            'empresaConsecNDb':info.empresaConsecNDb,'empresaConsecNCr':info.empresaConsecNCr}).success(function(data){
  
         if (data === 'Ok') {
            // getInfo(empresa);
             alert ('Registro Actualizado ');
         }
         });
-   }else{alert (er);}  
+   }else{alert (data);}  
     };
     
     $scope.clearInfo =function(info)

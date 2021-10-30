@@ -24,7 +24,7 @@ require_once ('fpdf.php');
         $der=0;
  //op=A"+"&em="+empresa+"&recibo="+recibo+"&in="+inm+'&fc='+fecha;
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_assoc($resultado) )
+        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -36,7 +36,7 @@ require_once ('fpdf.php');
         }
 
         $result = $obj->traeAptoPropietario($inmueble, $empresa);
-        while( $rec = mysqli_fetch_assoc($result) )
+        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
         {
             $propietario =  $rec['propietarioNombre'];
             $cedula =  $rec['propietarioCedula'];
@@ -48,7 +48,7 @@ require_once ('fpdf.php');
         }
  
         $result = $obj->traeReciboCaja($inmueble, $empresa, $recibo,1);
-        while( $rec =mysqli_fetch_assoc($result) )
+        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
         {
             //pagosfacturaid, pagosfecha, pagostipo, pagosvalor, pagosreferencia  
             $pagosfecha =  $rec['pagosfecha'];
@@ -66,7 +66,7 @@ require_once ('fpdf.php');
         $logo = "logos/".$this->logo;
       
         $titulo="RECIBO DE CAJA " . $recibo . ' De ' . $pagosfecha;
-        $this->Image($logo,$der+5,14,20,10,'png');
+ //       $this->Image($logo,$der+5,14,20,10);
 
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -150,7 +150,7 @@ require_once ('fpdf.php');
     $obj = new  reportesCls();
     $result = $obj->traeReciboCaja($inmueble, $empresa, $recibo, 0);
     $saldo=0;
-    while( $rec = mysqli_fetch_assoc($result) )
+    while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
     {
         //pagosfacturaid, pagosfecha, pagostipo, pagosvalor, pagosreferencia  , pagosTipoPago, pagosPeriodoPago 
         $periodo =  $rec['pagosPeriodoPago'];

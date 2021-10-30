@@ -248,8 +248,8 @@
                         <th>MORA</th>
                         <th>% MORA</th>
                         <th>VALOR MORA</th>
-                        <th>CUENTA DB</th>
-                        <th>CUENTA CR</th>
+<!--                        <th>CUENTA DB</th>
+                        <th>CUENTA CR</th>-->
                         <th>% PRONTO PAGO</th>
                         <th>VALOR PRONTO PAGO</th>
                         <th>ACTIVO</th>
@@ -271,14 +271,14 @@
                     <td>{{detail.ServicioMora}}</td>
                     <td>{{detail.ServicioMoraPorcentaje}}</td>
                     <td>{{detail.servicioMoraValor}}</td>
-                    <td>{{detail.ServicioCuentaDB}}</td>
-                    <td>{{detail.ServicioCuentaCR}}</td>
+<!--                    <td>{{detail.ServicioCuentaDB}}</td>
+                    <td>{{detail.ServicioCuentaCR}}</td>-->
                     <td>{{detail.ServicioPPporcentaje}}</td>
                     <td>{{detail.ServicioPPvalor}}</td>
                     <td>{{detail.ServicioActivo}}</td>
                     <td>{{detail.nomcase}}</td>
                     <!--td>{{detail.ServicioAmbito}}</td-->
-                    <td>{{detail.servicioClasificacionId}}</td>
+                    <td>{{detail.ServicioAmbitoNom}}</td>
                     <td>
                     <?php  if ($pf != 'C' ) {
                     echo '  <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>

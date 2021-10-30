@@ -9,6 +9,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_btnExcel = 'Exporta Excel';
     $scope.form_btnActualiza = 'Actualizar';
     $scope.form_btnCta = 'Cta';
+    $scope.form_btnMenos='Borra';
     $scope.form_titModal = 'Actualiza lista de registros';
     $scope.form_Phbusca = 'Consulta';
  
@@ -74,6 +75,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         compctacr2:'',
         compActivo:'A'
    };
+   
+   var cuentas={pucCuenta:'',pucNombre:''};
     
     control = $scope.control;
     
@@ -101,14 +104,22 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         });
     }
     
-    $scope.abreCta = function(cta){
-        $scope.buscaCta = cta
+    $scope.abreCta = function(cta){        
         $scope.cualCta=true;
+        $scope.buscaCta = cta;
     };
+    $scope.borraCta = function(cta){
+        $scope.buscaCta = cta;
+        $scope.buscaCuenta(false);
+    }
  
-    $scope.buscaCuenta = function(){
+    $scope.buscaCuenta = function(busca){
         i=$scope.buscaCta;
-        resultado = $scope.operators2.find(plan => plan.pucCuenta === $scope.CuentaCtble);
+        busca=$scope.cualCta;
+        resultado = angular.copy(cuentas);
+        if (busca){
+            resultado = $scope.operators2.find(plan => plan.pucCuenta === $scope.CuentaCtble);
+        }
     //    alert($scope.buscaCta+' '+resultado.pucCuenta);
         switch (i) {
             case 1:

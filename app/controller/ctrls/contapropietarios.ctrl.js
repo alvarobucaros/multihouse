@@ -152,6 +152,7 @@ $scope.exporta = function(){
         if($('#propietarioTelefonos').val()===''){er+='falta telefonos\n';}
         if($('#propietarioDireccion').val()===''){er+='falta direccion\n';}
         if($('#propietarioCorreo').val()===''){er+='falta e-mail\n';}
+        if(info.propietarioCorreo===undefined){er+='E-mail invalido\n';}
         if($('#propietarioActivo').val()===''){er+='falta activo\n';}
         if (er==''){
         $http.post('modulos/mod_contapropietarios.php?op=a',{'op':'a', 'propietarioId':info.propietarioId, 

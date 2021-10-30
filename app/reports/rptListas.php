@@ -32,7 +32,7 @@
         $tel = 'TELEFONO  : '.$empre[5];           
         $logo = "images/".$logo;
         
-        $this->Image( $logo ,25,15,20,10,'png');
+ //       $this->Image( $logo ,25,15,20,10);
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((310-$w)/2);
@@ -118,7 +118,7 @@
     $sum5=0.0;
     $sum6=0.0;
     
-    while( $reg = mysqli_fetch_assoc($result) )  
+    while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )  
     {         
         $pdf->SetXY(10,$ln); 
         $pdf->Cell(08,6,$reg['lista_inmueble'],0,0);$pdf->SetXY(25,$ln);

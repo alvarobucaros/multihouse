@@ -35,6 +35,7 @@ if (!isset($_GET['op'])){
  else {
   $op=$_GET['op']; 
 }
+$acceso='Consulta';
 $nodo = '';
 $subNodo='';
 $app='House';
@@ -84,17 +85,22 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
       <span class="logo-lg"><b>Multi</b><?php echo $app ?></span>
       <img  src=<?php echo $logo ?> alt="Logo"/>
     </a>
+    <?php
+    if ($datos[1]==='K'){$acceso='Contador';}
+    if ($datos[1]==='S'){$acceso='Superior';}
+    if ($datos[1]==='A'){$acceso='Administra';}
+    ?>
     <!-- Header Navbar: style can be found in header.less  --> 
     <nav class="navbar navbar-static-top">
       <!-- Sidebar toggle button-->
       <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"></a>
-      <span class="logo-lg"><?php echo $titApp ?></span>
+      <span class="logo-lg logoApp"><?php echo $titApp ?></span>
       <div id='titbar' class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="usuario();">
                 <img id='my_image' src="<?php echo $avatar ?>" class="user-image" alt="User Image">  
-                <span id='my-name' class="hidden-xs"><?php echo $datos[0] ?></span>
+                <span id='my-name' class="hidden-xs"><?php echo $datos[0] .' - '.$acceso ?></span>
               </a>  
           </li>      
         </ul>
@@ -114,7 +120,7 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
       <!-- /.search form -->
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
-        <li class="logito header list-inline"><?php echo $datos[5] ?></li>
+        <li class="logito"><?php echo $datos[5] ?></li>
         <li class="treeview">
           <a href="#">
             <i class="fa fa-archive"></i>
@@ -134,9 +140,9 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
               <li><a href="mm.php?op=clin"><i class=""></i>Clasificación de inmuebles</a></li>                      
               <li><a href="mm.php?op=inmu"><i class=""></i>Inmuebles</a></li>
               <li><a href="mm.php?op=prop"><i class=""></i>Propietarios</a></li>
-              <li><a href="mm.php?op=serv"><i class=""></i>Servicios</a></li>
+              <li><a href="mm.php?op=serv"><i class=""></i>Expensas</a></li>
               <li><a href="mm.php?op=proInm"><i class=""></i>Inmueble y su Propietario</a></li>
-              <li><a href="mm.php?op=inmServ"><i class=""></i>Inmueble y Servicio Especial</a></li>
+              <li><a href="mm.php?op=inmServ"><i class=""></i>Inmueble y Expensas Especial</a></li>
               <li><a href="mm.php?op=cbnte2"><i class=""></i>Tipo Ingresos Gastos</a></li>
               <li><a href="mm.php?op=terc"><i class=""></i>Lista de terceros</a></li>
               <li><a href="mm.php?op=users"><i class=""></i> <span>Usuarios</span></a></a></li>';
@@ -151,7 +157,24 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         ?>
               </ul>
         </li>
- 
+        <?php
+        if ($pf=='K' ){
+        echo ''
+        . '  <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-paste"></i>
+                    <span>Procesos</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </a>
+            <ul class="treeview-menu">
+                <li><a href="mm.php?op=terc"><i class=""></i>Lista de terceros</a></li>
+                <li><a href="mm.php?op=factCptos"><i class=""></i>Conceptos Factura</a></li> 
+                <li><a href="mm.php?op=factServ"><i class=""></i>Facturar Otros Servicios</a></li> 
+                <li><a href="mm.php?op=notasServ"><i class=""></i>Notas Otros Servicios</a></li> 
+                <li><a href="mm.php?op=parFac"><i class=""></i> <span>Parámetros Facturación</span></a></li>
+            </ul>
+        </li>' ;
+        }?>
         <?php if ($pf=='A' OR $pf=='S' ){            
         echo ' 
         <li class="treeview">
@@ -168,6 +191,9 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
             <li><a href="mm.php?op=otrIngr"><i class=""></i>Otros Ingresos y gastos</a></li>
             <li><a href="mm.php?op=acuPago"><i class=""></i>Acuerdos de Pago</a></li>
             <li><a href="mm.php?op=anticip"><i class=""></i>Anticipos (Abonos)</a></li> 
+            <li><a href="mm.php?op=factCptos"><i class=""></i>Conceptos Factura</a></li> 
+            <li><a href="mm.php?op=factServ"><i class=""></i>Facturar Otros Servicios</a></li> 
+            <li><a href="mm.php?op=notasServ"><i class=""></i>Notas Otros Servicios</a></li> 
           </ul>
         </li>' ;
         }?> 
@@ -420,6 +446,16 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         if ($op ==  'impPag'){
             include_once 'views/frm_contaimportaPagos.php';
         } 
+        if ($op ==  'factServ'){
+            include_once 'views/frm_contafactdef.php';
+        } 
+        if ($op ==  'notasServ'){
+            include_once 'views/frm_contanotasserv.php';
+        } 
+        
+        if ($op ==  'factCptos'){
+            include_once 'views/frm_contafactcptos.php';
+        }
         
         if ($op ==  'impsal2'){
             include_once 'views/frm_contaimportaSaldos.php';

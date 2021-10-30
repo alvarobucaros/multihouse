@@ -9,7 +9,7 @@ require_once ('fpdf.php');
         public $codTercero;
     
 
-        public function Header()
+    function Header()
     { 
         $dt =  explode(',',$_GET['dt']);  
         $empresa =  $dt[0];        
@@ -17,27 +17,23 @@ require_once ('fpdf.php');
         $periodoFin =  $dt[2];
         $fchIni  =  $dt[3];
         $fchFin  =  $dt[4];
-   
         $comprob =  $dt[5];
         $orden   =  $dt[6];      
-
+  // 
         $subtitulo = "Periodo del " . $fchIni . ' al ' . $fchFin;
         include_once("../modulos/mod_contaReportContable.php");
-        $obj = new  reportesContCls();
+        $obj = new  reportesContCls();   
         $resultado = $obj->cargaEmpresa($empresa);
-
-        $empre = mysqli_fetch_assoc($resultado);
-        $nomEmpre = $empre['empresaNombre']; 
-        $this->codTercero = $empre['empresatercero'];
-
-        $logo = $empre['empresaLogo']; 
-        $nit = 'NIT:        ' .$empre['empresaNit'].'-'.$empre['empresaDigito'];
-        $dir = 'DIRECCION : '.$empre['empresaDireccion']; 
-        $tel = 'TELEFONO  : '.$empre['empresaTelefonos'];      
-        $logo = "logos/".$logo;
+         while($empre = mysqli_fetch_assoc($resultado)){{
+            $nomEmpre = $empre['empresaNombre']; 
+            $this->codTercero = $empre['empresatercero'];
+            $logo = $empre['empresaLogo']; 
+            $nit = 'NIT:        ' .$empre['empresaNit'].'-'.$empre['empresaDigito'];
+            $dir = 'DIRECCION : '.$empre['empresaDireccion']; 
+            $tel = 'TELEFONO  : '.$empre['empresaTelefonos'];      
+            $logo = "logos/".$logo;             
+        }        
         
-        $this->Image( $logo ,25,15,20,10,'png');
- 
         $miTitulo = "Informe de comprobantes del mes";
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($this->empresa)+6;
@@ -69,13 +65,13 @@ require_once ('fpdf.php');
         $this->Line(8, 30, 280, 30);        
         $this->SetTextColor(0,0,0);      
     }
-
+    }
     //Pie de página
     function Footer()
         {
         $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
         $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
- 
+        date_default_timezone_set('America/Bogota');
         $hoy= $dias[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " del ".date('Y') ;
         $hoy= date("d-m-Y h:i a");
         //Posición: a 1,5 cm del final
@@ -86,9 +82,11 @@ require_once ('fpdf.php');
         $this->Cell(0,10,'REPORTE: COMPROBANTE CONTABLE DEL PERIODO.  IMPRESO EL: '.$hoy,0,0,'L');
         $this->Cell(0,10,'Pag. '.$this->PageNo().'/{nb}',0,0,'R');
         }
-    }
-
-    $hoy= date("Y-m-d (H:i)");
+    
+     }
+     
+ 
+    $hoy= date("d-m-Y h:i a");
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->AddPage();
@@ -108,16 +106,14 @@ require_once ('fpdf.php');
     $pdf->SetFont('Arial','',7);
     $pdf->SetY(54);
     $pdf->SetXY(10,32);
-    $ln=$pdf->GetY()-5;
+    $ln=$pdf->GetY()-2;
     $tercero =  $pdf->codTercero;
     include_once("../modulos/mod_contaReportContable.php");
     $obj = new  reportesContCls();
     $resultado = $obj->comprobantesDelMes($periodoIni, $periodoFin, $empresa, $orden, $comprob, $tercero);
     $comprobante='';
     $fecha='';
-//$pdf->MultiCell(120,6,$resultado,0,'L');$pdf->SetXY(105,$ln);
-//return;    
-    $ln+=4;
+   
     while($reg = mysqli_fetch_assoc($resultado) )
     {
         if($orden==='CF' and $comprobante <> $reg['movicaComprId'] ){

@@ -109,7 +109,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         }
         if(control==='TRC' || control === 'XLS'){
             meses=[31,28,31,30,31,30,31,31,30,31,30,31];
-            $scope.fchDesde = rec[15].substr(0,4)+'-'+rec[15].substr(4,6)+'-01';
+     //       $scope.fchDesde = rec[15].substr(0,4)+'-'+rec[15].substr(4,6)+'-01';
+            $scope.fchDesde = rec[15].substr(0,4)+'-01-01';
             $scope.fchHasta = rec[15].substr(0,4)+'-'+rec[15].substr(4,6)+'-'+meses[rec[15].substr(4,6)-1]; 
             if(control === 'XLS'){
                 $scope.registro.ultimoPeriodo = rec[15];
@@ -196,21 +197,21 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         
         if (control=== 'LAX' || control === 'CMV'){
             $http.post('modulos/mod_containformes.php?op=2m',{'op':'2m','empresa':empresa}).success(function(data){
-            $scope.operators0 = data;          
-            $scope.desdeCuenta = data[0].pucCuenta;
+            $scope.operators0 = data;  
             $scope.operators1 = data;
-            n=data.length;
-            $scope.hastaCuenta = data[n-1].pucCuenta; 
+            $scope.desdeCuenta = data[0].pucCuenta;           
+            n=data.length-1;
+            $scope.hastaCuenta = data[n].pucCuenta; 
              });
             return;
         }
         if (control==="SL2"){
             $http.post('modulos/mod_contamovicabeza.php?op=2c',{'op':'2c','empresa':empresa}).success(function(data){
-            $scope.operators0 = data;          
-            $scope.desdeCuenta = data[0].pucCuenta;
+            $scope.operators0 = data;  
             $scope.operators1 = data;
-            n=data.length;
-            $scope.hastaCuenta = data[n-1].pucCuenta; 
+            $scope.desdeCuenta = data[0].pucCuenta;         
+            n=data.length-1;
+            $scope.hastaCuenta = data[n].pucCuenta; 
             $scope.ultimoPeriodo = rec[15];
             $scope.primerPeriodo = rec[15];
              });            

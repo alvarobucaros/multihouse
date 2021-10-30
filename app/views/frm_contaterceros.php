@@ -80,7 +80,14 @@
                          value="{{registro.terceroDireccion}}" />
                     </div>
                 </div> 
-
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="terceroCiudad">{{form_terceroCiudad}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="terceroCiudad" name="terceroCiudad"
+                         ng-model="registro.terceroCiudad" required Placeholder="{{form_PhterceroCiudad}}" 
+                         value="{{registro.terceroCiudad}}" />
+                    </div>
+                </div> 
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="terceroTelefonos">{{form_terceroTelefonos}}</label>
                    <div class="col-md-6">
@@ -196,6 +203,7 @@
                         <th>T.Doc</th>
                         <th>Nr.Doc</th>
                         <th>DIRECCION</th>
+                        <th>CIUDAD</th>
                         <th>TELEFONOS</th>
                         <!--th>E-MAIL</th>
                         <th>CTA TWITER</th>
@@ -214,6 +222,8 @@
                     <td>{{detail.terceroIdenTipo}}</td>
                     <td>{{detail.terceroIdenNumero}}</td>
                     <td>{{detail.terceroDireccion}}</td>
+                    <td>{{detail.terceroCiudad}}</td>
+                    
                     <td>{{detail.terceroTelefonos}}</td>
                     <!--td>{{detail.terceroCorreo}}</td>
                     <td>{{detail.terceroTwiter}}</td>

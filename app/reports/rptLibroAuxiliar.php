@@ -21,18 +21,20 @@ require_once ('fpdf.php');
         $hoy= date("d-m-Y");
         include_once("../modulos/mod_contaReportContable.php");
         $obj = new  reportesContCls();
+
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_assoc($resultado) )
-        {
+        while($empre = mysqli_fetch_assoc($resultado)){
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
             $dir = 'DIRECCION : '.$empre['empresaDireccion'].' '.$empre['empresaCiudad'];   
             $tel = 'TELEFONO : '.$empre['empresaTelefonos']; 
             $mail = 'E-MAIL :' .$empre['empresaEmail'];  
             $this->logo = $empre['empresaLogo'];
-            $this->ciudad = $empre['empresaCiudad'];
-        }
-
+            $this->ciudad = $empre['empresaCiudad'];      
+        }         
+        
+        
+        
 //        $this->pieTexto = $nomEmpre . '   '. trim($nit) . '   '. trim($dir) . '   '. trim($tel);
         $der=0;
 
@@ -44,7 +46,7 @@ require_once ('fpdf.php');
         $yeyo=$periodo .'  '. $empresa  .'  ';
         $titulo="LIBRO AUXILIAR";
         $subtitulo="Periodo ".$periodo;
-        $this->Image($logo,$der+5,14,20,10,'png');    
+//        $this->Image($logo,$der+5,14,20,10);    
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);
@@ -111,13 +113,16 @@ require_once ('fpdf.php');
     $cuentaAux='';
     $saldo=0.0;
     $primero=true;
-    // $pdf->MultiCell(120,6,$resultado,0,'L');$pdf->SetXY(105,$ln);
-    // return;
+//     $pdf->MultiCell(120,6,$resultado,0,'L');$pdf->SetXY(105,$ln);
+//     return;
+//     
+    
     while($row = mysqli_fetch_assoc($resultado) )
     {
         if($cuentaAux != $row['moviConCuenta']){
             $cuentaAux = $row['moviConCuenta'];
-            $cta = $obj->nombreCuentaLM ($empresa, $cuentaAux, $periodo);
+            $cta = $obj->nombreCuentaLM($empresa, $cuentaAux, $periodo);
+            
             for($i=count($cta); $i>-1; $i--){
                 if ($i===0){
                     $saldo=$cta[$i]; 

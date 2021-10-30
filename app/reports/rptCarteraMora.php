@@ -25,7 +25,7 @@ require_once ('fpdf.php');
     
         $resultado = $obj->cargaEmpresa($empresa);
 
-        while( $empre = mysqli_fetch_assoc($resultado) )
+        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -46,7 +46,7 @@ require_once ('fpdf.php');
         $logo = "images/".$this->logo;
      
         $titulo="CARTERA POR EDADES CORTE A ".$fc;
-        $this->Image($logo,$der+5,14,36,20,'png');
+ //       $this->Image($logo,$der+5,14,36,20);
 
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -143,7 +143,7 @@ require_once ('fpdf.php');
         include_once("../bin/cls/clsReportes.php");
         $obj = new  reportesCls();
         $resultado = $obj->carteraEdades($empresa, $op, $hoy);
-        while( $reg = mysqli_fetch_assoc($resultado) )
+        while( $reg = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
         {
             if($op==='R'){
                 $subtotal=(float)$reg['pagoCrnte']+(float)$reg['pago0130']+(float)$reg['pago6190']+
