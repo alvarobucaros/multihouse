@@ -7,18 +7,24 @@ require_once ('fpdf.php');
         public $tit;
         public $pieTexto;
         public $aviso = true;
-      
+        public $info = '';
+        public $logo = '';
+        public $fecha = '';
+        
      function Header()
     { 
-        $dt =  explode(',',$_GET['dt']);         
+        $dt =  explode(',',$_GET['dt']); 
+       
         $empresa = $dt[0];
         $PeriodoDer =  $dt[1];
         $PeriodoIzq =  $dt[2];    
         $variaciones =  $dt[3];    
         $notas =  $dt[4];  
         $control = $dt[5];
-        $informe = $dt[6];
+        $informe = $dt[8];
         $hoy= date("d-m-Y");
+        $this->info = $informe.'_'.$hoy;
+        
         $ms = array(31,28,31,30,31,30,31,31,30,31,30,31);
         $d=$ms[substr($PeriodoDer,4, 2) - 1];
         $fchini = substr($PeriodoDer,0, 4).'/'.substr($PeriodoDer,4, 2).'/'.$d;
@@ -28,7 +34,8 @@ require_once ('fpdf.php');
         $obj = new  reportesContCls();
         $nombre = $obj->nombreLista($empresa, $informe );
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        
+        while( $empre = mysqli_fetch_assoc($resultado))
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -128,7 +135,7 @@ require_once ('fpdf.php');
         //Arial italic 8
         $this->SetFont('Arial','I',6);
         //Número de página  .$this->today;
-        $this->Cell(0,10,'REPORTE: '. $this->tit. '.  Impreso en : '.$hoy,0,0,'L');
+        $this->Cell(0,10,'REPORTE: '. $this->info. '.  Impreso en : '.$hoy,0,0,'L');
         $this->Cell(0,10,'Pag. '.$this->PageNo().'/{nb}',0,0,'R');
         }
     }
@@ -141,7 +148,7 @@ require_once ('fpdf.php');
     $variaciones =  $dt[3];    
     $notas =  $dt[4];  
     $control = $dt[5];
-    $informe = $dt[6];
+    $informe = $dt[8];
     $notes = array();  
     $yin=5;
     if($PeriodoDer === $PeriodoIzq){$yin=15;}
@@ -313,6 +320,6 @@ require_once ('fpdf.php');
     $pdf->SetXY(8,$y);
     $pdf->Cell(80,4, 'FIN DEL INFORME ' ,0,1);
     $reporte = $pdf->tit.' '.$hoy.'.pdf';
-    $pdf->Output($reporte,'D'); 
+    $pdf->Output($pdf->info.'.pdf','D'); 
  ?> 
 

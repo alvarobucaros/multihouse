@@ -42,7 +42,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
 
     $scope.ultiperfac = 'Ultimo perído facturado: ';
     $scope.periFact = 'Perído a Facturar:';
-    $scope.form_periodo ='Ultimo período';
+    $scope.form_periodo ='Ultimo período facturado';
     $scope.fchCorte = 'Fecha de corte:';
     $scope.inmueble = 'Inmueble : ';
     $scope.nroRecibos = 'recibo Nro.';
@@ -144,8 +144,20 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     
      function getInfoAnticipo(empresa){
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
+        var rec=data.split('||');
         $scope.periodo = rec[1];
-        $scope.registro.ultimoPeriodo =  rec[1];
+        $scope.valUltiperfac = rec[12];
+        $scope.valPreriFact = rec[1];
+        $scope.valFchCorte = rec[2];
+        $scope.valComprobante = rec[3]+' - ' + rec[4];
+        $scope.nrComprobante = rec[3];
+        $scope.decDias = rec[5];
+        $scope.consecFactura = rec[6];
+        $scope.recargoPorc  = rec[8];
+        $scope.recargoPesos = rec[9];
+        $scope.recargoDias  = rec[10];
+        $scope.factorRedondeo = rec[11];
+        $scope.registro.ultimoPeriodo = rec[12];
         return rec;
          }); 
      }
@@ -431,26 +443,35 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         prop=$scope.registro.propietario;
         inmu=$scope.registro.Inmueble;
         reimp=$scope.registro.reimprimeCtas;
-        peri=$scope.periodo;
+        peri=$scope.registro.ultimoPeriodo;
+        fecha = $scope.valFchCorte;
+       
         if (prop == undefined){prop=0;}
         if (inmu == undefined){inmu=0;}
         if (reimp == undefined){       
             alert('Seleccione todas o una sola');
             return; 
         }
-        else{
+
         if(reimp==='N'){
             if(prop==0 && inmu==0){
                 alert('Seleccione un inmueble o un propietario');
                 return;
-            }else  if(prop>0 && inmu>0){
-                alert('Solamente seleccione o un inmueble o un propietario no los dos');
-                return;
-            }
+            }else { 
+                if(prop>0 && inmu>0){
+                    alert('Solamente seleccione o un inmueble o un propietario no los dos');
+                    return;                }
+
+            empresa=$scope.empresa;
+            location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri;
+            } 
          }
-        }
-        empresa=$scope.empresa;
-        location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri; 
+         if(reimp==='S'){ 
+            empresa=$scope.empresa;
+            location.href="reports/rptFacturas.php?pe="+peri+"&em="+empresa+"&fc="+fecha; 
+            }     
+//        empresa=$scope.empresa;
+//        location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri; 
     };
     
     $scope.consultaCtaCobro = function($caso){

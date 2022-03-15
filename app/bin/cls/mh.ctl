@@ -1,1 +1,1 @@
-tsohlacol~rcn_egnimota~toor~~0
+tsohlacol~egnimota_etnieppa~toor~~0

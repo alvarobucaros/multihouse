@@ -476,7 +476,8 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         if ($op ==  'borsl2'){
             include_once 'views/frm_contaBorraSaldos.php';
         }      
-        if ($op ==  'proInm'){
+        if ($op ==  'proInm'){            include_once 'views/frmContaFacturacion.php';
+
             include_once 'views/frm_containmueblepropietario.php';
         }        
         if ($op ==  'prop'){
@@ -493,7 +494,6 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
             include_once 'views/frm_mm_usuarios.php';
         }
          if ($op ==  'creaFac'){
-            include_once 'views/frmContaFacturacion.php';
         }       
          if ($op ==  'recCaja'){
             include_once 'views/frmContaRecibosCaja.php';
@@ -695,20 +695,18 @@ function usuario(){
             if (user_contraNueva !='' && user_contraNuevaRep !=''){
                 if(user_contraNueva!=user_contraNuevaRep)
                     {
-                        err="Nuevas contraseÃ±as no son iguales. Para salir deje en blanco la contraseÃ±a actual";
+                        err="Nuevas contraseñas no son iguales. Para salir deje en blanco la contraseña actual";
                     }
                     else
                     {
                         parametro = user_contraAhora+'||'+user_contraNueva+'||'+user_contraNuevaRep+'||'+user;
-                           $.post("inc/opcGrales.php", {accion:'changePwd', condicion:parametro}, function(data){ 
-                            
-                            if (data.substr(0,5)=='Error'){
-                                alert(data);
+                           $.post("inc/opcGrales.php", {accion:'changePwd', condicion:parametro}, function(data){                   
+                            if (data.substr(0,5)==='Error'){
                                 err=data; 
                             }
                            else
                             { 
-                             alert('ContraseÃ±a cambiada exitosamente');
+                             alert('Contraseña cambiada exitosamente');
                              $('#popup').fadeOut('slow');
                              $('.popup-overlay').fadeOut('slow');
                             }

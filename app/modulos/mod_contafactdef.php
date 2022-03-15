@@ -135,23 +135,15 @@ switch ($op)
         $factmvtDescValor =  $data->factmvtDescValor;            
         if($factmvtId  == 0) 
         { 
-           $query = "INSERT INTO contafactserviciomvt (factmvtCptoId, factmvtFacDef, factmvtDetalle,
-                    factmvtValor, factmvtIvaPorc, factmvtIvaValor, factmvtDescPorc, factmvtDescValor)";
+           $query = "INSERT INTO contafactserviciomvt (factmvtCptoId, factmvtFacDef, factmvtDetalle)";
             $query .= "VALUES('" . $factmvtCptoId . "', '" . $factmvtFacDef  . "', '";
-            $query .= $factmvtDetalle. "', '"  .  $factmvtValor . "', '"  .$factmvtIvaPorc . "', '";
-            $query .= $factmvtIvaValor. "', '"  .  $factmvtDescPorc . "', '"  .$factmvtDescValor . "')";
+            $query .= $factmvtDetalle. "')";
             mysqli_query($con, $query);
             echo 'Ok';
         } 
         else 
         { 
-            $query = "UPDATE contafactdef  SET factdefempresa = '".$factdefempresa."', factdefnro = '".
-                    $factdefnro."', factdefcliente = '".$factdefcliente."', factdeffechcrea = '".$factdeffechcrea.
-                    "', factdeffechvence = '".$factdeffechvence."', factdefvalor = '".$factdefvalor.
-                    "', factdefiva = '".$factdefiva."', factdefsaldo = '".$factdefsaldo."', factdefneto = '".
-                    $factdefneto."', factdefcontabiliza = '".$factdefcontabiliza. "', factdefconcepto = '".
-                    $factdefconcepto .
-                    "' WHERE factdefid = ". $factdefid;
+            $query = "UPDATE contafactserviciomvt  SET factmvtDetalle = '".$factmvtDetalle ."'  WHERE factmvtId = ". $factmvtId;
             mysqli_query($con, $query); 
             echo 'Ok';
         } 

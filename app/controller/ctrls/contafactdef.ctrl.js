@@ -246,10 +246,8 @@ $scope.exporta = function(){
         if (ret[0] === 'Ok') {
             $scope.factid = (ret[1])
             $http.post('modulos/mod_contafactdef.php?op=am',{'op':'am', 'empresa':empresa, 'factmvtFacDef':ret[1],
-                'factmvtCptoId':info.factdefconcepto, 'factmvtDetalle':info.factdefdetalle, 'factmvtValor':info.factdefvalor, 
-                'factmvtIvaPorc':info.factdefiva, 'factmvtIvaValor':info.factdefsaldo, 'factmvtDescPorc':'0', 
-                'factmvtDescValor':'0', 'factmvtId':0}).success(function(data){
-                alert(data);
+                'factmvtCptoId':info.factdefconcepto, 
+                'factmvtDetalle':info.factdefdetalle}).success(function(data){
             }); 
             getInfo(empresa);
             alert ('Registro Actualizado ');
@@ -258,7 +256,6 @@ $scope.exporta = function(){
             info.factdefsaldo='';
             info.factdefneto='';
             info.factdefiva='';
-//            $('#idForm').slideToggle();
         }else{
             alert(data);
         }

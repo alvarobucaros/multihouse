@@ -169,7 +169,7 @@ class reportesContCls {
         $con = $objClase->conectar();
         $query = "SELECT tipoDetalle FROM contatipoinforme WHERE tipoEmpresa = " .
                 $empresa . " AND tipoCodigo = '" . $informe . "'";
-
+// echo $query;
         $result = mysqli_query($con, $query);
         while ($row = mysqli_fetch_assoc($result)) {
             $tipoDetalle = $row['tipoDetalle'];

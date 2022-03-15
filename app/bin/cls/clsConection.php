@@ -56,7 +56,7 @@ class DBconexion{
             
                 $claveOk = md5($dat[0]);
                 $resultado =  mysqli_query($con, $strSql);
-                $usuario = mysqli_fetch_array($resultado, MYSQL_ASSOC);
+                $usuario = mysqli_fetch_assoc($resultado);
                 if($usuario['usuario_password'] ==  $claveOk ){
                     $strSql = "UPDATE mm_usuarios SET usuario_password = '" . md5($dat[1]) . 
                             "' WHERE usuario_id = " . $dat[3];

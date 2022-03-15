@@ -113,9 +113,7 @@ require_once ('fpdf.php');
     $cuentaAux='';
     $saldo=0.0;
     $primero=true;
-//     $pdf->MultiCell(120,6,$resultado,0,'L');$pdf->SetXY(105,$ln);
-//     return;
-//     
+    
     
     while($row = mysqli_fetch_assoc($resultado) )
     {
@@ -123,7 +121,7 @@ require_once ('fpdf.php');
             $cuentaAux = $row['moviConCuenta'];
             $cta = $obj->nombreCuentaLM($empresa, $cuentaAux, $periodo);
             
-            for($i=count($cta); $i>-1; $i--){
+            for($i=count($cta)-1; $i>-1; $i--){
                 if ($i===0){
                     $saldo=$cta[$i]; 
                     $primero=true;

@@ -514,6 +514,7 @@ function validaComp($empresa, $id) {
     $con = $objClase->conectar();
     $query = "SELECT  sum(moviConDebito - moviConCredito) sl2 FROM contamovidetalle " .
             " WHERE moviConCabezaId = " . $id;
+ //   echo $query;
     $result = mysqli_query($con, $query);
     while ($row = mysqli_fetch_assoc($result)) {
         $sl2 = $row['sl2'];

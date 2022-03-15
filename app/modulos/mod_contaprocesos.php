@@ -562,7 +562,8 @@ function carteraEnMoraXLS($data) {
     $expo .= '          <th>MAS DE 120 DIAS</th>';
     $expo .= '          <th>SUB TOTAL</th>';
     $expo .= '</tr> ';
-    while ($row = mysqli_fetch_array($resultado, MYSQL_ASSOC)) {
+    while($row = mysqli_fetch_assoc($resultado)) {
+  //  while ($row = mysqli_fetch_array($resultado, MYSQL_ASSOC)) {
         $subtotal = (float) $row['pagoCrnte'] + (float) $row['pago0130'] + (float) $row['pago6190'] +
                 (float) $row['pago3160'] + (float) $row['pago91120'] + (float) $row['pago121mas'];
         if ($op === 'R') {

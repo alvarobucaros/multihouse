@@ -17,7 +17,7 @@ require_once ('fpdf.php');
         include_once("../modulos/mod_contaReportContable.php");
         $obj = new  reportesContCls();
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+          while($empre = mysqli_fetch_assoc($resultado))
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];

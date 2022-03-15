@@ -28,7 +28,7 @@
                     <label class="control-label milabel col-md-4" for="fchCorte">{{fchCorte}}</label>
                    <div class="col-md-6">
                     <input type="text" class="form-control mitexto" id="fchCorte" name="fchCorte"
-                         ng-model="valFchCorte" readonly="yes" 
+                         ng-model="valFchCorte" 
                          value="{{valFchCorte}}" />
                     </div>
                 </div> 

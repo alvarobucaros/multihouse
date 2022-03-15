@@ -19,7 +19,7 @@ require_once ('fpdf.php');
         $control = $dt[7];
         $informe = $dt[8];
         $hoy= date("d-m-Y");
-        //"5,201412,201412,N,S,2014/12/31,2014/12/31,SF,SITFIN"
+     
         $ms = array(31,28,31,30,31,30,31,31,30,31,30,31);
         $d=$ms[substr($PeriodoDer,4, 2) - 1];
         $fchini = substr($PeriodoDer,0, 4).'/'.substr($PeriodoDer,4, 2).'/'.$d;

@@ -24,8 +24,7 @@ require_once ('fpdf.php');
         $der=0;
     
         $resultado = $obj->cargaEmpresa($empresa);
-
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while($empre = mysqli_fetch_assoc($resultado))
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -43,10 +42,10 @@ require_once ('fpdf.php');
 
         $this->archivo = 'CarteraDetalaldoEdades';
         if($op==='R'){$this->archivo = 'CarteraResumenEdades';}
-        $logo = "images/".$this->logo;
+        $logo = "logos/".$this->logo;
      
         $titulo="CARTERA POR EDADES CORTE A ".$fc;
- //       $this->Image($logo,$der+5,14,36,20);
+        $this->Image($logo,$der+5,14,36,20);
 
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($nomEmpre)+6;
@@ -143,15 +142,15 @@ require_once ('fpdf.php');
         include_once("../bin/cls/clsReportes.php");
         $obj = new  reportesCls();
         $resultado = $obj->carteraEdades($empresa, $op, $hoy);
-        while( $reg = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while($reg = mysqli_fetch_assoc($resultado))
         {
             if($op==='R'){
                 $subtotal=(float)$reg['pagoCrnte']+(float)$reg['pago0130']+(float)$reg['pago6190']+
-                (float)$reg['pagoCrnte']+(float)$reg['pago91120']+(float)$reg['pago121mas'];
+                (float)$reg['pago3160']+(float)$reg['pago91120']+(float)$reg['pago121mas'];
                 $pagoCrnte+=(float)$reg['pagoCrnte'];
                 $pago0130+=(float)$reg['pago0130'];
-                $pago3160+=(float)$reg['pago6190'];
-                $pago6190+=(float)$reg['pagoCrnte'];
+                $pago3160+=(float)$reg['pago3160'];
+                $pago6190+=(float)$reg['pago6190'];
                 $pago91120+=(float)$reg['pago91120'];
                 $pago121mas+=(float)$reg['pago121mas'];
                 $sumSubtotal +=(float)$subtotal;            
@@ -194,18 +193,18 @@ require_once ('fpdf.php');
                 }
             }
             $subtotal=(float)$reg['pagoCrnte']+(float)$reg['pago0130']+(float)$reg['pago6190']+
-            (float)$reg['pagoCrnte']+(float)$reg['pago91120']+(float)$reg['pago121mas'];
+            (float)$reg['pago3160']+(float)$reg['pago91120']+(float)$reg['pago121mas'];
             $pagoCrnte+=(float)$reg['pagoCrnte'];
             $pago0130+=(float)$reg['pago0130'];
-            $pago3160+=(float)$reg['pago6190'];
-            $pago6190+=(float)$reg['pagoCrnte'];
+            $pago3160+=(float)$reg['pago3160'];
+            $pago6190+=(float)$reg['pago6190'];
             $pago91120+=(float)$reg['pago91120'];
             $pago121mas+=(float)$reg['pago121mas'];
             $sumSubtotal +=(float)$subtotal;
             $totpagoCrnte+=(float)$reg['pagoCrnte'];
             $totpago0130+=(float)$reg['pago0130'];
-            $totpago3160+=(float)$reg['pago6190'];
-            $totpago6190+=(float)$reg['pagoCrnte'];
+            $totpago3160+=(float)$reg['pago3160'];
+            $totpago6190+=(float)$reg['pago6190'];
             $totpago91120+=(float)$reg['pago91120'];
             $totpago121mas+=(float)$reg['pago121mas'];
             $totsumSubtotal +=$subtotal;

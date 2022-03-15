@@ -140,13 +140,14 @@ class reportesCls{
                " INNER JOIN containmuebles ON facturaInmuebleid = inmuebleId  ".
                " INNER JOIN containmueblepropietario ON inmuebleId = contaInmuPropietarioInmuebleId ". 
                " INNER JOIN contapropietarios ON contaInmuPropietarioPropietarioId = propietarioId  ".
-               " WHERE FacturaPeriodo <= " .$periodo ." AND FacturaEmpresaId =  ". $empresa .
+               " WHERE FacturaPeriodo <= '" .$periodo ."' AND FacturaEmpresaId =  ". $empresa .
                " AND facturasaldo > 0 AND facturaTipo <> 'M'  ";
             if($inmueble > 0){
                 $sql .= " AND facturaInmuebleid = " . $inmueble ;              
             }
                 $sql .= " ORDER BY inmuebleCodigo, facturaperiodo desc,  facturadetalle , facturaservicioid   ";
         $result = mysqli_query($con, $sql);
+      
         return  $result;	   
      }
 
@@ -157,7 +158,7 @@ class reportesCls{
         $sql = "DELETE FROM contatmpcartera WHERE pagoempresa = " . $empresa ." AND pagoid > 0";
         $result = mysqli_query($con, $sql); //2019-12-11
         $anio = substr($hoy,0,4);
-        $mes = substr($hoy,5,2);
+        $mes = substr($hoy,6,2);
         $peri=$anio;
         if ($mes < 10){$peri.'0';}
         $peri .= $mes;
