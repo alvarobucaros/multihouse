@@ -48,8 +48,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.nroRecibos = 'recibo Nro.';
     $scope.rCaja = 'Recibo de caja'; 
     $scope.propietario = 'Propietario : ';
-    $scope.comprobante = 'Cmbante facturación:';
-    $scope.comprobanteRC = 'Cmbante Ingresos:';
+    $scope.comprobante = 'Cmpbante facturación:';
+    $scope.comprobanteRC = 'Cmpbante Ingresos:';
     $scope.titSaldo = 'Saldo a la fecha';
     $scope.titvlrPago = 'Valor pagado';
     $scope.titformaPago = 'Forma de pago';
@@ -138,9 +138,11 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     }
     if(procesa === 'R' || procesa === 'CN'){
         $scope.Mensaje='';
+        inmu=$scope.inmueble;
         getInfoRcaja($scope.empresa, procesa);
         getCombos($scope.empresa);
     }
+    
     
      function getInfoAnticipo(empresa){
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
@@ -161,6 +163,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         return rec;
          }); 
      }
+     
      function getInfoFac(empresa){
        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
 
@@ -195,6 +198,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         mes = ['31', '28', '31','30','31','30','31','31','30','31','30','31' ];
         $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
         var rec=data.split('||');
+ //       console.log(data);
+ //       alert(data);
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];
         $scope.valFchCorte = rec[2];
@@ -207,12 +212,18 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.recargoDias  = rec[10];
         $scope.factorRedondeo = rec[11];
         $scope.periCierreFactura = rec[12];
-        m=rec[12].substring(4, 6)-1;
-        if (procesa === 'CN'){
-            $scope.fechaCorte = rec[12].substring(0, 4)+'-'+rec[12].substring(4, 6)+'-'+mes[m];
-            return;
-        }
-        $scope.fchPago = rec[12].substring(0, 4)+'-'+rec[12].substring(4, 6)+'-'+mes[m];
+        fc=$scope.periCierreFactura;
+        var m = '0';
+        $scope.fechaCorte = rec[12].substring(0, 4)+'-'+rec[12].substring+'-'+mes[m];
+        
+        const fecha = new Date();
+        fch1=fecha.toLocaleDateString();
+        const myArray = fch1.split("/");
+        m = myArray[1]
+        if (m<10){m='0'+m}
+        const d = myArray[0]
+        if (d<10){d='0'+d}
+        $scope.fchPago = myArray[2]+'-'+m+'-'+d;
         $scope.registro.fechaAbono = $scope.fchPago;
         $scope.factura = true; 
         $scope.imprime = false; 
@@ -289,17 +300,37 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     
     $scope.buscaFacturas = function(detail){
         empresa=$scope.empresa;
-        inmueble = detail.Inmueble;
-        propietario = detail.propietario;
+        inmueble = $scope.Inmueble; //  detail.Inmueble;
+        propietario =  $scope.registro.propietario; //  detail.propietario;
+        fecha = $scope.registro.fechaAbono;
         if (inmueble === undefined){inmueble=0;}
         if (propietario === undefined) {propietario=0;}
-        $http.post('modulos/mod_contaprocesos.php?op=leeRCaja',{'op':'leeRCaja','empresa':empresa,'inmueble':inmueble,
-        'propietario':propietario}).success(function(data){
-        alert(data);
-        $scope.operators1 = data;
-         });
+        
+        $http.post('modulos/mod_contaprocesos.php?op=suma',{'op':'suma','empresa':empresa,'inmueble':inmueble,'propietario':propietario,'fecha':fecha}).success(function(data){
+  //      alert(data);
+        $scope.vlrPago = data;
+         });        
+        
     };
      
+    $scope.buscaPropiedades = function(detail){
+        empresa=$scope.empresa;
+        propietario = detail.propietario;  
+        inmueble = detail.Inmueble;
+        if (inmueble === undefined){inmueble=0;}
+        if (propietario === undefined) {propietario=0;}
+        $http.post('modulos/mod_contaprocesos.php?op=3',{'op':'3','empresa':empresa,
+            'propietario':propietario, 'inmueble':inmueble}).success(function(data){
+        $scope.operators0 = data;
+        }); 
+        };
+    
+//    SELECT inmuebleId,inmuebleDescripcion FROM containmuebles 
+//INNER JOIN containmueblepropietario ON inmuebleId = contaInmuPropietarioInmuebleId
+//WHERE inmueblePrincipal='SI' AND contaInmuPropietarioPropietarioId = 113
+ 
+    
+    
     $scope.buscanroRecibos = function(){
         empresa=$scope.empresa; 
         inmueble = $scope.detail.Inmueble;

@@ -48,7 +48,7 @@ class reportesCls{
             $sql="SELECT factdefvalor, factdefiva, factdefsaldo, factdefneto, factdefconcepto, " .
                 " factdefcptodeta  " .
                 " FROM contafactdef " .
-                " WHERE factdefempresa = ".$empresa." AND factdefnro = ".$nro      .
+                " WHERE factdefempresa = ".$empresa." AND factdefnro = ".$nro . " AND factdefconcepto > 0 " .
                 " ORDER BY factdefid";
                 $result =  mysqli_query($con, $sql);
             return $result;
@@ -147,7 +147,7 @@ class reportesCls{
             }
                 $sql .= " ORDER BY inmuebleCodigo, facturaperiodo desc,  facturadetalle , facturaservicioid   ";
         $result = mysqli_query($con, $sql);
-      
+// echo $sql;      
         return  $result;	   
      }
 

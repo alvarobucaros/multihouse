@@ -7,6 +7,16 @@
                   ng-submit="insertInfo(registro);" >
 
                 <div class="form-group">
+                   <label class=" milabel col-md-3" for="propietarios">{{propietario}}</label>
+                   <div class="col-md-5">
+                   <select id='propietarios' name='propietarios' ng-model='registro.propietario'   
+                           ng-change="buscaPropiedades(registro)">
+                   <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
+                    </select>
+                   </div>
+                </div> 
+                
+                <div class="form-group">
                    <label class=" milabel col-md-3" for="Inmuebles">{{inmueble}}</label>
                    <div class="col-md-5">
                    <select id='Inmuebles' name='Inmuebles' ng-model='registro.Inmueble'   
@@ -16,16 +26,6 @@
  
                    </div>
                </div>   
-
-                <div class="form-group">
-                   <label class=" milabel col-md-3" for="propietarios">{{propietario}}</label>
-                   <div class="col-md-5">
-                   <select id='propietarios' name='propietarios' ng-model='registro.propietario'   
-                           ng-change="buscaFacturas(registro)">
-                   <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
-                    </select>
-                   </div>
-               </div> 
 
                 <div class="form-group">
                    <label class="milabel col-md-3" for="fechaAbono">{{form_fechaAbono}}</label>

@@ -79,7 +79,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         factmvtDescValor:'',  
         factmvtCptoId:'',  
         factmvtId:'', 
-        factdefdetalle:'',
+        factdefcptodeta:'',
         factmvtFacDef:'',
         factid:'0'
    };
@@ -241,7 +241,7 @@ $scope.exporta = function(){
             'factdefcliente':terc, 'factdeffechcrea':info.factdeffechcrea, 
             'factdeffechvence':info.factdeffechvence, 'factdefvalor':info.factdefvalor, 
             'factdefiva':info.factdefiva, 'factdefsaldo':info.factdefsaldo, 'factdefneto':info.factdefneto, 
-            'factdefcontabiliza':'N','factdefconcepto':cpto}).success(function(data){
+            'factdefcontabiliza':'N','factdefconcepto':cpto, 'factdefcptodetalle':info.factdefdetalle}).success(function(data){
             var ret = data.split('||');
         if (ret[0] === 'Ok') {
             $scope.factid = (ret[1])

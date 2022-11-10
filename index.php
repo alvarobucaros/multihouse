@@ -20,8 +20,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="fh5co-navbar-brand">
-                                    <a class="fh5co-logo" href="http://www.atomingenieria.com">
-                                    <img src="app/img/atomInv.PNG" alt=""/>
+                                    <a class="fh5co-logo" href="http://www.aortizc.com">
+                                    <img src="app/img/logo.png" alt=""/>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -34,7 +34,7 @@
                             <div class="col-md-3">
                                 <ul class="social">
                                     <li><a href="https://www.facebook.com/fb.me/multimeeting" alt="facebook" title="facebook"><i class="icon-facebook"></i></a></li>
-                                    <li><a href="https://atomingenieria.blogspot.com/" alt="BlogSpot"  title="Blog"><i class="icon-bookmark"></i></a></li>
+                                    <li><a href="https://aortizc.blogspot.com/" alt="BlogSpot"  title="Blog"><i class="icon-bookmark"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -195,8 +195,8 @@
                             <div class="row">
                                     <div class="col-md-12 text-center ">
                                             <div class="footer-widget border">
-                                                    <p class="pull-left"><small>&copy; Atomingeniería sas. 2018 - Derechos reservados</small></p>
-                                                    <p class="pull-right"><small> Diseño de Atomingeniería sas</p>
+                                                    <p class="pull-left"><small>&copy; AortizC. 2018, 2020, 2022 - Derechos reservados</small></p>
+                                                    <p class="pull-right"><small> Diseño de AortizC</p>
 
                                             </div>
                                     </div>

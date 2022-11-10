@@ -25,7 +25,7 @@ switch ($op)
     case 'm':
         maxRegistroId($data);
         break;
-    case 'm':
+    case 'ma':
         actualizaMaxRegistroId($data);
         break;    
     case 'tc':
@@ -76,6 +76,7 @@ switch ($op)
  
     function actualiza($data)
     {     
+     //   echo($data->factdefcptodetalle);
        global $objClase;
         $con = $objClase->conectar(); 
         $op =  $data->op;	 
@@ -91,15 +92,18 @@ switch ($op)
         $factdefneto =  $data->factdefneto; 
         $factdefcontabiliza =  $data->factdefcontabiliza; 
         $factdefconcepto = $data->factdefconcepto;
+        $factdefcptodetalle = $data->factdefcptodetalle;
+        
         if($factdefid  == 0) 
         { 
             $query = "INSERT INTO contafactdef(factdefempresa, factdefnro, factdefcliente, factdeffechcrea,  ";
             $query .= " factdeffechvence, factdefvalor, factdefiva, factdefsaldo, factdefneto, factdefcontabiliza, ";
-            $query .= " factdefconcepto )";
+            $query .= " factdefconcepto, factdefcptodeta )";
             $query .= "  VALUES ('" . $factdefempresa."', '".$factdefnro."', '".$factdefcliente."', '".
                    $factdeffechcrea."', '".$factdeffechvence."', '".$factdefvalor."', '".$factdefiva."', '".
                    $factdefsaldo."', '".$factdefneto."', '".$factdefcontabiliza."', '".
-                   $factdefconcepto."')";  
+                   $factdefconcepto."', '".$factdefcptodetalle."')"; 
+          
             mysqli_query($con, $query);
             $last = mysqli_insert_id($con);
             echo 'Ok||'.$last;

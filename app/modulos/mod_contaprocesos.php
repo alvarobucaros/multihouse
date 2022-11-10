@@ -54,12 +54,17 @@ switch ($op) {
     case 'saldoFac':
         saldoFacturacion($data);
         break;
-
+    case 'suma':
+        sumaFacturas($data);
+        break;    
     case '0':
         traeListInmuebles($data);
         break;
     case '1':
         traeListPropietarios($data);
+        break;
+    case '3':
+        traeListInmuebles2($data);
         break;
 }
 
@@ -183,6 +188,7 @@ function leeParametros($data) {
             empresaRegimen, empresaporcentajeiva, empresaCompEgreso, empresatercero
             FROM contaempresas WHERE empresaId = ' . $empresa;
     $result = mysqli_query($con, $query);
+// echo $query;    
     if (mysqli_num_rows($result) != 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             $periodoFac = $row['empresaPeriodoFactura'];
@@ -209,29 +215,37 @@ function leeParametros($data) {
             $empresaCompApertura = $row['empresaCompApertura'];
             $empresaCuentaCierre = $row['empresaCuentaCierre'];
             $empresaCompAjustes = $row['empresaCompAjustes'];
-            $empresatercero = $row['empresatercero'];
+            $empresaDescPorc = $row['empresaDescPorc'];
+            $empresaDescPesos = $row['empresaDescPesos'];
+            $empresatercero = $row['empresatercero'];  
             $query = "SELECT count(*) as nro FROM contafactura where facturaEmpresaid = " . $empresa .
                     " AND facturaperiodo = '" . $nuevoPeriodo . "' ";
-
+// echo $query;  
             $result = mysqli_query($con, $query);
-            while ($rec = mysqli_fetch_assoc($result)) {
-                $rowcount = $rec['nro'];
+            $rowcount=0;
+            if (mysqli_num_rows($result) != 0) {
+                while ($rec = mysqli_fetch_assoc($result)) {
+                    $rowcount = $rec['nro'];
+                }
             }
 
-            if ($comprobante == '') {
+            if ($comprobante === '') {
                 $msg = 'ERR. No se ha definido el tipo de comprobante, ir a parámetros';
             } else {
                 $nomComprobante = nombreComprobante($empresa, $comprobante);
+// echo  $nomComprobante;               
                 $msg = $periodoFac . '||' . $nuevoPeriodo . '||' . $fecCorte . '||' . $comprobante . '||' .
                         $nomComprobante . '||' . $descDias . '||' . $consecutivo . '||' . $rowcount .
                         '||' . $RecargoPorc . '||' . $RecargoPesos . '||' . $RecargoDias . '||' .
                         $FactorRedondeo . '||' . $PeriCierreFactura . '||' . $conseRC .
                         '||' . $estructura . '||' . $periConta . '||' . $empresaAnoFiscal .
                         '||' . $empresaCompCierreMes . '||' . $empresaCompApertura . '||' . $empresaCuentaCierre .
-                        '||' . $empresaCompAjustes . '||' . $empresatercero;
+                        '||' . $empresaCompAjustes . '||' . $empresatercero.
+                        '||' . $empresaDescPorc . '||' .$empresaDescPesos;
             }
-            echo $msg;
-            return $msg;
+    echo $msg; 
+  //          return $msg;
+           
         }
     }
 }
@@ -1062,15 +1076,36 @@ function traeListInmuebles($data) {
             $arr[] = $row;
         }
     }
-
     echo $json_info = json_encode($arr);
 }
 
+function traeListInmuebles2($data) {
+    global $objClase;
+    $con = $objClase->conectar();
+    $empresa = $data->empresa;
+    $propietario =$data->propietario;
+    $resultado = "";
+    $sql = "SELECT inmuebleId, inmuebleDescripcion " .
+            " FROM containmuebles " .
+            " INNER JOIN containmueblepropietario ON inmuebleId = contaInmuPropietarioInmuebleId " .
+            " WHERE inmueblePrincipal = 'SI' AND inmuebleEmpresaId = '" .
+            $empresa . "' AND contaInmuPropietarioPropietarioId = '" .  $propietario.
+            "' ORDER BY inmuebleDescripcion";
+    
+    $result = mysqli_query($con, $sql);
+    $arr = array();
+    if (mysqli_num_rows($result) != 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $arr[] = $row;
+        }
+    }
+    echo $json_info = json_encode($arr);
+}
 function leeRCaja($data) {
     global $objClase;
     $con = $objClase->conectar();
     $empresa = $data->empresa;
-    $inmueble = $data->inmu;
+    $inmueble = $data->inmueble;
     $sql = "SELECT DISTINCT CONCAT(pagosNrReciCaja,' Del ',pagosfecha) AS recibo,  pagosNrReciCaja  " .
             " FROM contapagos   " .
             " WHERE pagosempresa = " . $empresa . " AND  pagosinmueble =  " . $inmueble .
@@ -1104,6 +1139,48 @@ function traeListPropietarios($data) {
     }
 
     echo $json_info = json_encode($arr);
+}
+
+
+function sumaFacturas($data){
+    global $objClase;
+    $con = $objClase->conectar();
+    $empresa = $data->empresa;
+    $propietario = $data->propietario;    
+    $inmueble = $data->inmueble;
+    $fecha=$data->fecha;
+    $resultado = "";
+    $data = leeParametros($data);
+    $reg = explode('||', $data);
+echo '****'.$data;  
+    $empresaRecargoPorc = $reg[8];
+    $empresaRecargoPesos =$reg[9];
+    $empresaRecargoDias =$reg[10];
+    $empresaDescPorc =$reg[22];
+    $empresaDescPesos = $reg[23];
+    $empresaFactorRedondeo = $reg[11]; 
+    $periodo = $reg[0];
+    include_once("../bin/cls/clsReportes.php");
+    $obj = new  reportesCls();
+    $resultado=$obj->preparaImpresionFactura($periodo, $empresa,  $fecha, $empresaRecargoPorc, 
+                $empresaRecargoPesos, $empresaRecargoDias, $empresaDescPorc, $empresaDescPesos, 
+                $empresaFactorRedondeo,$inmueble); 
+    $data=0;
+    $parcial=0;
+    $descuentos=0;
+    $SaldoMora=0;
+    
+    $resultado = $obj->preparaImpresionFacturaRep($periodo, $empresa, $inmueble); 
+    
+    while( $reg = mysqli_fetch_assoc($resultado))
+    {
+        $parcial+=$reg['facturavalor'];
+        $descuentos += (float)$reg['facturadescuento'];
+        $SaldoMora += (float)$reg['facturaMora'];  
+    }
+    $data =    $parcial - $descuentos + $SaldoMora;
+    echo $data;
+    return $data;
 }
 
 function traeSaldo($data) {
