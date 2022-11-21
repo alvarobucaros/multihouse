@@ -59,52 +59,48 @@
                     </div>
                 </div> 
                 <div class="form-group" style='display: none'>                   
-                    <input type="text"  id="control"
-                         ng-model="control" 
-                         value="F" />
-                </div> 
-                
+                    <input type="text"  id="control" ng-model="control" value="F" />
+                </div>                 
             </form>
 	</div>
 	<div class="clearfix"  ng-show="progreso">
-        <img src="img/progress.gif" alt=""/>
-        
-        </div>
+        <img src="img/progress.gif" alt=""/> 
+    </div>
 
-        <div class="col-md-10">
-            <!-- Table to show employee detalis -->
-            <div class="table-responsive">
-                <table class="table table-hover tablex">
-                    <tr>
-                        <th>INMUEBLE</th>
-                        <th>PROPIETARIO</th>
-                        <th>SALDO</th>
-                        <th>Ver</th>
-                        <th>Imprimir</th>
-                    </tr>
-                   
-                    <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-                    <td>{{detail.inmuebleDescripcion}}</td>
-                    <td>{{detail.propietarioNombre}}</td>
-                    <td>{{detail.saldo}}</td>
-                    <!--td>{{detail.facturaInmuebleid}}</td-->
-                    <td>
-                    <button class="btn btn-warning btn-xs"    ng-click="open(detail)"
-                            title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
-                    </td>
-                    <td>
-                    <button class="btn btn-default btn-xs" ng-click="printInfo(detail)" 
-                            confirm="Está seguro ?, {{form_btnImprimir}}?" title="{{form_btnImprimir}}"><span class="glyphicon glyphicon-print"></span></button>
-                    </td>
-                    </tr>
-                </table>
-                    <div class='btn-group'>
-                        <button type='button' class='btn btn-default' ng-disabled='currentPage === 0' ng-click='currentPage = currentPage - 1'>&laquo;</button>
-                        <button type='button' class='btn btn-default' ng-disabled='currentPage === page.no - 1' ng-click='setPage(page.no)' ng-repeat='page in pages'>{{page.no}}</button>
-                        <button type='button' class='btn btn-default' ng-disabled='currentPage >= details.length/pageSize - 1', ng-click='currentPage = currentPage + 1'>&raquo;</button>
-                    </div> 
-            </div>
-        </div>        
+    <div class="col-md-10">
+        <!-- Table to show employee detalis -->
+        <div class="table-responsive">
+            <table class="table table-hover tablex">
+                <tr>
+                    <th>INMUEBLE</th>
+                    <th>PROPIETARIO</th>
+                    <th>SALDO</th>
+                    <th>Ver</th>
+                    <th>Imprimir</th>
+                </tr>
+                
+                <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
+                <td>{{detail.inmuebleDescripcion}}</td>
+                <td>{{detail.propietarioNombre}}</td>
+                <td>{{detail.saldo}}</td>
+                <!--td>{{detail.facturaInmuebleid}}</td-->
+                <td>
+                <button class="btn btn-warning btn-xs"    ng-click="open(detail)"
+                    title="{{form_btnEdita}}"><span class="glyphicon glyphicon-edit"></span></button>
+                </td>
+                <td>
+                <button class="btn btn-default btn-xs" ng-click="printInfo(detail)" 
+                    confirm="Está seguro ?, {{form_btnImprimir}}?" title="{{form_btnImprimir}}"><span class="glyphicon glyphicon-print"></span></button>
+                </td>
+                </tr>
+            </table>
+                <div class='btn-group'>
+                    <button type='button' class='btn btn-default' ng-disabled='currentPage === 0' ng-click='currentPage = currentPage - 1'>&laquo;</button>
+                    <button type='button' class='btn btn-default' ng-disabled='currentPage === page.no - 1' ng-click='setPage(page.no)' ng-repeat='page in pages'>{{page.no}}</button>
+                    <button type='button' class='btn btn-default' ng-disabled='currentPage >= details.length/pageSize - 1', ng-click='currentPage = currentPage + 1'>&raquo;</button>
+                </div> 
+        </div>
+    </div>        
         
    </div>
 

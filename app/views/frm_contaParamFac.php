@@ -737,9 +737,10 @@
  
                 </div>       
                 <div style='display: none'>
+                <input type="text"	 ng-model="registro.empresatercero" id ='empresatercero'  name ='empresatercero' value="{{registro.empresatercero}}"/>
                 <input type="text"	 ng-model="registro.empresaId" id ='empresaId'  name ='empresaId' value="{{registro.empresaId}}"/>
                 <input type="text" ng-model="tipo" id ='empresaId'  name ='tipo' value="F"/>
-   
+                
                 </div>
                 <div id='miExcel' style='display: none'>
                 </div> 

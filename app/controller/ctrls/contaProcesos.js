@@ -4,7 +4,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_titleFactura = 'Facturación del Mes';
     $scope.form_titleRCaja = 'Recibos de Caja (Abonos)';
     $scope.form_titleOtroIngreso = 'Otros Ingresos';
-    $scope.form_anulaRCaja = 'Anula recibo de caja';
+    $scope.form_anulaRCaja = 'Anula recibo de caja'; 
   
     $scope.form_contabiliza='Contabiliza movimiento de Ingresos y Egresos';
     $scope.form_consultasCtaCobro='Consulta de cuentas de cobro';
@@ -38,7 +38,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.form_btnAplicar = 'Aplicar';  
     $scope.form_btnBuscar = 'Buscar';  
     $scope.Mensaje='El periodo ya se facturó';
-    $scope.form_imprimeTodos='Imprime todas o una sola:';
+    $scope.form_imprimeTodos='Imprime facturas: ';
 
     $scope.ultiperfac = 'Ultimo perído facturado: ';
     $scope.periFact = 'Perído a Facturar:';
@@ -57,8 +57,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     $scope.formaPagoT = 'Trasferencia';
     $scope.formaPagoB = 'Banco';
     $scope.titreferencia = 'Referencia';
-    $scope.form_todassi='Ultimo periodo: ';
-    $scope.form_todasno='Una sola: ';
+    $scope.form_todassi=' Todo el periodo ';
+    $scope.form_todasno=' Una sola factura ';
     $scope.form_enMora = 'Saldo en mora';
     $scope.form_corriente = 'Saldo corriente';
     $scope.form_vlrTotal = 'Total deuda';
@@ -117,9 +117,10 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         }); 
     }
    
-    if(procesa === 'A'){
+    if(procesa === 'A'){    
         getCombos($scope.empresa);
-        getInfoAnticipo($scope.empresa);
+        //getInfoAnticipo($scope.empresa);
+        getInfoFac($scope.empresa);
         $scope.reimprime='S';
         $scope.registro.reimprimeCtas='S';
     }
@@ -150,7 +151,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.periodo = rec[1];
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];
-        $scope.valFchCorte = rec[2];
+     //   $scope.valFchCorte = rec[2];
+        $scope.valFchCorte = rec[12].substring(0, 4)+'-'+rec[12].substring(4, 2)+'-30'; 
         $scope.valComprobante = rec[3]+' - ' + rec[4];
         $scope.nrComprobante = rec[3];
         $scope.decDias = rec[5];
@@ -160,13 +162,13 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.recargoDias  = rec[10];
         $scope.factorRedondeo = rec[11];
         $scope.registro.ultimoPeriodo = rec[12];
+        $scope.registro.fchCorte =  $scope.valFchCorte;
         return rec;
          }); 
      }
      
      function getInfoFac(empresa){
        $http.post('modulos/mod_contaprocesos.php?op=par',{'op':'par', 'empresa':empresa}).success(function(data){ 
-
         var rec=data.split('||');
         $scope.valUltiperfac = rec[12];
         $scope.valPreriFact = rec[1];
@@ -180,6 +182,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         $scope.recargoDias  = rec[10];
         $scope.factorRedondeo = rec[11];
         $scope.periCierreFactura = rec[12];
+        $scope.valFchCorteUlt = rec[24];
    
         $scope.factura = true; 
         $scope.imprime = false; 
@@ -377,7 +380,7 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         }
         if (err ===''){
         datos=empresa+"||"+prop+"||"+inmu;
-        alert(datos);
+   //     alert(datos);
         $http.post('modulos/mod_contaprocesos.php?op=saldoFac',{'op':'saldoFac','datos':datos}).success(function(data){        
         $scope.details = data;
          });
@@ -469,14 +472,20 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             $scope.referencia='';
         }
     };
+
+    $scope.todosBtn = function(op){
+        $scope.progress = false;
+    if (op==='N'){ 
+        $scope.progress = true;}
+    }
     
     $scope.imprimeCtaCobro = function(){
         prop=$scope.registro.propietario;
         inmu=$scope.registro.Inmueble;
         reimp=$scope.registro.reimprimeCtas;
-        peri=$scope.registro.ultimoPeriodo;
+        peri=$scope.registro.valUltiperfac; 
         fecha = $scope.valFchCorte;
-       
+//  alert(prop+' '+inmu+' '+reimp+' '+peri+' '+fecha+' --'+$scope.valUltiperfac)      
         if (prop == undefined){prop=0;}
         if (inmu == undefined){inmu=0;}
         if (reimp == undefined){       
@@ -491,19 +500,20 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
             }else { 
                 if(prop>0 && inmu>0){
                     alert('Solamente seleccione o un inmueble o un propietario no los dos');
-                    return;                }
+                    return; 
+                }
 
             empresa=$scope.empresa;
-            location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri;
+            location.href="reports/rptFacturas.php?pe="+peri+"&em="+empresa+"&fc="+fecha+"&inmu="+inmu+"&prop="+prop; 
             } 
          }
          if(reimp==='S'){ 
             empresa=$scope.empresa;
-            location.href="reports/rptFacturas.php?pe="+peri+"&em="+empresa+"&fc="+fecha; 
+            prop=0;
+            inmu=0;
+            location.href="reports/rptFacturas.php?pe="+peri+"&em="+empresa+"&fc="+fecha+"&inmu="+inmu+"&prop="+prop; 
             }     
-//        empresa=$scope.empresa;
-//        location.href="reports/rptCtaCbro.php?op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmu+"&pe"+peri; 
-    };
+  };
     
     $scope.consultaCtaCobro = function($caso){
         empresa=$scope.empresa;

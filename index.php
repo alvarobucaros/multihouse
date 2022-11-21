@@ -21,7 +21,7 @@
                             <div class="col-md-3">
                                 <div class="fh5co-navbar-brand">
                                     <a class="fh5co-logo" href="http://www.aortizc.com">
-                                    <img src="app/img/logo.png" alt=""/>
+                                   <img src="app/img/logo.png"  width="100" height="50" alt=""/></a>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -145,7 +145,7 @@
                                             <div class="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 text-center">
                                                 <div class="intro animate-box">
                                                     <h1>Acerca de nosotros</h1>
-                                                    <h4>Atomingenieria es una empresa dedicada al desarrollo y asesoria en procesos de informática</h4>
+                                                    <h4>AORTIZC es una empresa dedicada al desarrollo y asesoria en procesos de informática</h4>
 
                                                 </div>							
 
@@ -196,7 +196,8 @@
                                     <div class="col-md-12 text-center ">
                                             <div class="footer-widget border">
                                                     <p class="pull-left"><small>&copy; AortizC. 2018, 2020, 2022 - Derechos reservados</small></p>
-                                                    <p class="pull-right"><small> Diseño de AortizC</p>
+                                                    <p class="pull-right"> 
+                                                        <a class="fh5co-logo" href="https://www.aortizc.com"><img src="app/img/logoChiq.png"  width="80" height="30" alt=""/></a>
 
                                             </div>
                                     </div>

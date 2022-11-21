@@ -28,11 +28,12 @@ switch ($op)
  
     function  leeRegistros($data) 
     { 
-       global $objClase;
-      $con = $objClase->conectar(); 
+        global $objClase;
+        $con = $objClase->conectar(); 
+        $empresa = $data->empresa;
        { 
             $query = "SELECT  cptosid, cptosEmpresa, cptosCodigo, cptosDetalle, cptosValor, cptosIva, cptosEstado" 
-                    . " FROM contafactcptos ORDER BY cptosCodigo ";             
+                    . " FROM contafactcptos WHERE cptosEmpresa = " . $empresa ."  ORDER BY cptosCodigo ";             
             $result = mysqli_query($con, $query); 
             $arr = array(); 
             if(mysqli_num_rows($result) != 0)  

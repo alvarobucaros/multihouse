@@ -35,17 +35,18 @@ function leeRegistros($data) {
     $con = $objClase->conectar();
     $empresa = $data->empresa;
     $control = $data->control;
-    $qry = " CASE compTipo WHEN 'C' THEN 'Cbnte' ELSE 'Oper' END nonTipo";
+    $qry = " CASE compTipo WHEN 'C' THEN 'Comprobante' ELSE 'Operacion' END nonTipo";
     $wen = " AND compTipo IN ('C','O') ";
     if ($control == 'C2') {
-        $qry = " CASE compTipo WHEN 'C' THEN 'Cbnte' ELSE 'In/Eg' END nonTipo";
-        $wen = " AND compTipo = 'O' ";
+        $qry = " CASE compTipo WHEN 'I' THEN 'Ingresos' ELSE 'Gastos' END nonTipo";
+        $wen = " AND compTipo IN ('I','G') ";
     } {
         $query = "SELECT  compId, compEmpresaId, compCodigo, compTipo, " . $qry .
                 ", compNombre, compDetalle, " .
                 " compConsecutivo, compctadb0, compctadb1, compctadb2, compctacr0, compctacr1, compctacr2, " .
                 " compActivo, compcpbnte " .
                 " FROM contacomprobantes WHERE compEmpresaId = " . $empresa . $wen . " ORDER BY compTipo, compNombre ";
+               
         $result = mysqli_query($con, $query);
         $arr = array();
         if (mysqli_num_rows($result) != 0) {

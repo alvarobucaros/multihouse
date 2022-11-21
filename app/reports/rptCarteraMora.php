@@ -42,10 +42,10 @@ require_once ('fpdf.php');
 
         $this->archivo = 'CarteraDetalaldoEdades';
         if($op==='R'){$this->archivo = 'CarteraResumenEdades';}
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
      
         $titulo="CARTERA POR EDADES CORTE A ".$fc;
-        $this->Image($logo,$der+5,14,36,20);
+        $this->Image($logo,$der+8,10,33,16);
 
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($nomEmpre)+6;

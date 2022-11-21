@@ -17,7 +17,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_factdefcontabiliza100 = 'NO';
     $scope.form_factdefcontabiliza101 = 'SI';
 
-    $scope.form_factdefid = 'ID';
+    $scope.form_factdefid = 'ID'; 
     $scope.form_factdefempresa = 'EMPRESA';
     $scope.form_factdefnro = 'NRO';
     $scope.form_factdefcliente = 'CLIENTE';
@@ -137,14 +137,15 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
 
  
 // Function to add toggle behaviour to form
-    $scope.formToggle =function(){
-        $('#idForm').slideToggle();
-        $scope.factdefid=0;
-        $('#idForm').css('display', 'none');
-    };
+    // $scope.formToggle =function(){
+    //     $('#idForm').slideToggle();
+    //     $scope.factdefid=0;
+    //     $('#idForm').css('display', 'none');
+    //     alert('toggle 1');
+    // };
 
     $scope.show_form = true;
-    // Function to add toggle behaviour to form
+
     $scope.formToggle =function(){
         $('#idForm').slideToggle();
         empresa = $scope.empresa;
@@ -152,15 +153,17 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.registro = angular.copy(defaultForm);
         $http.post('modulos/mod_contafactdef.php?op=m',{'op':'m', 'empresa':empresa}).success(function(data){
         $scope.registro.factdefnro = data;
-        }); 
+        numero =  $scope.registro.factdefnro
+        $scope.detalles(numero);
+        });
+       
     };
 
-    $scope.detalles = function(info, op){
-        alert('trae modal con detalles de conceptos de factura '+op);
+    $scope.detalles = function(op){
         $scope.IsVisible = $scope.IsVisible ? false : true;
-        $http.post('modulos/mod_contafactdef.php?op=d',{'op':'d', 'empresa':empresa}).success(function(data){
-        $scope.details = data;
-        $scope.configPages();   
+        empresa = $('#e').val();
+        $http.post('modulos/mod_contafactdef.php?op=d',{'op':'d', 'empresa':empresa, 'numero':op}).success(function(data){
+        $scope.details = data;  
         }); 
     };
     
@@ -168,7 +171,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         cp = info.factdefconcepto; 
         let indice = $scope.operators1.findIndex(ind => ind.cptosid === cp);
         $scope.registro.factdefdetalle = $scope.operators1[indice].cptosDetalle;
-        empresa = info.factdefempresa; //scope.empresa   
+        empresa = info.factdefempresa; 
         $http.post('modulos/mod_contafactdef.php?op=tc',{'op':'tc', 'empresa':empresa,'concepto':cp}).success(function(data){
         $scope.miData = data[0];
         valor = parseFloat($scope.miData.cptosValor)
@@ -212,7 +215,7 @@ $scope.exporta = function(){
     $scope.muestraInfo =function(info)
     { 
         empresa = $('\#e').val(); 
-    alert('muestra la info de '+ empresa+' '+info.factdefid);  
+        alert('muestra la info de '+ empresa+' '+info.factdefid);  
     };
 
     $scope.updateInfo =function(info)
@@ -225,7 +228,7 @@ $scope.exporta = function(){
         if($('#factdefcliente').val()===''){er+='falta cliente\n';}
         if($('#factdeffechcrea').val()===''){er+='falta fecha crea\n';}
         if($('#factdeffechvence').val()===''){er+='falta fecha vence\n';}
-        if($('#factdeffechvence').val()>$('#factdeffechcrea').val()){er+='fecha factura mayor a fecha vencimiento\n';}
+        if($('#factdeffechcrea').val()>$('#factdeffechvence').val()){er+='fecha factura mayor a fecha vencimiento\n';}
         if($('#factdefvalor').val()===''){er+='falta valor\n';}
         if($('#factdefiva').val()===''){er+='falta % iva\n';}
         if($('#factdefsaldo').val()===''){er+='falta valor IVA\n';}
@@ -241,7 +244,7 @@ $scope.exporta = function(){
             'factdefcliente':terc, 'factdeffechcrea':info.factdeffechcrea, 
             'factdeffechvence':info.factdeffechvence, 'factdefvalor':info.factdefvalor, 
             'factdefiva':info.factdefiva, 'factdefsaldo':info.factdefsaldo, 'factdefneto':info.factdefneto, 
-            'factdefcontabiliza':'N','factdefconcepto':cpto, 'factdefcptodetalle':info.factdefdetalle}).success(function(data){
+            'factdefcontabiliza':'N','factdefconcepto':cpto, 'factdefcptodeta':info.factdefdetalle}).success(function(data){
             var ret = data.split('||');
         if (ret[0] === 'Ok') {
             $scope.factid = (ret[1])

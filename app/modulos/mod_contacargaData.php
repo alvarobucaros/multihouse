@@ -212,9 +212,9 @@ class opcCargaData {
         include_once("../bin/cls/clsConection.php");
         $objClase = new DBconexion();
         $con = $objClase->conectar();
-//Numero Doc	 Inmuebleid	 Cedula Propietario	 Servicio	 Periodo	 Fecha Factura	 Fecha Vence	 Saldo	 Detalle	 Tipo
-//1	 AP101	19295811	Administracion Apartamentos tipo 1	201710	01/10/2017	30/10/2017	110000	Administración Apartamento	F
-
+//Numero Doc	 Inmuebleid	 Cedula Propietario	 Servicio	 Periodo	 Fecha Factura	 Fecha Vence Valor	 Saldo	 Detalle	 Tipo
+//1	 AP101	19295811	Administracion Apartamentos tipo 1	201710	01/10/2017	30/10/2017 110000	110000	Administración Apartamento	F
+//2; A202; 1016; FRA-1; 202112; 01/12/2021; 30/12/2021; 160000; 160000; Factura mensual
         $array = explode(';', $data);
         $retorno = 'Importacion Correcta';
         $respuesta = " proceso ";
@@ -227,20 +227,23 @@ class opcCargaData {
         $periodo = $array[4];
         $fechaFac = substr($array[5], 6, 4) . '-' . substr($array[5], 3, 2) . '-' . substr($array[5], 0, 2);
         $fechaVnc = substr($array[6], 6, 4) . '-' . substr($array[6], 3, 2) . '-' . substr($array[6], 0, 2);
-        $saldo = $array[7];
-        $detalle = $array[8];
-        //    $principal = $array[9];
+        $valor = $array[7];
+        $saldo = $array[8]; 
+        $detalle = $array[9];
+        $principal = 'F';
+
         $inmuebleId = 0;
         $propieId = 0;
-
-        $query = "SELECT count(*) as Nr FROM containmuebles WHERE inmuebleEmpresaId = " . $empresa .
+        $inmueblePrincipal='';
+        $inmuebleDepende='';
+        $query = "SELECT count(*) as nro FROM containmuebles WHERE inmuebleEmpresaId = " . $empresa .
                 " AND inmuebleCodigo = '" . trim($inmueble) . "' ";
         $resultado = mysqli_query($con, $query);
         while ($row = mysqli_fetch_assoc($resultado)) {
-            $nr = $row['Nr'];
+            $nro = $row['nro'];
         }
-
-        if (intval($nr) === 1) {
+    
+        if ($nro > 0) {
             $query = "SELECT  inmuebleId, inmueblePrincipal, inmuebleDepende " .
                     " FROM containmuebles WHERE inmuebleEmpresaId = " . $empresa .
                     " AND inmuebleCodigo = '" . trim($inmueble) . "' ";
@@ -252,12 +255,12 @@ class opcCargaData {
             }
         }
 
-        if ($inmueblePrincipal = 'SI') {
+        if ($inmueblePrincipal = 'P') {
             $query = "SELECT inmuebleId FROM containmuebles WHERE inmuebleEmpresaId = " . $empresa .
                     " AND inmuebleCodigo = '" . trim($inmuebleDepende) . "' ";
             $resultado = mysqli_query($con, $query);
             while ($row = mysqli_fetch_assoc($resultado)) {
-                $inmuebleId = $row['inmuebleId'];
+                $inmuebleId = $row['inmuebleId'];            
             }
         }
 
@@ -268,25 +271,24 @@ class opcCargaData {
             $nr = $row['Nr'];
         }
 
-        if (intval($nr) === 1) {
+        if ($nr > 0) {
             $query = "SELECT propietarioId FROM contapropietarios WHERE propietarioEmpresaId  =  " . $empresa .
                     "  AND  propietarioCedula = '" . $cedPropietario . "'";
-
             $resultado = mysqli_query($con, $query);
             while ($row = mysqli_fetch_assoc($resultado)) {
                 $propieId = $row['propietarioId'];
-            }
+            }   
         }
 
         $query = "SELECT count(*) Nr FROM contaservicios WHERE servicioEmpresaId = " . $empresa .
-                "  AND ServicioDetalle = '" . $servicio . "' ";
+                "  AND ServicioCodigo = '" . $servicio . "' ";
         $result = mysqli_query($con, $query);
         while ($reg = mysqli_fetch_assoc($result)) {
             $nr = $reg['Nr'];
         }
-        if (intval($nr) === 1) {
+        if ($nr > 0) {
             $query = "SELECT ServicioId FROM contaservicios WHERE servicioEmpresaId = " . $empresa .
-                    "  AND ServicioDetalle = '" . $servicio . "' ";
+                    "  AND ServicioCodigo = '" . $servicio . "' ";
             $result = mysqli_query($con, $query);
             while ($reg = mysqli_fetch_assoc($result)) {
                 $ServicioId = $reg['ServicioId'];
@@ -296,13 +298,14 @@ class opcCargaData {
                     " ServicioFechaDesde, ServicioFechaHasta, ServicioValor, ServicioPrioridad, ServicioTipo, ServicioMora,  " .
                     " ServicioMoraPorcentaje, servicioMoraValor, ServicioCuentaDB, ServicioCuentaCR, ServicioPPporcentaje,  " .
                     " ServicioPPvalor, ServicioActivo, ServicioAmbito, servicioClasificacionId) VALUES('" .
-                    $empresa . "', 'COD','" . $servicio . "','0000','','',0,1,'C','S',0,0,'','',0,0,'A','T',0)";
-            $result = mysqli_query($con, $query);
-
+                    $empresa . "', '" . $servicio . "', '" . $servicio . "', '" . $periodo .
+                    "', '" . $fechaFac . "', '" . $fechaFac . "', '" . $valor . "',1,'C','S',0,0,'','',0,0,'A','T',0)";
+            $result = mysqli_query($con, $query); 
+            
             $query = "SELECT LAST_INSERT_ID() as id";
             $result = mysqli_query($con, $query);
             while ($reg = mysqli_fetch_assoc($result)) {
-                $ServicioId = $reg['id'];
+                $ServicioId = $reg['id'];                
             }
         }
 
@@ -312,9 +315,11 @@ class opcCargaData {
                 " facturafechacontrol, facturasaldo, facturaprioridad, facturadescuento, facturaMora, facturaNroReciboPago, " .
                 " facturaTipo,facturaPropietario,facturaDiasMora, facturaMoraInmuebId, facturaAcuerdo) VALUES ('" .
                 $empresa . "', '" . $numeroDoc . "', '" . $inmuebleId . "', '" . $ServicioId . "', '" .
-                $periodo . "', 1, " . $saldo . ", '" . $detalle . "', '" . $fechaFac . "', '" . $fechaVnc . "', '" .
+                $periodo . "', 1, " . $valor . ", '" . $detalle . "', '" . $fechaFac . "', '" . $fechaVnc . "', '" .
                 $fechaVnc . "', " . $saldo . ",1,0,0,0,'F'," . $propieId . ",0,0,0)";
-        $resultado = mysqli_query($con, $query);
+    echo($query);
+ 
+                $resultado = mysqli_query($con, $query);
     }
 
     function importaPUCC($empresa, $file, $data) {

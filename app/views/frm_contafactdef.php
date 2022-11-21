@@ -102,22 +102,11 @@
                     <input type="text" class="form-control mitexto mivalor" id="factdefneto" name="factdefneto"
                          ng-model="registro.factdefneto" readonly="yes"
                          value="{{detail.factdefneto|currency:'$' : 'symbol' : '1.0-0'}}" />
-<!--                    <p>{{Value |currency:'INR':'symbol':'3.1-1'}}</p>-->
+
                     </div>
                 </div> 
 
-<!--                <div class="form-group alto12">
-                    <label class="control-label milabel col-md-4" for="factdefcontabiliza">{{form_factdefcontabiliza}}</label>
-                    <div class="btn-group  col-md-6"  data-toggle="buttons">
-                   <label>
-                      <input type="radio" name ="factdefcontabiliza" ng-model="registro.factdefcontabiliza" value="N" >{{form_factdefcontabiliza100}}
-                   </label>
-                   <label>
-                      <input type="radio" name ="factdefcontabiliza" ng-model="registro.factdefcontabiliza" value="S" >{{form_factdefcontabiliza101}}
-                   </label>
-                    </div>
-                </div> 
-                <br/>-->
+
                 <div class="form-group alto12">
                     <div class="col-md-4">
                         <button type="button" value="Detalles" class="btn btn-custom pull-right btn-xs" 
@@ -159,6 +148,21 @@
                     <th>VLR IVA</th>
                     <th>SUBTOTAL</th>
                 </tr>
+                <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
+                    <td style="text-align:left;">{{detail.factdefcptodeta}}</td>
+                    <td style="text-align:right;">{{detail.factdefvalor|currency:'$' : 'symbol' : '1.0-0'}}</td>  
+                    <td style="text-align:right;">{{detail.factdefiva|currency:'%' : 'symbol' : '1.0-0'}}</td>
+                    <td style="text-align:right;">{{detail.factdefsaldo|currency:'$' : 'symbol' : '1.0-0'}}</td>
+                    <td style="text-align:right;">{{detail.factdefneto|currency:'$' : 'symbol' : '1.0-0'}}</td>
+                    <td>
+                    <button class="btn btn-warning btn-xs" ng-click="editInfo(detail)" title="{{form_btnEdita}}">
+                        <span class="glyphicon glyphicon-edit"></span></button>
+                    </td>
+                    <td>
+                    <button class="btn btn-warning btn-xs" ng-click="imprimeInfo(detail)" title="{{form_btnElimina}}">
+                         <span class="glyphicon glyphicon-trash"></span></button>
+                    </td>
+                </tr>
             </table>
                         
             <div class="col-md-4">
@@ -167,12 +171,9 @@
             </div>
         </div>
         <div class="col-md-10">
-            <!-- Table to show employee detalis -->
             <div class="table-responsive">
                 <table class="table table-hover tablex">
                     <tr>
-<!--                    <th>ID</th>
-                        <th>EMPRESA</th>-->
                         <th>FACTURA</th>
                         <th>CLIENTE</th>
                         <th>FECHCREA</th>
@@ -181,9 +182,6 @@
                     </tr>
                    
                     <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-<!--                    <td>{{detail.factdefid}}</td>
-                    <td>{{detail.factdefempresa}}</td>
-                        <td>{{detail.factdefcliente}}</td>-->
                     <td style="text-align: center;">{{detail.factdefnro}}</td>
                     <td>{{detail.terceroNombre}}</td>  
                     <td>{{detail.factdeffechcrea}}</td>

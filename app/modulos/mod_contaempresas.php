@@ -217,7 +217,7 @@ function actualiza($data) {
                 $empresaProformaFac . "', '" . $empresatercero . "','".$empresaActividad . "','" .  
                 $empresaConsecFact . "','" .$empresaObservaciones ."','".$empresaConsecNDb."','".
                 $empresaConsecNCr.".')"; 
-    echo $query;
+    //echo $query;
         mysqli_query($con, $query);
         echo 'Ok'.$query;
     } else {
@@ -228,7 +228,7 @@ function actualiza($data) {
                 . "empresaFchModificacion = '" . $empresaFchModificacion . "', "
                 . "empresaFchVigencia = '" . $empresaFchVigencia . "', empresaPeriodoActual = '" . $empresaPeriodoActual . "', "
                 . "empresaTwiter = '" . $empresaTwiter . "', empresaFacebook = '" . $empresaFacebook . "',"
-                . " empresaWeb = '" . $empresaWeb . "', empresaEmail = '" . $empresaEmail . "', "
+                . "empresaWeb = '" . $empresaWeb . "', empresaEmail = '" . $empresaEmail . "', "
                 . "empresaActiva = '" . $empresaActiva . "', empresaPuertoCorreo = '" . $empresaPuertoCorreo . "', "
                 . "empresaRepresentante = '" . $empresaRepresentante . "', "
                 . "empresaIdentifRepresentante = '" . $empresaIdentifRepresentante . "', "
@@ -270,10 +270,10 @@ function actualiza($data) {
                 . "empresatercero = '" . $empresatercero . "', "
                 . "empresafacturactaiva = '" . $empresafacturactaiva . "', empresaRegimen = '" . $empresaRegimen . "', "
                 . "empresaporcentajeiva = '" . $empresaporcentajeiva ."',"
-                . " empresaActividad= '" . $empresaActividad . "', empresaConsecFact = '" . $empresaConsecFact . "', "
-                . " empresaObservaciones= '" . $empresaObservaciones . "', " 
-                . " empresaConsecNDb= '" . $empresaConsecNDb . "', " 
-                . " empresaConsecNCr= '" . $empresaConsecNCr . "' " 
+                . "empresaActividad= '" . $empresaActividad . "', empresaConsecFact = '" . $empresaConsecFact . "', "
+                . "empresaObservaciones= '" . $empresaObservaciones . "', " 
+                . "empresaConsecNDb= '" . $empresaConsecNDb . "', " 
+                . "empresaConsecNCr= '" . $empresaConsecNCr . "' " 
                 . " WHERE empresaId = " . $empresaId;
 //echo $query;
       mysqli_query($con, $query);

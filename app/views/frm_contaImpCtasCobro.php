@@ -10,10 +10,12 @@
                     <label class=" milabel  col-md-4" for="reimprimeCtas">{{form_imprimeTodos}}</label>
                     <div class="btn-group  col-md-6"  data-toggle="buttons">
                    <label>
-                      <input type="radio" name ="reimprimeCtas" id="reimprimeSi" ng-model="registro.reimprimeCtas" value="S" >{{form_todassi}}
+                      <input type="radio" name ="reimprimeCtas" id="reimprimeSi" ng-click="todosBtn('S')"
+                      ng-model="registro.reimprimeCtas" value="S" >{{form_todassi}}
                    </label>
                    <label>
-                      <input type="radio" name ="reimprimeCtas" id="reimprimeNo" ng-model="registro.reimprimeCtas" value="N" >{{form_todasno}}
+                      <input type="radio" name ="reimprimeCtas" id="reimprimeNo" ng-click="todosBtn('N')"
+                      ng-model="registro.reimprimeCtas" value="N" >{{form_todasno}}
                    </label>
                     </div>
                 </div> 
@@ -25,7 +27,7 @@
                    <div class="col-md-6">
                        <input type="text"width="12" 
                               class="form-control mitexto fa fa-calendar fa-lg" id="ultimoPeriodo" name="ultimoPeriodo"
-                           ng-model="registro.ultimoPeriodo" />
+                           ng-model="valUltiperfac" value="{{valUltiperfac}}" />
                     </div>
                 </div>                 
                 <div class="form-group">
@@ -33,31 +35,29 @@
                    <div class="col-md-6">
                     <input type="date"  width="12" 
                          class="form-control mitexto fa fa-calendar fa-lg" id="fchCorte" name="fchCorte"
-                         ng-model="valFchCorte" 
-                         value="{{valFchCorte}}" />
+                         ng-model="valFchCorteUlt" 
+                         value="{{valFchCorteUlt}}" />
                     </div>
                 </div> 
-  
-                
-                <div class="form-group">
-                   <label class=" milabel col-md-4" for="Inmuebles">{{inmueble}}</label>
-                   <div class="col-md-5">
-                   <select id='Inmuebles' name='Inmuebles' ng-model='registro.Inmueble'>
-                   <option ng-repeat='operator0 in operators0' value = " {{operator0.inmuebleId}}">{{operator0.inmuebleDescripcion}}</option>
-                   </select>
- 
-                   </div>
-               </div>   
+                <div id='progreso' ng-show="progress">
+                    <div class="form-group">
+                    <label class=" milabel col-md-4" for="Inmuebles">{{inmueble}}</label>
+                    <div class="col-md-5">
+                    <select id='Inmuebles' name='Inmuebles' ng-model='registro.Inmueble'>
+                    <option ng-repeat='operator0 in operators0' value = " {{operator0.inmuebleId}}">{{operator0.inmuebleDescripcion}}</option>
+                    </select>
+                    </div>
+                </div>   
 
-                <div class="form-group">
-                   <label class=" milabel col-md-4" for="propietarios">{{propietario}}</label>
-                   <div class="col-md-5">
-                   <select id='propietarios' name='propietarios' ng-model='registro.propietario'>
-                   <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
-                   </select>
-                   </div>
-               </div> 
-
+                    <div class="form-group">
+                    <label class=" milabel col-md-4" for="propietarios">{{propietario}}</label>
+                    <div class="col-md-5">
+                    <select id='propietarios' name='propietarios' ng-model='registro.propietario'>
+                    <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
+                    </select>
+                    </div>
+                </div> 
+               </div>
                 <div class="form-group">
                     <div class="form-group">
                         <div class="col-md-2">
@@ -72,10 +72,8 @@
                     <input type="text"  id="periodo" ng-model="periodo" /> 
                 </div> 
             </form>
-	</div>
-
-     
-   </div>
+	    </div>  
+    </div>
 
 <script src="js/ui-bootstrap-tpls-0.11.0.js" type="text/javascript"></script>
 <script src="controller/ctrls/contaProcesos.js" type="text/javascript"></script>

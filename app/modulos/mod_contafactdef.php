@@ -7,18 +7,23 @@ $op = mysqli_real_escape_string($con, $data->op);
 
 switch ($op)
 {
-    case 'r':
-        leeRegistros($data);
-        break;
-    case 'b':
-        borra($data);
-        break;
     case 'a':
         actualiza($data);
         break; 
     case 'am':
         actualizaDetalle($data);
-        break; 
+        break;        
+    case 'b':
+        borra($data);
+        break;
+    case 'd':
+        Detalles($data);
+        break;
+    case 'r':
+        leeRegistros($data);
+        break;
+ 
+ 
     case 'u':
         unRegistro($data);
         break;
@@ -38,7 +43,30 @@ switch ($op)
         lista1($data);
         break;    
 }
-  
+
+function  detalles($data) 
+{ 
+    global $objClase;
+    $empresa = $data->empresa;
+    $numero = $data->numero;
+    $con = $objClase->conectar(); 
+   { 
+    $query = " SELECT factdefid, factdefvalor, factdefiva, factdefsaldo, ";
+    $query .= " factdefneto, factdefcptodeta ";
+    $query .= " FROM contafactdef ";
+    $query .= " WHERE factdefempresa = " . $empresa ;
+    $query .= "  AND factdefnro = " .$numero . " order by factdefid desc ";
+    $result = mysqli_query($con, $query); 
+    $arr = array(); 
+    if(mysqli_num_rows($result) != 0)  
+    { 
+        while($row = mysqli_fetch_assoc($result)) { 
+            $arr[] = $row; 
+        } 
+    } 
+    echo $json_info = json_encode($arr); 
+} 
+}
 
  
     function  leeRegistros($data) 
@@ -76,7 +104,6 @@ switch ($op)
  
     function actualiza($data)
     {     
-     //   echo($data->factdefcptodetalle);
        global $objClase;
         $con = $objClase->conectar(); 
         $op =  $data->op;	 
@@ -92,8 +119,8 @@ switch ($op)
         $factdefneto =  $data->factdefneto; 
         $factdefcontabiliza =  $data->factdefcontabiliza; 
         $factdefconcepto = $data->factdefconcepto;
-        $factdefcptodetalle = $data->factdefcptodetalle;
-        
+        $factdefcptodeta = $data->factdefcptodeta;
+              
         if($factdefid  == 0) 
         { 
             $query = "INSERT INTO contafactdef(factdefempresa, factdefnro, factdefcliente, factdeffechcrea,  ";
@@ -102,8 +129,7 @@ switch ($op)
             $query .= "  VALUES ('" . $factdefempresa."', '".$factdefnro."', '".$factdefcliente."', '".
                    $factdeffechcrea."', '".$factdeffechvence."', '".$factdefvalor."', '".$factdefiva."', '".
                    $factdefsaldo."', '".$factdefneto."', '".$factdefcontabiliza."', '".
-                   $factdefconcepto."', '".$factdefcptodetalle."')"; 
-          
+                   $factdefconcepto."', '".$factdefcptodeta."')";           
             mysqli_query($con, $query);
             $last = mysqli_insert_id($con);
             echo 'Ok||'.$last;

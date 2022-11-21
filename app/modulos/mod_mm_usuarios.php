@@ -28,16 +28,19 @@ switch ($op) {
 }
 
 function leeRegistros($data) {
+    $empresa = $data->empresa;
     global $objClase;
     $con = $objClase->conectar();
     {
-        $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, usuario_celular, " .
-                " usuario_password, CASE usuario_tipo_acceso WHEN 'S' THEN 'Super' WHEN 'A' THEN 'Admin' " .
-                " WHEN 'K' THEN 'Ctble' ELSE 'Consulta' END usuario_tipo_acceso, " .
-                " usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar, " .
-                " usuario_estado, CASE usuario_tipodoc WHEN 'C' THEN 'C.C.' WHEN 'E' THEN 'C.E.' ELSE  'OTRO' END usuario_tipodoc, usuario_nrodoc, usuario_direccion, usuario_ciudad"
-                . " FROM mm_usuarios ORDER BY usuario_nombre ";
+        $query = "SELECT  usuario_id, usuario_empresa, usuario_nombre, usuario_email, usuario_celular, ";
+        $query .= " usuario_password, CASE usuario_tipo_acceso WHEN 'S' THEN 'Super' WHEN 'A' THEN 'Admin' WHEN 'K' THEN 'Ctble' ELSE 'Consulta' END usuario_tipo_acceso, ";
+        $query .= " usuario_fechaCreado, usuario_fechaActualizado, usuario_perfil, usuario_avatar,  usuario_estado,";
+        $query .= " CASE usuario_tipodoc WHEN 'C' THEN 'C.C.' WHEN 'E' THEN 'C.E.' ELSE  'OTRO' END usuario_tipodoc, ";
+        $query .= " usuario_nrodoc, usuario_direccion, usuario_ciudad";
+        $query .= " FROM mm_usuarios WHERE usuario_empresa = " .$empresa;
+        $query .= " ORDER BY usuario_nombre ";
         $result = mysqli_query($con, $query);
+
         $arr = array();
         if (mysqli_num_rows($result) != 0) {
             while ($row = mysqli_fetch_assoc($result)) {

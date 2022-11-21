@@ -2,9 +2,10 @@ var app = angular.module('app', []);
 app.controller('mainController',['$scope','$http', function($scope,$http){
    
     $scope.form_titleImportar = 'Importa Información desde CSV  Saldos de cartera';
-    $scope.nota1 = 'Importante !!!, esto borra toda la cartera del sistema. La información debe estar en formato .CSV cada campo separado por un punto y coma (;) y en un solo documento'
+    $scope.nota0 = 'Importante !!!, esto borra toda la cartera del sistema.'
+    $scope.nota1 = 'La información debe estar en formato .CSV cada campo separado por un punto y coma (;) y en un solo documento'
     $scope.nota2 = 'El formato debe ser: '
-    $scope.nota3 = 'Numero Doc; Inmuebleid; Cédula Propietario; Servicio; Periodo; Fecha Factura; Fecha Vence; Saldo; Detalle; Tipo';
+    $scope.nota3 = 'Numero Factura; Código del inmueble; Cédula Propietario; Servicio; Periodo; Fecha Factura (D/M/A); Fecha Vence (D/M/A); Valor Factura; Saldo Actual; Detalle';
 
     $scope.form_subtit1 = '';
     $scope.form_subtit2 = 'Crea la lista de ervicios prestados por el Conjunto';
@@ -62,19 +63,19 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
                 data =  $.csv.toArrays(csvData); 
                 var name =  $('#archivo').val();
                 var empresa  = $('#empresa').val();
-                if (confirm('importa los datos a la tabla  desde el archivo... '+name)){
+                if (confirm('importa los saldos a la tabla  desde el archivo... '+name)){
                     $scope.progress = true;
                     condicion = empresa
                     $.post("inc/opcGrales.php", {accion:'borraSaldos', condicion:condicion}, function(dato){ 
                     }) 
 
-                     for(i=1;i<data.length;i++){
+                     for(i=0;i<data.length;i++){
                         condicion = empresa+'||'+name+'||'+data[i]+'||S';    
                         $.post("inc/opcGrales.php", {accion:'importaDatos', condicion:condicion}, function(data){ 
                          
                     }) 
                      }
-                      alert('Importó -' + i + '- pagos. correcto !!! + data');
+                      alert('Importó -' + i + '- registros. correcto !!! + data');
                       $scope.progress = false;
                     } else {
                         alert('No importo registros!');

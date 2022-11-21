@@ -44,6 +44,7 @@
     <div class="form-group">
         <div class="col-md-1"></div>
             <div class="col-md-8">
+            <span> <p>{{nota0}}</p> </span>
             <span> <p>{{nota1}}</p> </span>
             <span> <p>{{nota2}}</p> </span>
             <span> <p>{{nota3}}</p> </span>

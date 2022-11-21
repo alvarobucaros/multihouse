@@ -196,7 +196,14 @@ function leeParametros($data) {
             $ano = substr($periodoFac, 0, 4);
             $mes = substr($periodoFac, 4, 2);
             $dia = date("d", (mktime(0, 0, 0, $mes + 1, 1, $ano) - 1));
-            $fecCorte = $ano . '-' . $mes . '-' . $dia;
+          //  $fecCorte = $ano . '-' . $mes . '-' . $dia;   
+            $fecCorte = $ano . '-' . $mes . '-01';
+
+            $periodoFac = $row['empresaPeriCierreFactura'];
+            $ano = substr($periodoFac, 0, 4);
+            $mes = substr($periodoFac, 4, 2);
+            $fecAnterio = $ano . '-' . $mes . '-01';
+
             $conseRC = $row['empresaConsecRcaja'];
             $consecutivo = $row['empresaConsecFactura'];
             $comprobante = $row['empresaCompFra'];
@@ -220,7 +227,7 @@ function leeParametros($data) {
             $empresatercero = $row['empresatercero'];  
             $query = "SELECT count(*) as nro FROM contafactura where facturaEmpresaid = " . $empresa .
                     " AND facturaperiodo = '" . $nuevoPeriodo . "' ";
-// echo $query;  
+ 
             $result = mysqli_query($con, $query);
             $rowcount=0;
             if (mysqli_num_rows($result) != 0) {
@@ -232,8 +239,7 @@ function leeParametros($data) {
             if ($comprobante === '') {
                 $msg = 'ERR. No se ha definido el tipo de comprobante, ir a parámetros';
             } else {
-                $nomComprobante = nombreComprobante($empresa, $comprobante);
-// echo  $nomComprobante;               
+                $nomComprobante = nombreComprobante($empresa, $comprobante);               
                 $msg = $periodoFac . '||' . $nuevoPeriodo . '||' . $fecCorte . '||' . $comprobante . '||' .
                         $nomComprobante . '||' . $descDias . '||' . $consecutivo . '||' . $rowcount .
                         '||' . $RecargoPorc . '||' . $RecargoPesos . '||' . $RecargoDias . '||' .
@@ -241,10 +247,10 @@ function leeParametros($data) {
                         '||' . $estructura . '||' . $periConta . '||' . $empresaAnoFiscal .
                         '||' . $empresaCompCierreMes . '||' . $empresaCompApertura . '||' . $empresaCuentaCierre .
                         '||' . $empresaCompAjustes . '||' . $empresatercero.
-                        '||' . $empresaDescPorc . '||' .$empresaDescPesos;
+                        '||' . $empresaDescPorc . '||' .$empresaDescPesos . '||'.$fecAnterio;
             }
     echo $msg; 
-  //          return $msg;
+            return $msg;
            
         }
     }
@@ -392,7 +398,7 @@ function facturar($data) {
                 }
 
                 $inmuebleIdAux = $registro['inmuebleId'];
-                if ($inmueblePrincipal === 'NO') {
+                if ($inmueblePrincipal === '') {
                     $inmuebleIdAux = buscaPpal($inmuebleDepende);
                 }
                 $nroFactura = add1Factura($nroFactura);
@@ -654,29 +660,29 @@ function recupera_facturacion($condicion) {
     $con = $objClase->conectar();
     $resultado = "";
 
-    $sql1 = "SELECT ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle, ServicioPeriodo, " .
+    $sql = "SELECT ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle, ServicioPeriodo, " .
             " ServicioFechaDesde, ServicioFechaHasta, ServicioValor, ServicioPrioridad, ServicioTipo, " .
             " ServicioMora, ServicioMoraPorcentaje, servicioMoraValor,ServicioCuentaDB, " .
             " ServicioCuentaCR, ServicioPPporcentaje, ServicioPPvalor, ServicioAmbito, 'Todos'" .
             " clasificacionDetalle, 0 servicioClasificacionId, ServicioActivo, inmuebleId, " .
             " inmuebleEmpresaId,inmuebleCodigo,inmuebleClasificacionId, inmueblePrincipal, " .
-            " CASE WHEN inmueblePrincipal = 'SI' THEN inmuebleCodigo ELSE inmuebleDepende END inmuebleDepende , " .
+            " CASE WHEN inmueblePrincipal = 'P' THEN inmuebleCodigo ELSE inmuebleDepende END inmuebleDepende , " .
             " contaInmuPropietarioPropietarioId, contaInmuPropietarioInmuebleId, 0 As saldo   " .
             " FROM contaservicios,  containmuebles, containmueblepropietario  " .
             " WHERE servicioAmbito = 'T'  " .
             " AND contaInmuPropietarioEmpresaId = servicioEmpresaId AND contaInmuPropietarioInmuebleId = inmuebleId " .
-            " AND inmuebleEmpresaId = servicioEmpresaId AND inmueblePrincipal = 'SI' AND " .
+            " AND inmuebleEmpresaId = servicioEmpresaId AND inmueblePrincipal = 'P' AND " .
             "((servicioAmbito = 'T' and servicioClasificacionId = 0 ) OR " .
             " (servicioAmbito = 'T' and inmuebleClasificacionId = servicioClasificacionId  )) AND " .
             $condicion;
-    $sql2 = " UNION ";
-    $sql = " SELECT ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle, ServicioPeriodo, " .
+    $sql .= " UNION ALL ";
+    $sql .= " SELECT ServicioId, servicioEmpresaId, ServicioCodigo, ServicioDetalle, ServicioPeriodo, " .
             " ServicioFechaDesde, ServicioFechaHasta, ServicioValor, ServicioPrioridad, ServicioTipo, " .
             " ServicioMora, ServicioMoraPorcentaje, servicioMoraValor, ServicioCuentaDB, " .
             " ServicioCuentaCR, ServicioPPporcentaje, ServicioPPvalor, ServicioAmbito, " .
             " clasificacionDetalle, servicioClasificacionId, ServicioActivo, inmuebleId, " .
             " inmuebleEmpresaId,inmuebleCodigo,inmuebleClasificacionId, inmueblePrincipal,  " .
-            " CASE WHEN inmueblePrincipal = 'SI' THEN inmuebleCodigo ELSE inmuebleDepende END inmuebleDepende , " .
+            " CASE WHEN inmueblePrincipal = 'P' THEN inmuebleCodigo ELSE inmuebleDepende END inmuebleDepende , " .
             " contaInmuPropietarioPropietarioId, contaInmuPropietarioInmuebleId , 0 As saldo  " .
             " FROM contaservicios, contaclasificacion, containmuebles, containmueblepropietario  " .
             " WHERE servicioEmpresaId = clasificacionEmpresaId  " .
@@ -684,9 +690,9 @@ function recupera_facturacion($condicion) {
             " AND servicioClasificacionId = clasificacionId AND servicioAmbito = 'G'  AND  " .
             " inmuebleEmpresaId = servicioEmpresaId AND inmuebleClasificacionId = servicioClasificacionId AND " .
             $condicion;
-    //  $sql = $sql1. ' ' . $sql2. ' ORDER BY inmuebleDepende, ServicioCodigo, inmuebleCodigo ';   
+    $sql .=  " ORDER BY contaInmuPropietarioPropietarioId, inmuebleCodigo, servicioClasificacionId";      
     $result = mysqli_query($con, $sql);
-//            echo $sql;
+  //     echo $sql;
     return $result;
 }
 
@@ -940,7 +946,7 @@ function grabaFacturacion($factura) {
     $con = $objClase->conectar();
     $resultado = "";
     $inmueble = $factura['inmuebleCodigo'];
-    if ($factura['inmueblePrincipal'] == 'NO') {
+    if ($factura['inmueblePrincipal'] == '') {
         $sql = " SELECT  inmuebleId  FROM containmuebles WHERE inmuebleCodigo = '" . $factura['inmuebleDepende'] . "'";
         $resulter = mysqli_query($con, $sql);
         while ($row = mysqli_fetch_assoc($resulter)) {
@@ -1027,7 +1033,7 @@ function facturaResumen($data) {
             " FROM contafactura  " .
             " INNER JOIN containmuebles ON facturaInmuebleid = inmuebleId  " .
             " INNER JOIN contapropietarios ON facturaPropietario = propietarioId  " .
-            " WHERE facturaEmpresaid = '" . $empresa . "' AND  inmueblePrincipal = 'SI'  " .
+            " WHERE facturaEmpresaid = '" . $empresa . "' AND  inmueblePrincipal = 'P'  " .
             " GROUP BY facturaInmuebleid, facturaInmuebleid, facturaPropietario  " .
             " ORDER BY inmuebleDescripcion;";
     $result = mysqli_query($con, $sql);
@@ -1067,7 +1073,7 @@ function traeListInmuebles($data) {
 
     $resultado = "";
     $sql = "SELECT inmuebleId, inmuebleDescripcion " .
-            " FROM containmuebles WHERE inmueblePrincipal = 'SI' AND inmuebleEmpresaId = '" .
+            " FROM containmuebles WHERE inmueblePrincipal = 'P' AND inmuebleEmpresaId = '" .
             $empresa . "' ORDER BY inmuebleDescripcion";
     $result = mysqli_query($con, $sql);
     $arr = array();
@@ -1088,7 +1094,7 @@ function traeListInmuebles2($data) {
     $sql = "SELECT inmuebleId, inmuebleDescripcion " .
             " FROM containmuebles " .
             " INNER JOIN containmueblepropietario ON inmuebleId = contaInmuPropietarioInmuebleId " .
-            " WHERE inmueblePrincipal = 'SI' AND inmuebleEmpresaId = '" .
+            " WHERE inmueblePrincipal = 'P' AND inmuebleEmpresaId = '" .
             $empresa . "' AND contaInmuPropietarioPropietarioId = '" .  $propietario.
             "' ORDER BY inmuebleDescripcion";
     
@@ -1294,7 +1300,7 @@ function recuperaUnInmueble($data) {
         $sql = "SELECT facturaperiodo, facturadetalle, facturasaldo , inmuebleId  " .
                 " FROM contafactura  " .
                 " INNER JOIN containmuebles ON facturaInmuebleid = inmuebleId  " .
-                " WHERE facturaEmpresaid = " . $empresa . " AND  facturasaldo > 0 AND inmueblePrincipal='SI'   " .
+                " WHERE facturaEmpresaid = " . $empresa . " AND  facturasaldo > 0 AND inmueblePrincipal='P'   " .
                 " AND inmuebleEmpresaId = " . $empresa . " AND inmuebleCodigo = '" . $inmueble . "'" .
                 " UNION    " .
                 " SELECT facturaperiodo, facturadetalle, facturasaldo , inmuebleId   " .

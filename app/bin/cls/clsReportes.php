@@ -17,7 +17,8 @@ class reportesCls{
                  " empresaMensaje1, empresaMensaje2, empresaEmail, empresafacturaNota, " .
                  " empresaRecargoPorc, empresaRecargoPesos, empresaRecargoDias, empresaDescPorc,".
                  " empresaDescPesos, empresaFactorRedondeo, empresaPeriCierreFactura, empresaRegimen, " .
-                 " empresaActividad, empresaObservaciones FROM contaempresas  WHERE  empresaId = ". $empresa ;
+                 " empresaActividad, empresaObservaciones, empresaDescDias ".
+                 " FROM contaempresas  WHERE  empresaId = ". $empresa ;
             $result =  mysqli_query($con, $sql);
         return $result;   
             }
@@ -126,11 +127,11 @@ class reportesCls{
            return $resultado;
        }
  
-    function preparaImpresionFacturaRep($periodo, $empresa, $inmueble){
+    function preparaImpresionFacturaRep($periodo, $empresa, $inmueble, $propietario){
         include_once("clsConection.php");
         $objClase = new DBconexion();
         $con = $objClase->conectar();	 
-        $sql = "SELECT  IF (inmueblePrincipal = 'SI', inmuebleCodigo , inmuebleDepende) inmuebleCodigo, " .
+        $sql = "SELECT  IF (inmueblePrincipal = 'P', inmuebleCodigo , inmuebleDepende) inmuebleCodigo, " .
                " facturaid, facturaNumero, facturaInmuebleid, facturaservicioid, facturaperiodo, facturasecuencia, ".
                " facturavalor, facturadetalle, facturafechafac, facturafechavence, facturafechacontrol, ".
                " facturasaldo, facturaprioridad, facturadescuento, facturaMora, facturaNroReciboPago,  ".
@@ -144,6 +145,9 @@ class reportesCls{
                " AND facturasaldo > 0 AND facturaTipo <> 'M'  ";
             if($inmueble > 0){
                 $sql .= " AND facturaInmuebleid = " . $inmueble ;              
+            }
+            if($propietario > 0){
+                $sql .= " AND propietarioId = " . $propietario ;   
             }
                 $sql .= " ORDER BY inmuebleCodigo, facturaperiodo desc,  facturadetalle , facturaservicioid   ";
         $result = mysqli_query($con, $sql);
@@ -162,7 +166,7 @@ class reportesCls{
         $peri=$anio;
         if ($mes < 10){$peri.'0';}
         $peri .= $mes;
-        $result = $this->preparaImpresionFacturaRep($peri, $empresa,0);
+        $result = $this->preparaImpresionFacturaRep($peri, $empresa,0,0);
         $retorno='';
         //while( $row = mysqli_fetch_array($result, MYSQL_ASSOC) )
         while($row = mysqli_fetch_assoc($result))
@@ -269,7 +273,7 @@ class reportesCls{
                 " FROM contapropietarios  ".
                 " INNER JOIN containmueblepropietario ON contaInmuPropietarioPropietarioId = propietarioId ".
                 " INNER JOIN containmuebles ON contaInmuPropietarioInmuebleId = inmuebleId ".
-                " WHERE inmueblePrincipal = 'SI' AND  propietarioEmpresaId =  ".
+                " WHERE inmueblePrincipal = 'P' AND  propietarioEmpresaId =  ".
                 $empresa ;        
         if($inmueble > 0){
             $sql .= " AND contaInmuPropietarioInmuebleId = " . $inmueble ;              

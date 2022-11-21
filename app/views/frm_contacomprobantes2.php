@@ -39,29 +39,19 @@
                     </div>
                 </div> 
 
-                <div class="form-group" ng-show="tipoCO">
+                <div class="form-group">
                     <label class="milabel col-md-3" for="compTipo">{{form_compTipo}}</label>
                     <div class="btn-group  col-md-7"  data-toggle="buttons">
                    <label>
-                       <input type="radio" name ="compTipo" ng-model="registro.compTipo" ng-change="cambiaTipo()" value="C" >{{form_compTipo30}}
+                       <input type="radio" name ="compTipo" ng-model="registro.compTipo" ng-change="cambiaTipo()" value="I" >{{form_compTipo32}}
                    </label>
                    <label>
-                      <input type="radio" name ="compTipo" ng-model="registro.compTipo" ng-change="cambiaTipo()" value="O" >{{form_compTipo31}}
+                      <input type="radio" name ="compTipo" ng-model="registro.compTipo" ng-change="cambiaTipo()" value="G" >{{form_compTipo31}}
                    </label>
                     </div>
-                </div> 
+                </div>                 
 
-                <div class="form-group" ng-show="tipoCO">
-                    <label class="milabel col-md-3" for="compTipo">{{form_compTipo}}</label>
-                    <div class="btn-group  col-md-7"  data-toggle="buttons">
-                   <label>
-                        <input type="radio" name ="compTipo" ng-model="registro.compTipo" value="I" >{{form_compTipo32}}
-                   </label>
-                   <label>
-                        <input type="radio" name ="compTipo" ng-model="registro.compTipo"  value="G" >{{form_compTipo33}}
-                   </label>
-                    </div>
-                </div>
+
                 <div class="form-group">
                    <label class="milabel col-md-3" for="compNombre">{{form_compNombre}}</label>
                    <div class="col-md-7">
@@ -260,8 +250,7 @@
                     <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
                     <!--td>{{detail.compId}}</td>
                     <td>{{detail.compEmpresaId}}</td-->
-                    <td>{{detail.compCodigo}}</td>
-                   
+                    <td>{{detail.compCodigo}}</td>                   
                     <td>{{detail.compNombre}}</td>
                     <td>{{detail.compDetalle}}</td>
                     <td>{{detail.compConsecutivo}}</td>
@@ -293,4 +282,4 @@
 
 <script src="controller/ctrls/contacomprobantes.ctrl.js" type="text/javascript"></script>
 	 
-<!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Feb 10, 2020 8:53:04   <<<<<<< -->
+<!-- >>>>>>>   Creado por: Alvaro Ortiz Castellanos   Monday,Feb 10, 2020 8:53   <<<<<<< -->

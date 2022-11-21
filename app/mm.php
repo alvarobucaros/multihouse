@@ -476,7 +476,8 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         if ($op ==  'borsl2'){
             include_once 'views/frm_contaBorraSaldos.php';
         }      
-        if ($op ==  'proInm'){            include_once 'views/frmContaFacturacion.php';
+        if ($op ==  'proInm'){           
+            //  include_once 'views/frmContaFacturacion.php';
 
             include_once 'views/frm_containmueblepropietario.php';
         }        
@@ -541,7 +542,7 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
         } 
 
         if ($op ==  'rMora'){
-            include_once 'views/frm_contaCarteraMora.php';
+            include_once 'views/frmRepCarteraMora.php';
         }  
 
         if ($op ==  'rCtas'){
@@ -649,12 +650,13 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
     <input type="text"  id ='titApp' value = '<?php echo $titApp ?>' >
     
 </div>
-
+ 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 1.0.2
     </div>
-    <strong>Copyright &copy; 2016, 2018, 2020 <a href="http://atomingenieria.com">Atominge sas.</a> </strong> Derechos reservados
+   
+    <strong>Copyright &copy; 2018, 2020, 2022 <a href="http://aortizc.com"><img src="img/logoChiq.png"  width="70" height="30" alt=""/></a> </strong> Derechos reservados
   </footer>
 
 

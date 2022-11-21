@@ -15,6 +15,8 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
  
     $scope.form_compTipo30 = 'Comprobante';
     $scope.form_compTipo31 = 'Operaciones';
+    $scope.form_compTipo32 = 'Ingresos';
+    $scope.form_compTipo33 = 'Gastos';
     $scope.form_compActivo130 = 'Activo';
     $scope.form_compActivo131 = 'Inactivo';
 
@@ -84,7 +86,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     
     getCombos($scope.empresa);
     
-    function getInfo(empresa){
+    function getInfo(empresa){     
         $http.post('modulos/mod_contacomprobantes.php?op=r',{'op':'r', 'empresa':empresa,'control':control}).success(function(data){
         $scope.details = data;
         $scope.configPages();   
@@ -181,10 +183,10 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     };
 
     $scope.cambiaTipo = function(){
-        if($scope.registro.compTipo==='O'){
-            $scope.movto=true;
-        }else{
+        if($scope.registro.compTipo==='C'){
             $scope.movto=false;
+        }else{
+            $scope.movto=true;
         };
     }
     
@@ -292,7 +294,6 @@ $scope.exporta = function(){
         console.log('empty');
         $('#idForm').slideToggle();
     };
-
 }]);
 	 
 
