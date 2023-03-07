@@ -13,7 +13,7 @@
                      " WHERE agenda_id = " . $agenda_id;
             $result = mysqli_query($con, $query); 
                       
-            while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
+            while( $reg = mysqli_fetch_array($result) )
             {
                 $retorno = $reg['comite_nombre'].'||'.$reg['comite_consecActa'].'||'.
                         $reg['salon_nombre'].'||'.$reg['agenda_Descripcion'].'||'.

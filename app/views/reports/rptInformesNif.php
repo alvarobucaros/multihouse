@@ -50,7 +50,7 @@ require_once ('fpdf.php');
 //        }  
         $this->tit = strtolower($informe);
         $this->tit = $this->tit.$PeriodoDer;
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $titulo=strtoupper($nombre) .' Al '. $fchini;
         
         if($PeriodoDer <> $PeriodoIzq){

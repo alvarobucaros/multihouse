@@ -17,7 +17,7 @@ require_once ('fpdf.php');
 //        include_once("../modulos/mod_contaReportContable.php");
 //        $obj = new  reportesContCls();
 //        $resultado = $obj->cargaEmpresa($empresa);
-//        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+//        while( $empre = mysqli_fetch_array($resultado) )
 //        {
 //            $nomEmpre = $empre['empresaNombre'];         
 //            $nit = 'NIT : ' .$empre['empresaNit'];
@@ -50,10 +50,11 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
 
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  ';
         $titulo="SALDOS CONTABLES";
         $subtitulo="Periodo ".$periodo. " Desde cuenta: ". $ctaIni . " Hasta cuenta : " . $ctaFin ;
+         $this->Image($logo,15,14,20,10);
  //       $this->Image($logo,$der+5,14,20,10);    
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;

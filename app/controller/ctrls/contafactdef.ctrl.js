@@ -135,15 +135,6 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.currentPage = index - 1;
     };
 
- 
-// Function to add toggle behaviour to form
-    // $scope.formToggle =function(){
-    //     $('#idForm').slideToggle();
-    //     $scope.factdefid=0;
-    //     $('#idForm').css('display', 'none');
-    //     alert('toggle 1');
-    // };
-
     $scope.show_form = true;
 
     $scope.formToggle =function(){
@@ -162,6 +153,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.detalles = function(op){
         $scope.IsVisible = $scope.IsVisible ? false : true;
         empresa = $('#e').val();
+        op = $scope.registro.factdefnro;
         $http.post('modulos/mod_contafactdef.php?op=d',{'op':'d', 'empresa':empresa, 'numero':op}).success(function(data){
         $scope.details = data;  
         }); 
@@ -270,6 +262,7 @@ $scope.exporta = function(){
     {
         console.log('empty');
         $('#idForm').slideToggle();
+        getInfo(info.empresa);
     };
 
 }]);

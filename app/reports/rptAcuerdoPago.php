@@ -25,7 +25,7 @@ require_once ('fpdf.php');
         $der=0;
 
         $resultado = $obj->cargaEmpresa($this->empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while( $empre = mysqli_fetch_array($resultado) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -36,7 +36,7 @@ require_once ('fpdf.php');
         }
         $result = $obj->cabezaAcuerdoPago($this->id, $this->empresa);
 
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_array($result) )
         {
             $acuerdodetalle= $rec['acuerdodetalle'];
             $acuerdovalor = $rec['acuerdovalor'];
@@ -49,7 +49,7 @@ require_once ('fpdf.php');
         $tit01 .= " para pagar en ". $acuerdoplazo . " Cuotas. Descuento en mora aplicado :  " .$acuerdodescmora;
         $this->desc = $acuerdodescmora;
         $result = $obj->traeAptoPropietario($this->inmueble, $this->empresa);
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_array($result) )
         {
             $propietario =  $rec['propietarioNombre'];
             $cedula =  $rec['propietarioCedula'];
@@ -65,7 +65,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
        
         $this->archivo = 'AcuerdoPago';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
      
         $titulo="ACUERDO DE PAGO";
 //        $this->Image($logo,$der+5,14,20,10);
@@ -173,7 +173,7 @@ require_once ('fpdf.php');
         $y=59;
         $saldo=0;
         $izq=1;
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_array($result) )
         {
             $fecha =  $rec['facturafechafac'];
             $ref =  $rec['facturadetalle']; 

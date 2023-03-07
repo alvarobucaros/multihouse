@@ -44,7 +44,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
 
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $titulo="MOVIMIENTOS POR TERCERO";
         
         $subtitulo='Desde '. $fchIni . ' Hasta '.$fchFin;

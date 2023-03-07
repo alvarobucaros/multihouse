@@ -8,7 +8,7 @@
 
                 <div class="form-group">
                    <label class=" milabel col-md-3" for="propietarios">{{propietario}}</label>
-                   <div class="col-md-5">
+                   <div class="form-group col-md-6">
                    <select id='propietarios' name='propietarios' ng-model='registro.propietario'   
                            ng-change="buscaPropiedades(registro)">
                    <option ng-repeat='operator1 in operators1' value = " {{operator1.propietarioId}}">{{operator1.propietarioNombre}}</option>
@@ -18,7 +18,7 @@
                 
                 <div class="form-group">
                    <label class=" milabel col-md-3" for="Inmuebles">{{inmueble}}</label>
-                   <div class="col-md-5">
+                   <div class="form-group col-md-6">
                    <select id='Inmuebles' name='Inmuebles' ng-model='registro.Inmueble'   
                            ng-change="buscaFacturas(registro)">
                    <option ng-repeat='operator0 in operators0' value = " {{operator0.inmuebleId}}">{{operator0.inmuebleDescripcion}}</option>
@@ -29,32 +29,32 @@
 
                 <div class="form-group">
                    <label class="milabel col-md-3" for="fechaAbono">{{form_fechaAbono}}</label>
-                   <div class="col-md-6">
-                    <input type="date" width="12" class="form-control mitexto fa fa-calendar fa-lg" id="fechaAbono" name="fechaAbono"
+                   <div class="form-group col-md-6">
+                    <input type="date" width="12" class="form-control col-md-6 fa fa-calendar fa-lg" id="fechaAbono" name="fechaAbono"
                          ng-model="registro.fechaAbono" value="{{fechaAbono}}"   />
                     </div>
                 </div> 
                  <div class="form-group">
                     <label class="milabel col-md-3" for="comprobante">{{comprobanteRC}}</label>
                    <div class="col-md-6">
-                    <input type="text" class="form-control mitexto" id="comprobante" name="comprobante"
+                    <input type="text" class="form-group col-md-6" id="comprobante" name="comprobante"
                          ng-model="valComprobante" readonly="yes" 
                          value="{{valComprobante}}" />
                     </div>
                 </div>
                 
                 <div class="form-group">
-                     <label class="milabel col-md-3" for="msg">{{titSaldo}}</label>
-                        <div class="form-group" class="col-md-6">                   
+                     <label class="milabel col-md-3 " for="msg">{{titSaldo}}</label>
+                        <div class="form-group col-md-6">                   
                             <input type="text"  name="msg" id="msg" width="100" readonly="yes"
-                             ng-model="Mensaje"/>
+                            class='mivalor' ng-model="vlrSaldo"  value="{{vlrSaldo}}"/>
                         </div> 
                 
                 </div> 
                 
                 <div class="form-group">
                     <label class="milabel col-md-3" for="vlrPago">{{titvlrPago}}</label>
-                   <div class="col-md-6">
+                   <div class="form-group col-md-6">
                        <input type="text"  id="vlrPago" name="vlrPago" width="80"
                          ng-model="vlrPago"  value="{{vlrPago}}" />
                     </div>
@@ -104,7 +104,6 @@
             </form>
 	</div>
 
-     
    </div>
 
 <script src="js/ui-bootstrap-tpls-0.11.0.js" type="text/javascript"></script>

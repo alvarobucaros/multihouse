@@ -17,7 +17,7 @@ class reportesCls{
                  " empresaMensaje1, empresaMensaje2, empresaEmail, empresafacturaNota, " .
                  " empresaRecargoPorc, empresaRecargoPesos, empresaRecargoDias, empresaDescPorc,".
                  " empresaDescPesos, empresaFactorRedondeo, empresaPeriCierreFactura, empresaRegimen, " .
-                 " empresaActividad, empresaObservaciones, empresaDescDias ".
+                 " empresaActividad, empresaObservaciones, empresaDescDias, empresaPrefijo ".
                  " FROM contaempresas  WHERE  empresaId = ". $empresa ;
             $result =  mysqli_query($con, $sql);
         return $result;   
@@ -150,8 +150,9 @@ class reportesCls{
                 $sql .= " AND propietarioId = " . $propietario ;   
             }
                 $sql .= " ORDER BY inmuebleCodigo, facturaperiodo desc,  facturadetalle , facturaservicioid   ";
-        $result = mysqli_query($con, $sql);
-// echo $sql;      
+//echo $sql;  
+                $result = mysqli_query($con, $sql);
+    
         return  $result;	   
      }
 
@@ -168,7 +169,7 @@ class reportesCls{
         $peri .= $mes;
         $result = $this->preparaImpresionFacturaRep($peri, $empresa,0,0);
         $retorno='';
-        //while( $row = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        //while( $row = mysqli_fetch_array($result) )
         while($row = mysqli_fetch_assoc($result))
         { 
             $pagoCrnte=0;
@@ -255,7 +256,7 @@ class reportesCls{
         $sql = "SELECT inmuebleDescripcion FROM containmuebles ".
                 " WHERE inmuebleCodigo = '". $apto . "' AND  inmuebleEmpresaId = " .$empresa;
         $result = mysqli_query($con, $sql);
-       // while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+       // while( $rec = mysqli_fetch_array($result) )
         while($rec = mysqli_fetch_assoc($result))
         {
              $nomInmueble = $rec['inmuebleDescripcion'];

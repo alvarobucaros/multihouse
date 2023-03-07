@@ -660,7 +660,15 @@
                          value="{{registro.empresaporcentajeiva}}" />
                     </div>
                 </div> 
-
+                
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaPrefijo">{{form_empresaPrefijo}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="empresaPrefijo" name="empresaPrefijo"
+                         ng-model="registro.empresaPrefijo" required Placeholder="" 
+                         value="{{registro.empresaPrefijo}}" />
+                    </div>
+                </div>                 
                 <div class="form-group">
                     <div class="col-md-5">
                         <button type="button" value="Actualizar" class="btn btn-custom pull-right btn-xs" 

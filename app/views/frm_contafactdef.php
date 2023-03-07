@@ -149,7 +149,7 @@
                     <th>SUBTOTAL</th>
                 </tr>
                 <tr ng-repeat="detail in details | filter:search_query | startFromGrid: currentPage * pageSize | limitTo: pageSize">
-                    <td style="text-align:left;">{{detail.factdefcptodeta}}</td>
+                    <td style="text-align:left;">{{detail.factdefconcepto}} - {{detail.factdefcptodeta}} </td>
                     <td style="text-align:right;">{{detail.factdefvalor|currency:'$' : 'symbol' : '1.0-0'}}</td>  
                     <td style="text-align:right;">{{detail.factdefiva|currency:'%' : 'symbol' : '1.0-0'}}</td>
                     <td style="text-align:right;">{{detail.factdefsaldo|currency:'$' : 'symbol' : '1.0-0'}}</td>

@@ -498,7 +498,7 @@ if($pf=='K'){$app='Accounting';$titApp='Contabilidad General';}
               include_once 'views/frmContaFacturacion.php';
         }       
          if ($op ==  'recCaja'){
-            include_once 'views/frmContaRecibosCaja.php';
+            include_once 'views/frm_ContaRecibosCaja.php';
         }        
         if ($op ==  'pagos'){
             include_once 'views/frm_contatmpagos.php';

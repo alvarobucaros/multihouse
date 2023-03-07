@@ -37,8 +37,9 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
 
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
-
+        $logo = "../img/".$this->logo;
+        
+        $this->Image($logo,15,14,20,10);
         $titulo="CUENTA Y SUS MOVIMIENTOS";
         $subtitulo="Periodo Desde: ". $periIni. " Hasta: ".$periFin;
   
@@ -93,7 +94,7 @@ require_once ('fpdf.php');
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->AddPage();
-    $pdf->SetFont('Arial','',7);
+    $pdf->SetFont('Arial','',6);
  
     $ln=0;
     $y=$pdf->GetY(); 
@@ -137,12 +138,14 @@ require_once ('fpdf.php');
             $cuentaAux = $row['moviConCuenta'];
             $cta = $row['pucNombre']; //$obj->nombreCuenta($empresa, $cuentaAux);
             $pdf->SetXY(12,$y);   
+             $pdf->SetFont('Arial','B',6);
             $pdf->Cell(30,4,  utf8_decode($cuentaAux.'-'.$cta),0,0,'L');$pdf->SetXY(15,$y); 
+             $pdf->SetFont('Arial','',6);
             $y+=3;
             $pdf->SetXY(6,$y);
             $pdf->Cell(10,4,'Fecha',0,0,'L');$pdf->SetXY(14,$y);
             $pdf->Cell(16,4,'Comprobante',0,0,'L');$pdf->SetXY(70,$y);
-            $pdf->Cell(16,4,'Tercero',0,0,'L');$pdf->SetXY(100,$y);
+            $pdf->Cell(16,4,'Tercero',0,0,'L');$pdf->SetXY(110,$y);
             $pdf->Cell(6,4,'Detalle',0,0,'L');$pdf->SetXY(145,$y);
             $pdf->Cell(30,4,'Debito',0,0,'R');$pdf->SetXY(170,$y);
             $pdf->Cell(30,4,'Credito',0,0,'R');
@@ -164,9 +167,9 @@ require_once ('fpdf.php');
         $pdf->SetXY(4,$y); 
         $pdf->Cell(10,4,$row['movicaFecha'],0,0,'L');
         $pdf->SetXY(17,$y);
-        $pdf->Cell(16,4,  substr($row['compNombre'].' Nr.'.$row['movicaCompNro'] ,0,25),0,0,'L');
-        $pdf->SetXY(55,$y);
-        $pdf->MultiCell(50,4,utf8_decode($row['terceroNombre']),0,'L');
+        $pdf->MultiCell(36,4,utf8_decode(substr($row['compNombre'].' Nr. '.$row['movicaCompNro'] ,0,25)),0,'L');
+        $pdf->SetXY(43,$y);
+        $pdf->MultiCell(66,4,utf8_decode($row['terceroNombre']),0,'L');
         $t=$pdf->GetY();
         $pdf->SetXY(100,$y);
         $pdf->MultiCell(50,4,utf8_decode($row['movicaDetalle']),0,'L');

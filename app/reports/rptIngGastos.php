@@ -24,7 +24,8 @@ require_once ('fpdf.php');
         $der=0;
 
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while( $empre = mysqli_fetch_assoc($resultado))
+        while( $empre = mysqli_fetch_array($resultado) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -37,7 +38,7 @@ require_once ('fpdf.php');
         }
 
         $result = $obj->traeAptoPropietario($inmueble, $empresa);
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_array($result) )
         {
             $propietario =  $rec['propietarioNombre'];
             $cedula =  $rec['propietarioCedula'];
@@ -53,7 +54,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
        
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  '. $cta;
         $titulo="RELACION DE INGESOS Y GASTOS PERIODO ".$periIni. " AL " .$periFin;
  //       $this->Image($logo,$der+5,14,20,10);
@@ -122,7 +123,7 @@ require_once ('fpdf.php');
     $saldo=0;
     if(mysqli_num_rows($result) != 0)  
     { 
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_array($result) )
         {
             $fecha =  $rec['ingastoFecha'];
             $ref =  $rec['tipo'].' '.$rec['ingastodetalle'].' '.$rec['ingastoDocumento']; 

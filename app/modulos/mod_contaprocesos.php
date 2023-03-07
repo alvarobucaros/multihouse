@@ -583,7 +583,7 @@ function carteraEnMoraXLS($data) {
     $expo .= '          <th>SUB TOTAL</th>';
     $expo .= '</tr> ';
     while($row = mysqli_fetch_assoc($resultado)) {
-  //  while ($row = mysqli_fetch_array($resultado, MYSQL_ASSOC)) {
+  //  while ($row = mysqli_fetch_array($resultado)) {
         $subtotal = (float) $row['pagoCrnte'] + (float) $row['pago0130'] + (float) $row['pago6190'] +
                 (float) $row['pago3160'] + (float) $row['pago91120'] + (float) $row['pago121mas'];
         if ($op === 'R') {
@@ -766,15 +766,17 @@ function pagaFactura($data) {
         $consecReciCaja = $row['empresaConsecRcaja'];
     }
 
-    $sql = "SELECT sum(facturasaldo) AS saldo FROM contafactura WHERE facturasaldo > 0  " .
-            "AND facturaTipo = 'T' AND facturaEmpresaid = " . $rec[0] . " AND facturaInmuebleid = " . $rec[2];
-    $resul = mysqli_query($con, $sql);
-    while ($row = mysqli_fetch_assoc($resul)) {
-        $valor = $row['saldo'];
-    }
-    if (is_null($valor)) {
-        $valor = 0;
-    }
+    // $sql = "SELECT sum(facturasaldo) AS saldo FROM contafactura WHERE facturasaldo > 0  " .
+    //         " AND facturaTipo = 'T' AND facturaEmpresaid = " . $rec[0] . 
+    //         " AND facturaInmuebleid = " . $rec[2];
+    // $resul = mysqli_query($con, $sql);
+    // while ($row = mysqli_fetch_assoc($resul)) {
+    //     $valor = $row['saldo'];
+    // }
+    // if (is_null($valor)) {
+    //     $valor = 0;
+    // }
+    $valor = 0;
     $inmueble = $rec[2];
     $propie = $rec[1];
     $saldo = (float) $rec[4] + (float) $valor;
@@ -793,12 +795,12 @@ function pagaFactura($data) {
     if ($rec[2] > 0) {
         $sql0 .= "  AND facturaInmuebleid = " . $rec[2];
     }
-    $sql1 = "  AND facturaTipo = 'M' AND facturaEmpresaid = " . $rec[0];
-    $sql2 = " ORDER BY facturaperiodo, facturaNumero ";
+    $sql1 = "  AND facturaTipo IN ( 'M', 'F') AND facturaEmpresaid = " . $rec[0];
+    $sql2 = " ORDER BY facturaperiodo, facturaTipo DESC ";
     $sql = $sql0 . $sql1 . $sql2;
-
     $resultado = mysqli_query($con, $sql);
     $consecReciCaja = add1Factura($consecReciCaja);
+
     while ($row = mysqli_fetch_assoc($resultado)) {
         $idFac = $row['facturaMoraInmuebId'];
         $inmueble = $row['facturaInmuebleid'];
@@ -807,34 +809,38 @@ function pagaFactura($data) {
         $pago = $row['facturasaldo'];
         $propie = $row['facturaPropietario'];
         $facturaTipo = $row['facturaTipo'];
+        $detalle = 'Abono ' . $row['facturadetalle'];
         $valor = (float) $saldo - (float) $row['facturasaldo'];
         if ($valor >= 0) {
             $hay = 0;
             $saldo = $valor;
             // Cancela el saldo en mora
-            $sql = "UPDATE contafactura SET facturasaldo = 0,  facturaTipo='P'  WHERE facturaid = " . $id;
+            $sql = "UPDATE contafactura SET facturasaldo = 0  WHERE facturaid = " . $id;
             $resul = mysqli_query($con, $sql);
-
-            grabaContapagos($rec[0], $id, $rec[6], $facturaTipo, $pago, 'Paga Intereses de mora', $consecReciCaja, $inmueble, $rec[3], $priodo);
-            // Trae saldo factura y detalle
-            $sql = "SELECT  facturasaldo, facturadetalle FROM contafactura WHERE facturaid = " . $idFac;
-            $resul = mysqli_query($con, $sql);
-            while ($row = mysqli_fetch_assoc($resul)) {
-                $facSaldo = $row['facturasaldo'];
-                $detalle = 'Abono ' . $row['facturadetalle'];
+            $deta='Paga Intereses de mora';
+            if($facturaTipo=='F'){
+                $deta='Paga Factura';
             }
+            grabaContapagos($rec[0], $id, $rec[6], $facturaTipo, $pago, $deta, $consecReciCaja, $inmueble, $rec[3], $priodo);
+            // Trae saldo factura y detalle
+            // $sql = "SELECT  facturasaldo, facturadetalle FROM contafactura WHERE facturaid = " . $idFac;
+            // $resul = mysqli_query($con, $sql);
+            // while ($row = mysqli_fetch_assoc($resul)) {
+            //     $facSaldo = $row['facturasaldo'];
+            //     $detalle = 'Abono ' . $row['facturadetalle'];
+            // }
             // aplica pago afactura
             $valor = (float) $saldo - (float) $facSaldo;
             if ($valor >= 0) {
                 $pago = $row['facturasaldo'];
                 $saldo = $valor;
-                $sql = "UPDATE contafactura SET facturasaldo = 0,  facturaTipo='A'  WHERE facturaid = " . $idFac;
+                $sql = "UPDATE contafactura SET facturasaldo = 0   WHERE facturaid = " . $idFac;
                 $resul = mysqli_query($con, $sql);
                 grabaContapagos($rec[0], $idFac, $rec[6], $facturaTipo, $pago, $detalle, $consecReciCaja, $inmueble, $rec[3], $priodo);
             } else {
                 $pago = (float) $facSaldo - (float) $saldo;
                 $sql = "UPDATE contafactura SET facturasaldo = " . $pago .
-                        ",  facturafechavence = '" . $fecha . "' facturaTipo='A'  WHERE facturaid = " . $idFac;
+                        ",  facturafechavence = '" . $fecha . "'  WHERE facturaid = " . $idFac;
                 $resul = mysqli_query($con, $sql);
                 grabaContapagos($rec[0], $idFac, $rec[6], $facturaTipo, $valor, $detalle, $consecReciCaja, $inmueble, $rec[3], $priodo);
             }
@@ -1158,7 +1164,6 @@ function sumaFacturas($data){
     $resultado = "";
     $data = leeParametros($data);
     $reg = explode('||', $data);
-echo '****'.$data;  
     $empresaRecargoPorc = $reg[8];
     $empresaRecargoPesos =$reg[9];
     $empresaRecargoDias =$reg[10];
@@ -1176,7 +1181,7 @@ echo '****'.$data;
     $descuentos=0;
     $SaldoMora=0;
     
-    $resultado = $obj->preparaImpresionFacturaRep($periodo, $empresa, $inmueble); 
+    $resultado = $obj->preparaImpresionFacturaRep($periodo, $empresa, $inmueble, $propietario); 
     
     while( $reg = mysqli_fetch_assoc($resultado))
     {
@@ -1185,6 +1190,7 @@ echo '****'.$data;
         $SaldoMora += (float)$reg['facturaMora'];  
     }
     $data =    $parcial - $descuentos + $SaldoMora;
+    ob_end_clean();
     echo $data;
     return $data;
 }

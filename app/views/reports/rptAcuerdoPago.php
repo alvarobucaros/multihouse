@@ -65,7 +65,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
        
         $this->archivo = 'AcuerdoPago';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
      
         $titulo="ACUERDO DE PAGO";
         $this->Image($logo,$der+5,14,20,10,'png');

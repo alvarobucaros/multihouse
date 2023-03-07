@@ -303,15 +303,15 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     
     $scope.buscaFacturas = function(detail){
         empresa=$scope.empresa;
-        inmueble = $scope.Inmueble; //  detail.Inmueble;
-        propietario =  $scope.registro.propietario; //  detail.propietario;
+        inmueble = $scope.registro.Inmueble; 
+        propietario =  $scope.registro.propietario; 
         fecha = $scope.registro.fechaAbono;
         if (inmueble === undefined){inmueble=0;}
         if (propietario === undefined) {propietario=0;}
-        
         $http.post('modulos/mod_contaprocesos.php?op=suma',{'op':'suma','empresa':empresa,'inmueble':inmueble,'propietario':propietario,'fecha':fecha}).success(function(data){
-  //      alert(data);
-        $scope.vlrPago = data;
+     //  alert(data);
+     $scope.vlrSaldo = formatMoneyV2(data);
+      //  $scope.vlrSaldo = data;
          });        
         
     };
@@ -641,6 +641,24 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
         if (pos===1){fchfin = ano + '-' +  mes +'-'+dia ;}
     }
     
+    function formatMoneyV2(number){
+        var i = number.length;
+        let siga=true
+        let nr = '';
+        do{
+            nr = number.substr(-3)+nr;
+            i -=3;
+            if (i<=0){
+                siga=false
+            }else{
+                nr =','+nr;
+                number = number.substr(0,i);
+            }
+        }
+        while(siga)
+        return nr;
+    }
+
     function formatMoney(number, decPlaces, decSep, thouSep) {
     decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
     decSep = typeof decSep === "undefined" ? "." : decSep;
@@ -650,8 +668,8 @@ app.controller('mainController',['$scope','$http','$modal', function($scope,$htt
     var j = (j = i.length) > 3 ? j % 3 : 0;
 
     return sign +
-            (j ? i.substr(0, j) + thouSep : "") +
-            i.substr(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
+            (j ? i.substring(0, j) + thouSep : "") +
+            i.substring(j).replace(/(\decSep{3})(?=\decSep)/g, "$1" + thouSep) +
             (decPlaces ? decSep + Math.abs(number - i).toFixed(decPlaces).slice(2) : "");
     }
 

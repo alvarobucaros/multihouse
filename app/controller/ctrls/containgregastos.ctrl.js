@@ -244,8 +244,8 @@ $('#idForm').slideToggle();
     }
         $scope.deleteInfo =function(info)
     { 
-        empresa = $('\#e').val(); 
-        if (confirm('Desea borrar el registro con nombre : '+info.ingastoFecha+' ?')) {  
+        empresa = $('#e').val(); 
+        if (confirm('Desea borrar el registro con detalle : '+info.ingastodetalle+' por $'+info.ingastovalor+'  ?')) {  
             $http.post('modulos/mod_containgregastos.php?op=b',{'op':'b', 'ingastoid':info.ingastoid}).success(function(data){
             if (data === 'Ok') {
             getInfo(empresa);
@@ -258,7 +258,7 @@ $('#idForm').slideToggle();
     $scope.updateInfo =function(info)
     {
         er='';
-        empresa = $('\#e').val(); 
+        empresa = $('#e').val(); 
         if($('#ingastoid').val()===''){er+='falta id\n';}
         if($('#ingastoempresa').val()===''){er+='falta empresa\n';}
         if($('#ingastoFecha').val()===''){er+='falta fecha\n';}

@@ -31,9 +31,11 @@ require_once ('fpdf.php');
             $nit = 'NIT:        ' .$empre['empresaNit'].'-'.$empre['empresaDigito'];
             $dir = 'DIRECCION : '.$empre['empresaDireccion']; 
             $tel = 'TELEFONO  : '.$empre['empresaTelefonos'];      
-            $logo = "../img/".$this->logo;             
+            $logo = "../img/".$logo;             
         }        
         
+         $this->Image($logo,15,14,20,10);
+         
         $miTitulo = "Informe de comprobantes del mes";
         $this->SetFont('Arial','B',12);
         $w = $this->GetStringWidth($this->empresa)+6;
@@ -145,8 +147,8 @@ require_once ('fpdf.php');
         $pdf->SetXY(10,$ln);
         $pdf->Cell(0,6, "CUENTA       NOMBRE CUENTA"); $pdf->SetXY(85,$ln);
         $pdf->Cell(0,6, "DOC.IDENTIDAD"); $pdf->SetXY(130,$ln);
-        $pdf->Cell(0,6, "TERCERO"); $pdf->SetXY(178,$ln);
-        $pdf->Cell(0,6, "DOCUMENTO SOPORTE"); $pdf->SetXY(246,$ln);
+        $pdf->Cell(0,6, "TERCERO"); $pdf->SetXY(182,$ln);
+        $pdf->Cell(0,6, "DOC. SOPORTE"); $pdf->SetXY(246,$ln);
         $pdf->Cell(0,6, "DEBITOS           CREDITOS");
         $ln+=5;
         $pdf->Line(8,$ln, 280, $ln);
@@ -158,10 +160,13 @@ require_once ('fpdf.php');
         while($regMv = mysqli_fetch_assoc($resulMvt) )
         {    
             $pdf->SetXY(6,$ln);   
-            $pdf->MultiCell(70,4,$regMv['moviConCuenta'].' '.$regMv['pucNombre']);$y[0]=$pdf->GetY();$pdf->SetXY(85,$ln);
-            $pdf->multiCell(50,4,utf8_decode($regMv['moviConTerceroId']));$y[1]=$pdf->GetY();$pdf->SetXY(115,$ln);
-            $pdf->multiCell(60,4,utf8_decode($regMv['moviConTercero']));$y[2]=$pdf->GetY();$pdf->SetXY(177,$ln);
-
+            $pdf->MultiCell(70,4,$regMv['moviConCuenta'].' '.$regMv['pucNombre']);
+            $y[0]=$pdf->GetY();
+            $pdf->SetXY(85,$ln);
+            $pdf->multiCell(50,4,utf8_decode($regMv['moviConTerceroId']));
+            $y[1]=$pdf->GetY();$pdf->SetXY(107,$ln);
+            $pdf->multiCell(76,4,utf8_decode($regMv['moviConTercero']));
+            $y[2]=$pdf->GetY();$pdf->SetXY(183,$ln);
             $pdf->multiCell(28,4,$regMv['moviDocum1'].'  '.$regMv['moviDocum2']);$y[5]=$pdf->GetY();
             $pdf->SetXY(230,$ln);
             $pdf->Cell(30,4,number_format($regMv['moviConDebito'], 2, '.', ','),0,0,'R');$pdf->SetXY(250,$ln);

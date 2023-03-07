@@ -55,7 +55,7 @@ require_once ('fpdf.php');
             $this->tit='EtdoResul';
         }  
         $this->tit = $this->tit.$PeriodoDer;
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $titulo=strtoupper($nombre) .' Al '. $fchini;
         
         if($PeriodoDer <> $PeriodoIzq){
@@ -63,7 +63,8 @@ require_once ('fpdf.php');
             $this->tit = $this->tit.'-'.$PeriodoIzq;
         }
         
-//        $this->Image($logo,$der+5,14,20,10);    
+//        $this->Image($logo,$der+5,14,20,10); 
+        $this->Image($logo,15,14,20,10);
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);

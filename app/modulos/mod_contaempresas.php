@@ -46,7 +46,8 @@ function leeRegistros($data) {
                 " empresafacturanotaiva, empresafacturanotaica, empresafacturactacxc, empresafacturactaivta,  " .
                 " empresafacturactaica, empresafacturactaiva, empresaRegimen, empresaporcentajeiva, empresatercero," .
                 " empresaProformaCon, empresaProformaFac,  empresaProformaLimSup, empresaProformaLimInf, " .
-                " empresaActividad, empresaConsecFact, empresaObservaciones, empresaConsecNDb, empresaConsecNCr   " .
+                " empresaActividad, empresaConsecFact, empresaObservaciones, empresaConsecNDb, empresaConsecNCr, " .
+                " empresaPrefijo " .
                 " FROM contaempresas WHERE empresaId = " . $empresa .
                 " ORDER BY empresaNombre ";
         $result = mysqli_query($con, $query);
@@ -73,7 +74,7 @@ function leeRegistros($data) {
                         $rec['empresaProformaLimSup'] . '||' . $rec['empresaProformaLimInf'] .'||'.
                         $rec['empresaActividad'].'||'.$rec['empresaConsecFact'].'||'.
                         $rec['empresaObservaciones'] .'||'.
-                        $rec['empresaConsecNDb'].'||'.$rec['empresaConsecNCr'].'||';
+                        $rec['empresaConsecNDb'].'||'.$rec['empresaConsecNCr'].'||'.$rec['empresaPrefijo'].'||';
             }
         }
         echo $ret;
@@ -173,6 +174,7 @@ function actualiza($data) {
     $empresaObservaciones = $data->empresaObservaciones;
     $empresaConsecNDb = $data->empresaConsecNDb;
     $empresaConsecNCr = $data->empresaConsecNCr;
+    $empresaPrefijo = $data->empresaPrefijo;
     if ($empresaId == 0) {
         $query = "INSERT INTO contaempresas(empresaClave, empresaNombre, empresaNit, empresaDigito, empresaDireccion,"
                 . " empresaCiudad, empresaTelefonos, empresaFchCreacion, empresaFchModificacion, empresaFchVigencia, "
@@ -191,7 +193,7 @@ function actualiza($data) {
                 . " empresafacturanotaica, empresafacturactacxc, empresafacturactaivta, empresafacturactaica, "
                 . " empresafacturactaiva, empresaRegimen, empresaporcentajeiva, empresaProformaCon, "
                 . " empresaProformaFac, empresatercero, empresaActividad, empresaConsecFact,empresaObservaciones,"
-                . "empresaConsecNDb,empresaConsecNCr)";
+                . "empresaConsecNDb,empresaConsecNCr,empresaPrefijo)";
         $query .= "  VALUES ('" . $empresaClave . "', '" . $empresaNombre . "', '" . $empresaNit . "', '" . $empresaDigito . "', '" .
                 $empresaDireccion . "', '" . $empresaCiudad . "', '" . $empresaTelefonos . "', '" . $empresaFchCreacion . "', '" .
                 $empresaFchModificacion . "', '" . $empresaFchVigencia . "', '" . $empresaPeriodoActual . "', '" .
@@ -216,10 +218,10 @@ function actualiza($data) {
                 $empresaRegimen . "', '" . $empresaporcentajeiva . "', '" . $empresaProformaCon . "', '" .
                 $empresaProformaFac . "', '" . $empresatercero . "','".$empresaActividad . "','" .  
                 $empresaConsecFact . "','" .$empresaObservaciones ."','".$empresaConsecNDb."','".
-                $empresaConsecNCr.".')"; 
+                $empresaConsecNCr. "','".$empresaPrefijo."')";  
     //echo $query;
         mysqli_query($con, $query);
-        echo 'Ok'.$query;
+        echo 'Ok'; //.$query;
     } else {
         $query = "UPDATE contaempresas  SET empresaClave = '" . $empresaClave . "', empresaNombre = '" . $empresaNombre . "', "
                 . "empresaNit = '" . $empresaNit . "', empresaDigito = '" . $empresaDigito . "', "
@@ -273,7 +275,8 @@ function actualiza($data) {
                 . "empresaActividad= '" . $empresaActividad . "', empresaConsecFact = '" . $empresaConsecFact . "', "
                 . "empresaObservaciones= '" . $empresaObservaciones . "', " 
                 . "empresaConsecNDb= '" . $empresaConsecNDb . "', " 
-                . "empresaConsecNCr= '" . $empresaConsecNCr . "' " 
+                . "empresaConsecNCr= '" . $empresaConsecNCr . "', "
+                . "empresaPrefijo= '" . $empresaPrefijo . "' "  
                 . " WHERE empresaId = " . $empresaId;
 //echo $query;
       mysqli_query($con, $query);
@@ -316,8 +319,8 @@ function unRegistro($data) {
             . "empresafacturaNota, empresafacturaresDIAN, empresafacturaNumeracion, empresafacturanotaiva, "
             . "empresafacturanotaica, empresafacturactacxc, empresafacturactaivta, empresafacturactaica, "
             . "empresafacturactaiva, empresaRegimen, empresaporcentajeiva, empresaProformaCon, "
-            . " empresaProformaFac, empresatercero, empresaActividad, empresaConsecFact, empresaObservaciones  " .
-            " FROM contaempresas  WHERE empresaId = " . $empresaId .
+            . " empresaProformaFac, empresatercero, empresaActividad, empresaConsecFact, empresaObservaciones, " .
+            " empresaPrefijo FROM contaempresas  WHERE empresaId = " . $empresaId .
             " ORDER BY empresaNombre ";
     $result = mysqli_query($con, $query);
     $arr = array();

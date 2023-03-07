@@ -117,10 +117,12 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_empresaProformaFac0 = 'NO';
     $scope.form_empresaProformaFac1 = 'SI';
     $scope.form_empresaActividad = 'ACTIVIDAD ECONOMICA';
+    $scope.form_empresaPrefijo = "PREFIJO";
     $scope.form_empresaObservaciones='OBSERVACIONES';
     $scope.empresaProformaLimite = "LIMITES PROFORMA";
     $scope.empresaProformaLimiteSup = "SUPERIOR";
     $scope.empresaProformaLimiteInf = "INFERIOR";
+
     $scope.form_PhempresaId = 'Digite id';
     $scope.form_PhempresaClave = 'Digite clave';
     $scope.form_PhempresaNombre = 'Digite nombre';
@@ -192,6 +194,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
     $scope.form_Phempresafacturactaiva = 'Digite facturactaiva';
     $scope.form_PhempresaRegimen = 'Digite regimen';
     $scope.form_Phempresaporcentajeiva = 'Digite porcentajeiva';
+    $scope.form_PhempresaPrefijo = 'Prefijo factura';
     $scope.id=0;
     $scope.currentPage = 0;
     $scope.pageSize = 10;
@@ -290,6 +293,7 @@ app.controller('mainController',['$scope','$http', function($scope,$http){
         $scope.registro.empresaObservaciones=registro[78];
         $scope.registro.empresaConsecNDb = registro[79]; 
         $scope.registro.empresaConsecNCr = registro[80]; 
+        $scope.registro.empresaPrefijo = registro[81];
         $scope.id=$scope.registro.empresatercero;
         $("#empresatercero").find($scope.id);
         $("#empresatercero option[value="+$scope.id+"]").attr('selected','selected');
@@ -404,7 +408,8 @@ $scope.show_form = true;
             'empresaProformaLimSup':info.empresaProformaLimSup,'empresaProformaLimInf':info.empresaProformaLimInf,
             'empresatercero':info.empresatercero,'empresaActividad':info.empresaActividad,
             'empresaConsecFact':info.empresaConsecFact,'empresaObservaciones':info.empresaObservaciones,
-            'empresaConsecNDb':info.empresaConsecNDb,'empresaConsecNCr':info.empresaConsecNCr}).success(function(data){
+            'empresaConsecNDb':info.empresaConsecNDb,'empresaConsecNCr':info.empresaConsecNCr,
+            'empresaPrefijo':info.empresaPrefijo}).success(function(data){
  
         if (data === 'Ok') {
            // getInfo(empresa);

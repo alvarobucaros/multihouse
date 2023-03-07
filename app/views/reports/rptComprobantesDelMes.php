@@ -34,7 +34,7 @@ require_once ('fpdf.php');
         $nit = 'NIT:        ' .$empre['empresaNit'].'-'.$empre['empresaDigito'];
         $dir = 'DIRECCION : '.$empre['empresaDireccion']; 
         $tel = 'TELEFONO  : '.$empre['empresaTelefonos'];      
-        $logo = "logos/".$logo;
+        $logo = "../img/".$this->logo;
         
         $this->Image( $logo ,25,15,20,10,'png');
  

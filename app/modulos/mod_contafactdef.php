@@ -22,8 +22,6 @@ switch ($op)
     case 'r':
         leeRegistros($data);
         break;
- 
- 
     case 'u':
         unRegistro($data);
         break;
@@ -50,9 +48,10 @@ function  detalles($data)
     $empresa = $data->empresa;
     $numero = $data->numero;
     $con = $objClase->conectar(); 
-   { 
-    $query = " SELECT factdefid, factdefvalor, factdefiva, factdefsaldo, ";
-    $query .= " factdefneto, factdefcptodeta ";
+    
+    $query = " SELECT factdefid, factdefempresa, factdefvalor, factdefiva, factdefsaldo, ";
+    $query .= " factdefneto, factdefcptodeta, factdefconcepto, factdefcliente, ";
+    $query .= " factdeffechcrea, factdeffechvence, factdefnro, factdefcptodeta as factdefdetalle ";
     $query .= " FROM contafactdef ";
     $query .= " WHERE factdefempresa = " . $empresa ;
     $query .= "  AND factdefnro = " .$numero . " order by factdefid desc ";
@@ -65,7 +64,7 @@ function  detalles($data)
         } 
     } 
     echo $json_info = json_encode($arr); 
-} 
+
 }
 
  
@@ -136,7 +135,7 @@ function  detalles($data)
         } 
         else 
         { 
-            $query = "UPDATE contafactdef  SET factdefempresa = '".$factdefempresa."', factdefnro = '".
+            $query = "UPDATE contafactdef  SET factdefcptodeta = '".$factdefcptodeta."', factdefnro = '".
                     $factdefnro."', factdefcliente = '".$factdefcliente."', factdeffechcrea = '".$factdeffechcrea.
                     "', factdeffechvence = '".$factdeffechvence."', factdefvalor = '".$factdefvalor.
                     "', factdefiva = '".$factdefiva."', factdefsaldo = '".$factdefsaldo."', factdefneto = '".
@@ -146,7 +145,6 @@ function  detalles($data)
             mysqli_query($con, $query); 
             echo 'Ok';
         } 
- 
     } 
  
     function actualizaDetalle($data)
@@ -227,7 +225,6 @@ function  detalles($data)
            } 
         } 
         echo $json_info = json_encode($arr); 
- 
     } 
  
     function traeConcpto($data){

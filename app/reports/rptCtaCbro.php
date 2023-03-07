@@ -26,7 +26,7 @@ require_once ('fpdf.php');
         $this->periodo = $periodo;
  //op="+reimp+"&em="+empresa+"&prop="+prop+"&in="+inmueble;
         $resultado = $obj->cargaEmpresa($empresa);
-        while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+        while( $empre = mysqli_fetch_array($resultado) )
         {
             $nomEmpre = $empre['empresaNombre'];         
             $nit = 'NIT : ' .$empre['empresaNit'];
@@ -38,7 +38,7 @@ require_once ('fpdf.php');
         }
 
         $result = $obj->traeAptoPropietario($inmueble, $empresa);
-        while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+        while( $rec = mysqli_fetch_array($result) )
         {
             $propietario =  $rec['propietarioNombre'];
             $cedula =  $rec['propietarioCedula'];
@@ -146,7 +146,7 @@ require_once ('fpdf.php');
     include_once("../bin/cls/clsReportes.php");
     $obj = new  reportesCls();
     $resultado = $obj->cargaEmpresa($empresa);
-    while( $empre = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+    while( $empre = mysqli_fetch_array($resultado) )
     {
         $nota1=utf8_decode($empre['empresaMensaje1']);
         $nota2=utf8_decode($empre['empresaMensaje2']);
@@ -162,7 +162,7 @@ require_once ('fpdf.php');
     $ny=$y;
     $result = $obj->preparaReimpresionFactura($periodo, $empresa, $inmueble, $op, $propietario); 
      
-    while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )
+    while( $reg = mysqli_fetch_array($result) )
     {
         $valor = $reg['facturasaldo'];
         $line =  $reg['facturaperiodo'].'   '.$reg['facturafechafac'].'    '.$reg['facturafechavence'].'     '.

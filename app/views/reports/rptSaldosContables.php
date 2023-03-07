@@ -35,7 +35,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
 
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  ';
         $titulo="SALDOS CONTABLES";
         $subtitulo="Periodo ".$periodo. " Desde cuenta: ". $ctaIni . " Hasta cuenta : " . $ctaFin ;

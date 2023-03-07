@@ -118,7 +118,7 @@
     $sum5=0.0;
     $sum6=0.0;
     
-    while( $reg = mysqli_fetch_array($result, MYSQL_ASSOC) )  
+    while( $reg = mysqli_fetch_array($result) )  
     {         
         $pdf->SetXY(10,$ln); 
         $pdf->Cell(08,6,$reg['lista_inmueble'],0,0);$pdf->SetXY(25,$ln);

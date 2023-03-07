@@ -35,7 +35,7 @@ require_once ('fpdf.php');
         }
 
         $result = $obj->traeAptoPropietario($inmueble, $empresa);
-       // while( $rec = mysqli_fetch_array($result, MYSQL_ASSOC) )
+       // while( $rec = mysqli_fetch_array($result) )
        while( $rec = mysqli_fetch_assoc($result))
         {
             $propietario =  $rec['propietarioNombre'];

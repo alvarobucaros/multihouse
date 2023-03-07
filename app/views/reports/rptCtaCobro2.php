@@ -54,7 +54,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
        
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo=$empresa  .'  '. $cta;
         $titulo="CUENTA DE COBRO";
         $this->Image($logo,$der+10,14,20,10,'png');

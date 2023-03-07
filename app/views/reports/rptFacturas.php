@@ -43,7 +43,7 @@ require_once ('fpdf.php');
        
       //  $this->lugar = $empre[];
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  '. $cta;
         $titulo="CUENTA DE COBRO";
         $this->Image($logo,$der+5,14,20,10,'png');

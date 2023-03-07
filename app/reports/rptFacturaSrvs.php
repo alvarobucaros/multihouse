@@ -36,6 +36,7 @@ require_once ('fpdf.php');
             $empresaActividad = $empre['empresaActividad'];
             $this->logo = $empre['empresaLogo'];
             $this->ciudad = $empre['empresaCiudad']; 
+            $prefijo =  $empre['empresaPrefijo'];
             $regimen = 'Simplificado';
             if ( $empre['empresaRegimen'] ==='C'){
                 $regimen = 'Común';
@@ -62,9 +63,9 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
        
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo= $empresa;
-        $titulo="FACTURA DE VENTA: MP ".$nro;
+        $titulo="FACTURA DE VENTA: " . $prefijo ." ".$nro;
         $this->Image($logo,$der+25,24,50,25);
         $this->SetFont('Arial','B',10);        
         $this->SetTextColor(38, 34, 96 ); 
@@ -185,7 +186,7 @@ require_once ('fpdf.php');
     $resultado = $obj->cargaFactura($empresa, $nro);
     while($factura = mysqli_fetch_assoc($resultado))
     
-   // while( $factura = mysqli_fetch_array($resultado, MYSQL_ASSOC) )
+   // while( $factura = mysqli_fetch_array($resultado) )
     { 
         $valor+=$factura['factdefvalor'];
         $saldo+=$factura['factdefsaldo'];

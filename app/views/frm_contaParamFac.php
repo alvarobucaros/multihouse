@@ -719,6 +719,16 @@
                     </textarea> 
                     </div>
                 </div>
+   
+                <div class="form-group">
+                    <label class="control-label milabel col-md-4" for="empresaPrefijo">{{form_empresaPrefijo}}</label>
+                   <div class="col-md-6">
+                    <input type="text" class="form-control mitexto" id="empresaPrefijo" name="empresaPrefijo"
+                         ng-model="registro.empresaPrefijo" required Placeholder="{{form_PhempresaPrefijo}}" 
+                         value="{{registro.empresaPrefijo}}" />
+                    </div>
+                </div> 
+                
                 <div class="form-group">
                     <label class="control-label milabel col-md-4" for="empresaObservaciones">{{form_empresaObservaciones}}</label>
                     <div class="col-md-6">
@@ -737,8 +747,8 @@
  
                 </div>       
                 <div style='display: none'>
-                <input type="text"	 ng-model="registro.empresatercero" id ='empresatercero'  name ='empresatercero' value="{{registro.empresatercero}}"/>
-                <input type="text"	 ng-model="registro.empresaId" id ='empresaId'  name ='empresaId' value="{{registro.empresaId}}"/>
+                <input type="text" ng-model="registro.empresatercero" id ='empresatercero'  name ='empresatercero' value="{{registro.empresatercero}}"/>
+                <input type="text" ng-model="registro.empresaId" id ='empresaId'  name ='empresaId' value="{{registro.empresaId}}"/>
                 <input type="text" ng-model="tipo" id ='empresaId'  name ='tipo' value="F"/>
                 
                 </div>

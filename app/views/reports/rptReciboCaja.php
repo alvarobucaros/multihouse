@@ -63,7 +63,7 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
        
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
       
         $titulo="RECIBO DE CAJA " . $recibo . ' De ' . $pagosfecha;
         $this->Image($logo,$der+5,14,20,10,'png');

@@ -31,7 +31,7 @@ if( isset( $_COOKIE['mcrCookie'] ) ) {
         $nit = 'NIT:        ' .$empre['empresaNit'].'-'.$empre['empresaDigito'];
         $dir = 'DIRECCION : '.$empre['empresaDireccion']; 
         $tel = 'TELEFONO  : '.$empre['empresaTelefonos'];        
-        $logo = "logos/".$logo;
+        $logo = "../img/".$this->logo;
  
         $this->Image($logo,25,14,20,10);
        

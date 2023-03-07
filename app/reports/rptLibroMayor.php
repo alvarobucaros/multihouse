@@ -35,11 +35,12 @@ require_once ('fpdf.php');
         $this->today = date("Y/m/d H:i:s", $time);
 
         $this->archivo = 'CtaCobro';
-        $logo = "logos/".$this->logo;
+        $logo = "../img/".$this->logo;
         $yeyo=$periodo .'  '. $empresa  .'  ';
         $titulo="LIBRO MAYOR";
         $subtitulo="Periodo ".$periodo;
- //       $this->Image($logo,$der+5,14,20,10);    
+ //       $this->Image($logo,$der+5,14,20,10); 
+        $this->Image($logo,15,14,20,10);
         $this->SetFont('Arial','B',10);
         $w = $this->GetStringWidth($nomEmpre)+6;
         $this->SetX((210-$w)/2);

@@ -35,10 +35,10 @@ function leeRegistros($data) {
     $con = $objClase->conectar();
     $empresa = $data->empresa;
     {
-        $query = "SELECT  pagoid, pagoempresa, pagocedula, pagoinmueble,  inmuebleCodigo, pagofecha, pagovalor, " .
-                " pagoestado, pagopropietarioid, pagoinmuebleid " .
-                " FROM contatmpagos  INNER JOIN containmuebles ON inmuebleId = pagoinmueble WHERE inmueblePrincipal = 'SI' " .
-                // " WHERE pagoempresa = " . empresa .//" AND inmueblePrincipal = 'SI' " .
+        $query = "SELECT pagoid, pagoempresa, pagocedula, pagoinmueble, inmuebleCodigo,  " .
+                " pagofecha, pagovalor, pagoestado, pagopropietarioid, pagoinmuebleid " .
+                " FROM contatmpagos INNER JOIN containmuebles ON inmuebleId = pagoinmueble " .
+                " WHERE inmueblePrincipal = 'P' AND pagoempresa = " . empresa .
                 " ORDER BY pagocedula ";
         $result = mysqli_query($con, $query);
         $arr = array();
